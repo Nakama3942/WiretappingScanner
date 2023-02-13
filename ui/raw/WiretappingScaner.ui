@@ -115,7 +115,7 @@
   <customwidget>
    <class>DrawFrame</class>
    <extends>QFrame</extends>
-   <header>src/Drawer</header>
+   <header>ui/drawer</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
