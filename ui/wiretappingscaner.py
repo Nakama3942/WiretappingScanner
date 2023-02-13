@@ -91,8 +91,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
 
-		self.text = "..."
-
 		# It's a tracking of button clicks in the window
 	# self.toolTray.clicked.connect(self.toolTray_Clicked)
 	# self.checkMouseClick.stateChanged.connect(self.checkMouseClick_Changed)
@@ -216,11 +214,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				Draws.tab = 1
 				font = QFont("Arial")
 				Draws.tfont = font
+				Draws.tpixmap = "./icon/magnet.png"
 				Draws.text = "Hello 1"
 				self.CompassDrawFrame.repaint()
 			case 2:
 				Draws.tab = 2
-				font = QFont("Times")
+				font = QFont("JetBrains Mono")
 				Draws.tfont = font
 				Draws.text = "Hello 2"
 				self.IRDrawFrame.repaint()

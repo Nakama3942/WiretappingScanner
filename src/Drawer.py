@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QFrame
-from PyQt6.QtGui import QPainter, QColor, QFont
+from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QPainter, QPixmap, QColor, QFont
 
 from src.state import Draws
 
@@ -16,6 +17,7 @@ class DrawFrame(QFrame):
 			case 1:
 				qp = QPainter(self)
 				qp.setFont(Draws.tfont)
+				qp.drawPixmap(QPoint(200, 200), QPixmap(Draws.tpixmap))
 				qp.drawText(100, 100, Draws.text)
 			case 2:
 				qp = QPainter(self)
