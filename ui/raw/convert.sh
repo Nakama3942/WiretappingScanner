@@ -1,0 +1,1 @@
+pyuic6 -x WiretappingScaner.ui -o ui_wiretappingscaner.py
