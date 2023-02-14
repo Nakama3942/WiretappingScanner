@@ -18,6 +18,7 @@ from PyQt6.QtCore import QPoint
 from PyQt6.QtGui import QPainter, QPixmap, QColor, QFont
 
 from src.state import Draws
+from src.signals import RadioSignal, CompassSignal
 
 
 class DrawFrame(QFrame):
@@ -26,13 +27,20 @@ class DrawFrame(QFrame):
 			case 0:
 				qp = QPainter(self)
 				qp.setFont(Draws.tfont)
-				qp.drawText(100, 100, Draws.text)
-				qp.drawText(250, 100, Draws.radio_signal)
+				qp.drawText(100, 100, Draws.text1)
+				qp.drawText(250, 100, str(Draws.radio_signal))
+				qp.drawText(100, 150, Draws.text2)
+				qp.drawText(250, 150, str(Draws.radio_amplitude))
+				qp.drawPath(RadioSignal(10))
 			case 1:
 				qp = QPainter(self)
 				qp.setFont(Draws.tfont)
 				qp.drawPixmap(QPoint(200, 200), QPixmap(Draws.tpixmap))
+				compass, x, y = CompassSignal()
+				qp.drawPath(compass)
+				qp.drawLine(400, 400, x, y)
 				qp.drawText(100, 100, Draws.text)
+				qp.drawText(250, 100, str(Draws.compass_radius))
 			case 2:
 				qp = QPainter(self)
 				qp.setFont(Draws.tfont)

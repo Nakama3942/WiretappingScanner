@@ -40,7 +40,7 @@ from src.state import Draws
 
 
 class Detector(QThread):
-	radio_signal = pyqtSignal(str)
+	radio_signal = pyqtSignal(float, int, int)
 # 	mouse_clicked = pyqtSignal(int, int, str)
 # 	mouse_released = pyqtSignal(int, int, str)
 # 	mouse_move = pyqtSignal(int, int)
@@ -63,9 +63,9 @@ class Detector(QThread):
 #
 	def detect_radio(self):
 		while True:
-			self.radio_signal.emit("101.4")
+			self.radio_signal.emit(101.4, 20, 70)
 			time.sleep(0.3)
-			self.radio_signal.emit("97.5")
+			self.radio_signal.emit(97.5, 28, 76)
 			time.sleep(0.3)
 #
 # 	def _mouse_move(self, x, y):
@@ -90,6 +90,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
+		Draws.window_height = self.height()
+		Draws.window_width = self.width()
 
 		# It's a tracking of button clicks in the window
 	# self.toolTray.clicked.connect(self.toolTray_Clicked)
@@ -208,14 +210,15 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				Draws.tab = 0
 				font = QFont("JetBrains Mono")
 				Draws.tfont = font
-				Draws.text = "Radio signal: "
+				Draws.text1 = "Radio signal: "
+				Draws.text2 = "Radio amplitude: "
 				self.RadioDrawFrame.repaint()
 			case 1:
 				Draws.tab = 1
 				font = QFont("Arial")
 				Draws.tfont = font
 				Draws.tpixmap = "./icon/magnet.png"
-				Draws.text = "Hello 1"
+				Draws.text = "Compass gradus: "
 				self.CompassDrawFrame.repaint()
 			case 2:
 				Draws.tab = 2
@@ -271,9 +274,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 # 		save.write(self.textBrowserLoggingMoving.toPlainText())
 # 		self.textBrowserLoggingAction.append(self.printer.export_moving_string())
 #
-	def detect_radio_signal(self, data_radio_signal: str):
+	def detect_radio_signal(self, data_radio_signal: float, data_radio_amplitude: int, data_compass_radius: int):
 		Draws.radio_signal = data_radio_signal
+		Draws.radio_amplitude = data_radio_amplitude
+		Draws.compass_radius = data_compass_radius
 		self.RadioDrawFrame.repaint()
+		self.CompassDrawFrame.repaint()
 #
 # def mouse_Clicked(self, x: int, y: int, button: str):
 # 	if self.checkMouseClick.isChecked():

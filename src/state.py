@@ -13,9 +13,18 @@
 #  limitations under the License.
 
 class Draws:
+	# Global settings
 	tab = 0
+	window_height = 0
+	window_width = 0
 
+	# Extra settings
 	tfont = None
+	text1 = ""
+	text2 = ""
 	tpixmap = ""
-	text = ""
-	radio_signal = ""
+
+	# Radio wiretapping data
+	radio_signal = 0.0
+	radio_amplitude = 0
+	compass_radius = 0
