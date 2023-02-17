@@ -27,4 +27,7 @@ class Draws:
 	# Radio wiretapping data
 	radio_signal = 0.0
 	radio_amplitude = 0
+	radio_initphase = 0
+
+	# Compass wiretapping data
 	compass_radius = 0

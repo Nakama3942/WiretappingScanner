@@ -29,9 +29,9 @@ import time
 # from PyQt6.QtGui import QIcon, QAction, QCloseEvent
 
 from PyQt6 import QtWidgets
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu
 # from PyQt6.QtCore import QDir
-from PyQt6.QtGui import QIcon, QFont
+from PyQt6.QtGui import QIcon, QFont, QAction, QCloseEvent
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
@@ -40,45 +40,38 @@ from src.state import Draws
 
 
 class Detector(QThread):
-	radio_signal = pyqtSignal(float, int, int)
-# 	mouse_clicked = pyqtSignal(int, int, str)
-# 	mouse_released = pyqtSignal(int, int, str)
-# 	mouse_move = pyqtSignal(int, int)
-# 	mouse_scroll = pyqtSignal(int, int, int, int)
+	data_signal = pyqtSignal(dict)
 #
 	def __init__(self):
 		super(Detector, self).__init__()
+		self.wiretapping_data = {"data_radio_signal": 0.0,
+								 "data_radio_amplitude": 0,
+								 "data_compass_radius": 0}
 # 		self._keyboardListener = keyboard.Listener(on_press=self._keyboard_click)
 # 		self._mouseListener = mouse.Listener(on_move=self._mouse_move, on_click=self._mouse_click, on_scroll=self._mouse_scroll)
 #
 	def run(self):
-		self.detect_radio()
+		self.detect_signal()
 		# self._keyboardListener.start()
 		# self._mouseListener.start()
 #
-# 	def terminate(self):
-# 		self._keyboardListener.stop()
-# 		self._mouseListener.stop()
-# 		super().terminate()
+	def terminate(self):
+		# self._keyboardListener.stop()
+		# self._mouseListener.stop()
+		super().terminate()
 #
-	def detect_radio(self):
+	def detect_signal(self):
 		while True:
-			self.radio_signal.emit(101.4, 20, 70)
+			self.wiretapping_data["data_radio_signal"] = 101.4
+			self.wiretapping_data["data_radio_amplitude"] = 20
+			self.wiretapping_data["data_compass_radius"] = 70
+			self.data_signal.emit(self.wiretapping_data)
 			time.sleep(0.3)
-			self.radio_signal.emit(97.5, 28, 76)
+			self.wiretapping_data["data_radio_signal"] = 97.5
+			self.wiretapping_data["data_radio_amplitude"] = 28
+			self.wiretapping_data["data_compass_radius"] = 76
+			self.data_signal.emit(self.wiretapping_data)
 			time.sleep(0.3)
-#
-# 	def _mouse_move(self, x, y):
-# 		self.mouse_move.emit(x, y)
-#
-# 	def _mouse_click(self, x, y, button, pressed):
-# 		if pressed:
-# 			self.mouse_clicked.emit(x, y, str(button.name))
-# 		else:
-# 			self.mouse_released.emit(x, y, str(button.name))
-#
-# 	def _mouse_scroll(self, x, y, dx, dy):
-# 		self.mouse_scroll.emit(x, y, dx, dy)
 
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
@@ -94,72 +87,44 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		Draws.window_width = self.width()
 
 		# It's a tracking of button clicks in the window
-	# self.toolTray.clicked.connect(self.toolTray_Clicked)
 	# self.checkMouseClick.stateChanged.connect(self.checkMouseClick_Changed)
 	# self.checkMouseRelease.stateChanged.connect(self.checkMouseRelease_Changed)
 	# self.checkMouseMove.stateChanged.connect(self.checkMouseMove_Changed)
 	# self.comboScheme.currentTextChanged.connect(self.comboScheme_CurrentIndexChanged)
-		self.tabWidget.tabBarClicked.connect(self.tabRadio_Clicked)
+		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
 	# self.buttResetLogging.clicked.connect(self.buttResetLogging_Clicked)
 	# self.buttResetAll.clicked.connect(self.buttResetAll_Clicked)
 	# self.buttSaveLoggingAction.clicked.connect(self.buttSaveLoggingAction_Clicked)
 	# self.buttSaveLoggingMoving.clicked.connect(self.buttSaveLoggingMoving_Clicked)
 
-	# # Initialization of QSystemTrayIcon
-	# self.toolTray.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_ComputerIcon))
-	# self.tray_icon = QSystemTrayIcon(self)
-	# self.tray_icon.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon))
-	# show_action = QAction("Show", self)
-	# show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-	# show_action.triggered.connect(self.tray_Show)
-	# output_action = QAction("Output action to log", self)
-	# output_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogContentsView))
-	# output_action.triggered.connect(self.tray_ActionOutput)
-	# output_moving = QAction("Output moving to log", self)
-	# output_moving.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogContentsView))
-	# output_moving.triggered.connect(self.tray_MovingOutput)
-	# close_action = QAction("Close", self)
-	# close_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton))
-	# close_action.triggered.connect(self.tray_Close)
-	# tray_menu = QMenu()
-	# tray_menu.addAction(show_action)
-	# tray_menu.addAction(output_action)
-	# tray_menu.addAction(output_moving)
-	# tray_menu.addAction(close_action)
-	# self.tray_icon.setContextMenu(tray_menu)
+		# Initialization of QSystemTrayIcon
+		self.tray_icon = QSystemTrayIcon(self)
+		self.tray_icon.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon))
+		show_action = QAction("Show", self)
+		show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+		show_action.triggered.connect(self.tray_Hide)
+		close_action = QAction("Close", self)
+		close_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton))
+		close_action.triggered.connect(self.close)
+		tray_menu = QMenu()
+		tray_menu.addAction(show_action)
+		tray_menu.addAction(close_action)
+		self.tray_icon.setContextMenu(tray_menu)
 
 		# Initialization of process of tracking
 		self.detector = Detector()
 		self.detector.start()
-		self.detector.radio_signal.connect(self.detect_radio_signal)
-		# self.button_manager.mouse_clicked.connect(self.mouse_Clicked)
-		# self.button_manager.mouse_released.connect(self.mouse_Released)
-		# self.button_manager.mouse_move.connect(self.mouse_Move)
-		# self.button_manager.mouse_scroll.connect(self.mouse_Scroll)
+		self.detector.data_signal.connect(self.detect_data_signal)
 
-		self.tabRadio_Clicked(0)
+		self.tabWidget_Clicked(0)
 
-# def tray_Show(self):
-# 	self.tray_icon.hide()
-# 	self.show()
-# 	self.textBrowserLoggingAction.append(self.printer.show_program_string())
-#
-# def tray_ActionOutput(self):
-# 	self.buttSaveLoggingAction_Clicked()
-# 	os.startfile("key.log")
-#
-# def tray_MovingOutput(self):
-# 	self.buttSaveLoggingMoving_Clicked()
-# 	os.startfile("mov.log")
-#
-# def tray_Close(self):
-# 	self.tray_Show()
-# 	self.close()
-#
-# def toolTray_Clicked(self):
-# 	self.tray_icon.show()
-# 	self.hide()
-# 	self.textBrowserLoggingAction.append(self.printer.hide_program_string())
+	def tray_Show(self):
+		self.tray_icon.show()
+		self.hide()
+
+	def tray_Hide(self):
+		self.tray_icon.hide()
+		self.show()
 #
 # def checkMouseClick_Changed(self):
 # 	if self.checkMouseClick.isChecked():
@@ -204,7 +169,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 # 				self.textBrowserLoggingAction.append(self.printer.change_scheme_string())
 # 			break
 #
-	def tabRadio_Clicked(self, index):
+	def tabWidget_Clicked(self, index):
 		match index:
 			case 0:
 				Draws.tab = 0
@@ -274,43 +239,35 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 # 		save.write(self.textBrowserLoggingMoving.toPlainText())
 # 		self.textBrowserLoggingAction.append(self.printer.export_moving_string())
 #
-	def detect_radio_signal(self, data_radio_signal: float, data_radio_amplitude: int, data_compass_radius: int):
-		Draws.radio_signal = data_radio_signal
-		Draws.radio_amplitude = data_radio_amplitude
-		Draws.compass_radius = data_compass_radius
-		self.RadioDrawFrame.repaint()
-		self.CompassDrawFrame.repaint()
-#
-# def mouse_Clicked(self, x: int, y: int, button: str):
-# 	if self.checkMouseClick.isChecked():
-# 		if self.checkMouseClickCoord.isChecked():
-# 			self.textBrowserLoggingAction.append(self.printer.mouse_click_coord_string(x, y, button))
-# 		else:
-# 			self.textBrowserLoggingAction.append(self.printer.mouse_click_string(button))
-#
-# def mouse_Released(self, x: int, y: int, button: str):
-# 	if self.checkMouseRelease.isChecked():
-# 		if self.checkMouseReleaseCoord.isChecked():
-# 			self.textBrowserLoggingAction.append(self.printer.mouse_release_coord_string(x, y, button))
-# 		else:
-# 			self.textBrowserLoggingAction.append(self.printer.mouse_release_string(button))
-#
-# def mouse_Move(self, x: int, y: int):
-# 	if self.checkMouseMove.isChecked():
-# 		self.textBrowserLoggingMoving.append(self.printer.mouse_move_string(x, y))
-#
-# def mouse_Scroll(self, x: int, y: int, dx: int, dy: int):
-# 	if self.checkMouseScroll.isChecked():
-# 		self.textBrowserLoggingAction.append(self.printer.mouse_scroll_string(x, y, dx, dy))
-#
-# def closeEvent(self, event: QCloseEvent):
-# 	self.textBrowserLoggingAction.append(self.printer.stop_track_string())
-# 	self.button_manager.terminate()
-# 	# Saving
-# 	if not self.REBOOT:
-# 		self.saveData()
-# 	# Closing
-# 	super().closeEvent(event)
+	def detect_data_signal(self, data: dict):
+		Draws.radio_signal = data["data_radio_signal"]
+		Draws.radio_amplitude = data["data_radio_amplitude"]
+		Draws.compass_radius = data["data_compass_radius"]
+		match Draws.tab:
+			case 0:
+				self.RadioDrawFrame.repaint()
+			case 1:
+				self.CompassDrawFrame.repaint()
+			case 2:
+				pass
+			case 3:
+				pass
+			case 4:
+				pass
+			case 5:
+				pass
+
+	def closeEvent(self, event: QCloseEvent):
+		# Завершение программы должно происходить в трее, а не в системном меню
+		if self.isHidden():  # Если программа скрыта, значит доступен трей, а не системное меню
+			# Значит можно завершать программу
+			self.detector.terminate()
+			# event.accept()  # Почему-то не работает
+			QApplication.instance().exit(0)
+		else:
+			# Иначе - скрыть в трей
+			self.tray_Show()
+			event.ignore()
 #
 # def saveData(self):
 # 	config = configparser.ConfigParser()

@@ -15,7 +15,7 @@ def RadioSignal(grid):
 	# k - смещение по оси Y
 	amplitude = Draws.radio_amplitude									# A
 	frequency = 300_000_000 / (Draws.radio_signal * 1_000_000 * grid)	# λ
-	initphase = 0														# φ
+	initphase = Draws.radio_initphase									# φ
 	offset = 450														# k
 
 	wave = QPainterPath()
