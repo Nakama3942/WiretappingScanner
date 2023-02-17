@@ -16,7 +16,7 @@ import time
 # import configparser
 # import pickle
 # import os
-# from pynput import keyboard, mouse
+import keyboard
 #
 # from PyQt6 import QtWidgets
 # from PyQt6.QtWidgets import QApplication,\
@@ -28,10 +28,10 @@ import time
 # from PyQt6.QtCore import Qt, QDir
 # from PyQt6.QtGui import QIcon, QAction, QCloseEvent
 
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu
 # from PyQt6.QtCore import QDir
-from PyQt6.QtGui import QIcon, QFont, QAction, QCloseEvent
+from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
@@ -47,17 +47,11 @@ class Detector(QThread):
 		self.wiretapping_data = {"data_radio_signal": 0.0,
 								 "data_radio_amplitude": 0,
 								 "data_compass_radius": 0}
-# 		self._keyboardListener = keyboard.Listener(on_press=self._keyboard_click)
-# 		self._mouseListener = mouse.Listener(on_move=self._mouse_move, on_click=self._mouse_click, on_scroll=self._mouse_scroll)
 #
 	def run(self):
 		self.detect_signal()
-		# self._keyboardListener.start()
-		# self._mouseListener.start()
 #
 	def terminate(self):
-		# self._keyboardListener.stop()
-		# self._mouseListener.stop()
 		super().terminate()
 #
 	def detect_signal(self):
@@ -78,6 +72,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def __init__(self):
 		super(WiretappingScaner, self).__init__()
 		self.setupUi(self)
+
+		# Constant
+		self.exit_bool = False
 
 		# Set window to center
 		qr = self.frameGeometry()
@@ -100,14 +97,38 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
 		self.tray_icon.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon))
-		show_action = QAction("Show", self)
+		show_action = QAction("Відобразити", self)
 		show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
 		show_action.triggered.connect(self.tray_Hide)
-		close_action = QAction("Close", self)
+		radio_action = QAction("Радіо", self)
+		radio_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		radio_action.triggered.connect(lambda: self.openTab(0))
+		compass_action = QAction("Компас", self)
+		compass_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		compass_action.triggered.connect(lambda: self.openTab(1))
+		IR_action = QAction("ІЧ випромінювання", self)
+		IR_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		IR_action.triggered.connect(lambda: self.openTab(2))
+		US_action = QAction("Ультразвук", self)
+		US_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		US_action.triggered.connect(lambda: self.openTab(3))
+		channel_action = QAction("Вільний канал", self)
+		channel_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		channel_action.triggered.connect(lambda: self.openTab(4))
+		stethoscope_action = QAction("Стетоскоп", self)
+		stethoscope_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		stethoscope_action.triggered.connect(lambda: self.openTab(5))
+		close_action = QAction("Завершити", self)
 		close_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton))
 		close_action.triggered.connect(self.close)
 		tray_menu = QMenu()
 		tray_menu.addAction(show_action)
+		tray_menu.addAction(radio_action)
+		tray_menu.addAction(compass_action)
+		tray_menu.addAction(IR_action)
+		tray_menu.addAction(US_action)
+		tray_menu.addAction(channel_action)
+		tray_menu.addAction(stethoscope_action)
 		tray_menu.addAction(close_action)
 		self.tray_icon.setContextMenu(tray_menu)
 
@@ -121,6 +142,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def tray_Show(self):
 		self.tray_icon.show()
 		self.hide()
+
+	def openTab(self, index):
+		self.tray_Hide()
+		self.tabWidget.setCurrentIndex(index)
+		self.tabWidget_Clicked(index)
 
 	def tray_Hide(self):
 		self.tray_icon.hide()
@@ -249,17 +275,25 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			case 1:
 				self.CompassDrawFrame.repaint()
 			case 2:
-				pass
+				self.IRDrawFrame.repaint()
 			case 3:
-				pass
+				self.UltrasoundDrawFrame.repaint()
 			case 4:
-				pass
+				self.FreeChannelDrawFrame.repaint()
 			case 5:
-				pass
+				self.StethoscopeDrawFrame.repaint()
+
+	def keyPressEvent(self, event: QKeyEvent):
+		if event.key() == QtCore.Qt.Key.Key_Shift:
+			self.exit_bool = True
+		else:
+			self.exit_bool = False
 
 	def closeEvent(self, event: QCloseEvent):
 		# Завершение программы должно происходить в трее, а не в системном меню
-		if self.isHidden():  # Если программа скрыта, значит доступен трей, а не системное меню
+		# Если программа скрыта, значит доступен трей, а не системное меню
+		# Допустимо завершение в системном меню, если нажат shift
+		if self.isHidden() or self.exit_bool:
 			# Значит можно завершать программу
 			self.detector.terminate()
 			# event.accept()  # Почему-то не работает
