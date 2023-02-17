@@ -16,7 +16,7 @@ import time
 # import configparser
 # import pickle
 # import os
-import keyboard
+# import keyboard
 #
 # from PyQt6 import QtWidgets
 # from PyQt6.QtWidgets import QApplication,\
@@ -284,10 +284,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.StethoscopeDrawFrame.repaint()
 
 	def keyPressEvent(self, event: QKeyEvent):
-		if event.key() == QtCore.Qt.Key.Key_Shift:
-			self.exit_bool = True
-		else:
-			self.exit_bool = False
+		self.exit_bool = (False, True)[event.key() == QtCore.Qt.Key.Key_Shift]
 
 	def closeEvent(self, event: QCloseEvent):
 		# Завершение программы должно происходить в трее, а не в системном меню
