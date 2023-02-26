@@ -101,7 +101,7 @@ class Ui_WindowWiretappingScaner(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabUltrasound), _translate("WindowWiretappingScaner", "Ультразвук"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabFreeChannel), _translate("WindowWiretappingScaner", "Вільний канал"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabStethoscope), _translate("WindowWiretappingScaner", "Стетоскоп"))
-from ui.drawer import DrawFrame
+from src.drawer import DrawFrame
 
 
 if __name__ == "__main__":

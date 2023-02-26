@@ -12,13 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from math import pi, sin, cos
+
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QFrame
 from PyQt6.QtCore import QPoint, pyqtSignal
-from PyQt6.QtGui import QPainter, QPixmap, QColor, QFont, QMouseEvent
+from PyQt6.QtGui import QPainter, QPainterPath, QPixmap, QColor, QFont, QMouseEvent
 
 from src.state import Draws
-from src.signals import RadioSignal, CompassSignal
+from src.signals import RadioSignal
 
 
 class DrawFrame(QFrame):
@@ -34,16 +36,21 @@ class DrawFrame(QFrame):
 				qp.drawText(250, 100, str(Draws.radio_signal))
 				qp.drawText(100, 150, Draws.text2)
 				qp.drawText(250, 150, str(Draws.radio_amplitude))
-				qp.drawPath(RadioSignal(10))
+				qp.drawPath(RadioSignal(10))  # Рисование синуса радиовоны
 			case 1:
 				qp = QPainter(self)
 				qp.setFont(Draws.tfont)
 				qp.drawPixmap(QPoint(200, 200), QPixmap(Draws.tpixmap))
-				compass, x, y = CompassSignal()
-				qp.drawPath(compass)
-				qp.drawLine(400, 400, x, y)
 				qp.drawText(100, 100, Draws.text1)
 				qp.drawText(250, 100, str(Draws.compass_radius))
+				# Рисование компаса
+				circle = QPainterPath()
+				circle.addEllipse(300, 300, 200, 200)
+				qp.drawPath(circle)
+				qp.drawLine(400,
+							400,
+							int(400 + 90 * cos(((Draws.compass_radius - 90) * pi) / 180)),
+							int(400 + 90 * sin(((Draws.compass_radius - 90) * pi) / 180)))
 			case 2:
 				qp = QPainter(self)
 				qp.setFont(Draws.tfont)
