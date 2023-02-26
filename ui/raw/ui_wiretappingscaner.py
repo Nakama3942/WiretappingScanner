@@ -13,6 +13,13 @@ class Ui_WindowWiretappingScaner(object):
     def setupUi(self, WindowWiretappingScaner):
         WindowWiretappingScaner.setObjectName("WindowWiretappingScaner")
         WindowWiretappingScaner.resize(800, 600)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(WindowWiretappingScaner.sizePolicy().hasHeightForWidth())
+        WindowWiretappingScaner.setSizePolicy(sizePolicy)
+        WindowWiretappingScaner.setMinimumSize(QtCore.QSize(800, 600))
+        WindowWiretappingScaner.setMaximumSize(QtCore.QSize(800, 600))
         self.centralwidget = QtWidgets.QWidget(WindowWiretappingScaner)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)

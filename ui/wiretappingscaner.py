@@ -35,6 +35,7 @@ from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
+from ui.ultrasounddialog import UltrasoundDialog
 
 from src.state import Draws
 
@@ -46,7 +47,10 @@ class Detector(QThread):
 		super(Detector, self).__init__()
 		self.wiretapping_data = {"data_radio_signal": 0.0,
 								 "data_radio_amplitude": 0,
-								 "data_compass_radius": 0}
+								 "data_compass_radius": 0,
+								 "data_infrared_signal": 0.0,
+								 "data_infrared_data": "",
+								 "data_ultrasound_signal": 0.0}
 #
 	def run(self):
 		self.detect_signal()
@@ -59,11 +63,17 @@ class Detector(QThread):
 			self.wiretapping_data["data_radio_signal"] = 101.4
 			self.wiretapping_data["data_radio_amplitude"] = 20
 			self.wiretapping_data["data_compass_radius"] = 70
+			self.wiretapping_data["data_infrared_signal"] = 0.9
+			self.wiretapping_data["data_infrared_data"] = "2 (Exit)"
+			self.wiretapping_data["data_ultrasound_signal"] = 10778
 			self.data_signal.emit(self.wiretapping_data)
 			time.sleep(0.3)
 			self.wiretapping_data["data_radio_signal"] = 97.5
 			self.wiretapping_data["data_radio_amplitude"] = 28
 			self.wiretapping_data["data_compass_radius"] = 76
+			self.wiretapping_data["data_infrared_signal"] = 17.1
+			self.wiretapping_data["data_infrared_data"] = "5 (Clear)"
+			self.wiretapping_data["data_ultrasound_signal"] = 96333
 			self.data_signal.emit(self.wiretapping_data)
 			time.sleep(0.3)
 
@@ -89,6 +99,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	# self.checkMouseMove.stateChanged.connect(self.checkMouseMove_Changed)
 	# self.comboScheme.currentTextChanged.connect(self.comboScheme_CurrentIndexChanged)
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
+		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
+		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
 	# self.buttResetLogging.clicked.connect(self.buttResetLogging_Clicked)
 	# self.buttResetAll.clicked.connect(self.buttResetAll_Clicked)
 	# self.buttSaveLoggingAction.clicked.connect(self.buttSaveLoggingAction_Clicked)
@@ -201,7 +213,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				Draws.tab = 0
 				font = QFont("JetBrains Mono")
 				Draws.tfont = font
-				Draws.text1 = "Radio signal: "
+				Draws.text1 = "Radio signal (MHz): "
 				Draws.text2 = "Radio amplitude: "
 				self.RadioDrawFrame.repaint()
 			case 1:
@@ -209,20 +221,21 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				font = QFont("Arial")
 				Draws.tfont = font
 				Draws.tpixmap = "./icon/magnet.png"
-				Draws.text = "Compass gradus: "
+				Draws.text1 = "Compass gradus: "
 				self.CompassDrawFrame.repaint()
 			case 2:
 				Draws.tab = 2
 				font = QFont("JetBrains Mono")
 				Draws.tfont = font
-				Draws.text = "Hello 2"
+				Draws.text1 = "Infrared signal (THz): "
+				Draws.text2 = "Infrared signal data: "
 				self.IRDrawFrame.repaint()
 			case 3:
 				Draws.tab = 3
 				font = QFont()
 				font.setPointSize(15)
 				Draws.tfont = font
-				Draws.text = "Hello 3"
+				Draws.text1 = "Ultrasound (Hz): "
 				self.UltrasoundDrawFrame.repaint()
 			case 4:
 				Draws.tab = 4
@@ -230,15 +243,30 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				font.setPointSize(20)
 				font.setBold(True)
 				Draws.tfont = font
-				Draws.text = "Hello 4"
+				Draws.text1 = "Hello 4"
 				self.FreeChannelDrawFrame.repaint()
 			case 5:
 				Draws.tab = 5
 				font = QFont()
 				font.setPointSize(25)
 				Draws.tfont = font
-				Draws.text = "Hello 5"
+				Draws.text1 = "Hello 5"
 				self.StethoscopeDrawFrame.repaint()
+
+	def ultrasound_Gen(self):
+		gen_dialog = UltrasoundDialog()
+		gen_dialog.show()
+		result: int = gen_dialog.exec()
+		match result:
+			case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
+				print(1)
+			case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
+				print(2)
+			case _:
+				print(3)
+
+	def ultrasound_Play(self):
+		print(4)
 #
 # def buttResetLogging_Clicked(self):
 # 	self.button_manager.terminate()
@@ -269,6 +297,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		Draws.radio_signal = data["data_radio_signal"]
 		Draws.radio_amplitude = data["data_radio_amplitude"]
 		Draws.compass_radius = data["data_compass_radius"]
+		Draws.infrared_signal = data["data_infrared_signal"]
+		Draws.infrared_data = data["data_infrared_data"]
+		Draws.ultrasound_signal = data["data_ultrasound_signal"]
 		match Draws.tab:
 			case 0:
 				self.RadioDrawFrame.repaint()

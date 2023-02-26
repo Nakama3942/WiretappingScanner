@@ -31,3 +31,10 @@ class Draws:
 
 	# Compass wiretapping data
 	compass_radius = 0
+
+	# Infrared wiretapping data
+	infrared_signal = 0.0
+	infrared_data = ""
+
+	# Ultrasound wiretapping data
+	ultrasound_signal = 0.0
