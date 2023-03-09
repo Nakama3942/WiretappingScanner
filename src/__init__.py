@@ -1,4 +1,4 @@
-#  Copyright © 2022 Kalynovsky Valentin. All rights reserved.
+#  Copyright © 2023 Kalynovsky Valentin. All rights reserved.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -12,14 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import sys
-
-from PyQt6.QtWidgets import QApplication
-
-from ui.wiretappingscaner import WiretappingScaner
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ui = WiretappingScaner()
-    ui.show()
-    sys.exit(app.exec())
+from src.drawer import DrawFrame
+from src.signals import RadioSignal
+from src.state import Draws
