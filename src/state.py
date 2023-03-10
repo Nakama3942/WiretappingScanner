@@ -17,6 +17,9 @@ class Draws:
 	tab = 0
 	window_height = 0
 	window_width = 0
+	connect = False
+	IPAddr = ""
+	Port = ""
 
 	# Extra settings
 	tfont = None

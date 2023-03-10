@@ -76,6 +76,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		Draws.window_width = self.width()
 
 		# It's a tracking of button clicks in the window
+		self.buttConnect.clicked.connect(self.buttConnect_clicked)
+		self.buttDisconnect.clicked.connect(self.buttDisconnect_clicked)
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
 		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
 		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
@@ -137,6 +139,26 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tray_Hide()
 		self.tabWidget.setCurrentIndex(index)
 		self.tabWidget_Clicked(index)
+
+	def buttConnect_clicked(self):
+		Draws.IPAddr = "192.168.0.200"
+		Draws.Port = "12556"
+		Draws.connect = True
+		self.statusbar.showMessage(f"STATUS\tCONNECT to {Draws.IPAddr}:{Draws.Port}")
+		self.lineStatus.setText("Connected")
+		self.lineStatus.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
+		self.labelIPaddr.setText(Draws.IPAddr)
+		self.labelPort.setText(Draws.Port)
+
+	def buttDisconnect_clicked(self):
+		Draws.IPAddr = ""
+		Draws.Port = ""
+		Draws.connect = False
+		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
+		self.lineStatus.setText("Disconnect")
+		self.lineStatus.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
+		self.labelIPaddr.setText("000.000.000.000")
+		self.labelPort.setText("00000")
 
 	def tabWidget_Clicked(self, index):
 		match index:
