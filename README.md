@@ -17,6 +17,12 @@ This program is a keylogger. Its main functionality:
 - And many other important things.
 -->
 
+## ATTEMPTION!!!
+
+1. For the program to work, you need to install Nmap!!! We recommend [the official source of the developer](https://nmap.org/download.html). ТAlso install the library in Python: ```pip install python-nmap```.
+2. After installing the program, add Nmap to your system PATH variables. Now WiretappingScanner will scan all devices on the local network with a static(!) IP address.
+3. To make the device visible on the network: connect it to your Wi-Fi and set the device's IP address to static in the local network settings. Now Nmap will be able to detect your device on the local network, and you can connect it to the program.
+
 ## LICENSE
 
 The full text of the license can be found at the following [link](https://github.com/Nakama3942/WiretappingScanner/blob/master/LICENSE).

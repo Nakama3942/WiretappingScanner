@@ -16,7 +16,7 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
-from ui.wiretappingscaner import WiretappingScaner
+from ui import WiretappingScaner
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -15,7 +15,7 @@
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QDialog
 
-from ui.raw.ui_ultrasounddialog import Ui_UltrasoundDialog
+from ui.raw import Ui_UltrasoundDialog
 
 
 class UltrasoundDialog(QDialog, Ui_UltrasoundDialog):

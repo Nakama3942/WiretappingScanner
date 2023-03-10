@@ -18,8 +18,8 @@ class Draws:
 	window_height = 0
 	window_width = 0
 	connect = False
-	IPAddr = ""
-	Port = ""
+	IPAddr = "000.000.000.000"
+	Port = "00000"
 
 	# Extra settings
 	tfont = None

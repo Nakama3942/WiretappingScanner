@@ -13,5 +13,6 @@
 #  limitations under the License.
 
 from src.drawer import DrawFrame
+from src.getHosts import getHost
 from src.signals import RadioSignal
 from src.state import Draws

@@ -19,10 +19,10 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, 
 from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
-from ui.ultrasounddialog import UltrasoundDialog
+from ui.raw import Ui_WindowWiretappingScaner
+from ui import UltrasoundDialog
 
-from src.state import Draws
+from src import Draws, getHost
 
 
 class Detector(QThread):
@@ -74,6 +74,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.move(qr.topLeft())
 		Draws.window_height = self.height()
 		Draws.window_width = self.width()
+
+		# Taking out devices connected to the router
+		self.IPAddr = getHost()
+		for i in self.IPAddr:
+			self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
 
 		# It's a tracking of button clicks in the window
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
@@ -141,7 +146,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def buttConnect_clicked(self):
-		Draws.IPAddr = "192.168.0.200"
+		Draws.IPAddr = self.IPBox.currentText().split(" ")[1]
 		Draws.Port = "12556"
 		Draws.connect = True
 		self.statusbar.showMessage(f"STATUS\tCONNECT to {Draws.IPAddr}:{Draws.Port}")
@@ -151,14 +156,14 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.labelPort.setText(Draws.Port)
 
 	def buttDisconnect_clicked(self):
-		Draws.IPAddr = ""
-		Draws.Port = ""
+		Draws.IPAddr = "000.000.000.000"
+		Draws.Port = "00000"
 		Draws.connect = False
 		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 		self.lineStatus.setText("Disconnect")
 		self.lineStatus.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
-		self.labelIPaddr.setText("000.000.000.000")
-		self.labelPort.setText("00000")
+		self.labelIPaddr.setText(Draws.IPAddr)
+		self.labelPort.setText(Draws.Port)
 
 	def tabWidget_Clicked(self, index):
 		match index:
