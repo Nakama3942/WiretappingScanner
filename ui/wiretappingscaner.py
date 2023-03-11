@@ -15,14 +15,14 @@
 import time
 
 from PyQt6 import QtWidgets, QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame
 from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
 
-from src import Draws, getHost
+from src import IMPORTANT_DATA, getHost
 
 
 class Detector(QThread):
@@ -72,13 +72,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
-		Draws.window_height = self.height()
-		Draws.window_width = self.width()
+		IMPORTANT_DATA.window_height = self.height()
+		IMPORTANT_DATA.window_width = self.width()
 
 		# Taking out devices connected to the router
-		self.IPAddr = getHost()
-		for i in self.IPAddr:
+		for i in getHost():
 			self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
+		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 
 		# It's a tracking of button clicks in the window
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
@@ -90,28 +90,25 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
 		self.tray_icon.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon))
-		show_action = QAction("Відобразити", self)
+		show_action = QAction("Show", self)
 		show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
 		show_action.triggered.connect(self.tray_Hide)
-		radio_action = QAction("Радіо", self)
+		radio_action = QAction("Radio", self)
 		radio_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		radio_action.triggered.connect(lambda: self.openTab(0))
-		compass_action = QAction("Компас", self)
+		compass_action = QAction("Compass", self)
 		compass_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		compass_action.triggered.connect(lambda: self.openTab(1))
-		IR_action = QAction("ІЧ випромінювання", self)
+		IR_action = QAction("InfraRed radiation", self)
 		IR_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		IR_action.triggered.connect(lambda: self.openTab(2))
-		US_action = QAction("Ультразвук", self)
+		US_action = QAction("Ultrasound", self)
 		US_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		US_action.triggered.connect(lambda: self.openTab(3))
-		channel_action = QAction("Вільний канал", self)
+		channel_action = QAction("Link quality", self)
 		channel_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		channel_action.triggered.connect(lambda: self.openTab(4))
-		stethoscope_action = QAction("Стетоскоп", self)
-		stethoscope_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		stethoscope_action.triggered.connect(lambda: self.openTab(5))
-		close_action = QAction("Завершити", self)
+		close_action = QAction("Quit", self)
 		close_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton))
 		close_action.triggered.connect(self.close)
 		tray_menu = QMenu()
@@ -121,7 +118,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		tray_menu.addAction(IR_action)
 		tray_menu.addAction(US_action)
 		tray_menu.addAction(channel_action)
-		tray_menu.addAction(stethoscope_action)
 		tray_menu.addAction(close_action)
 		self.tray_icon.setContextMenu(tray_menu)
 
@@ -130,6 +126,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.detector.start()
 		self.detector.data_signal.connect(self.detect_data_signal)
 
+		# Tab selection simulation - start renderer
+		# (without this, the program refuses to work after the connection)
 		self.tabWidget_Clicked(0)
 
 	def tray_Show(self):
@@ -146,70 +144,69 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def buttConnect_clicked(self):
-		Draws.IPAddr = self.IPBox.currentText().split(" ")[1]
-		Draws.Port = "12556"
-		Draws.connect = True
-		self.statusbar.showMessage(f"STATUS\tCONNECT to {Draws.IPAddr}:{Draws.Port}")
-		self.lineStatus.setText("Connected")
-		self.lineStatus.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
-		self.labelIPaddr.setText(Draws.IPAddr)
-		self.labelPort.setText(Draws.Port)
+		IMPORTANT_DATA.IPAddr = self.IPBox.currentText().split(" ")[1]
+		IMPORTANT_DATA.Port = "12556"
+		IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"
+		IMPORTANT_DATA.connect = True
+		self.statusbar.showMessage(f"STATUS:\t\t\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+		self.statusLine.setText("Connected")
+		self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
+		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
+		self.labelPort.setText(IMPORTANT_DATA.Port)
+		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+		self.widgetSettings.setEnabled(True)
 
 	def buttDisconnect_clicked(self):
-		Draws.IPAddr = "000.000.000.000"
-		Draws.Port = "00000"
-		Draws.connect = False
+		IMPORTANT_DATA.IPAddr = "000.000.000.000"
+		IMPORTANT_DATA.Port = "00000"
+		IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
+		IMPORTANT_DATA.connect = False
 		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
-		self.lineStatus.setText("Disconnect")
-		self.lineStatus.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
-		self.labelIPaddr.setText(Draws.IPAddr)
-		self.labelPort.setText(Draws.Port)
+		self.statusLine.setText("Disconnect")
+		self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
+		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
+		self.labelPort.setText(IMPORTANT_DATA.Port)
+		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+		self.widgetSettings.setEnabled(False)
 
 	def tabWidget_Clicked(self, index):
 		match index:
 			case 0:
-				Draws.tab = 0
+				IMPORTANT_DATA.tab = 0
 				font = QFont("JetBrains Mono")
-				Draws.tfont = font
-				Draws.text1 = "Radio signal (MHz): "
-				Draws.text2 = "Radio amplitude: "
+				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.text1 = "Radio signal (MHz): "
+				IMPORTANT_DATA.text2 = "Radio amplitude: "
 				self.RadioDrawFrame.repaint()
 			case 1:
-				Draws.tab = 1
+				IMPORTANT_DATA.tab = 1
 				font = QFont("Arial")
-				Draws.tfont = font
-				Draws.tpixmap = "./icon/magnet.png"
-				Draws.text1 = "Compass gradus: "
+				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.tpixmap = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "Compass gradus: "
 				self.CompassDrawFrame.repaint()
 			case 2:
-				Draws.tab = 2
+				IMPORTANT_DATA.tab = 2
 				font = QFont("JetBrains Mono")
-				Draws.tfont = font
-				Draws.text1 = "Infrared signal (THz): "
-				Draws.text2 = "Infrared signal data: "
+				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.text1 = "Infrared signal (THz): "
+				IMPORTANT_DATA.text2 = "Infrared signal data: "
 				self.IRDrawFrame.repaint()
 			case 3:
-				Draws.tab = 3
+				IMPORTANT_DATA.tab = 3
 				font = QFont()
 				font.setPointSize(15)
-				Draws.tfont = font
-				Draws.text1 = "Ultrasound (Hz): "
+				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.text1 = "Ultrasound (Hz): "
 				self.UltrasoundDrawFrame.repaint()
 			case 4:
-				Draws.tab = 4
+				IMPORTANT_DATA.tab = 4
 				font = QFont()
 				font.setPointSize(20)
 				font.setBold(True)
-				Draws.tfont = font
-				Draws.text1 = "Hello 4"
+				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.text1 = "Hello 4"
 				self.FreeChannelDrawFrame.repaint()
-			case 5:
-				Draws.tab = 5
-				font = QFont()
-				font.setPointSize(25)
-				Draws.tfont = font
-				Draws.text1 = "Hello 5"
-				self.StethoscopeDrawFrame.repaint()
 
 	def ultrasound_Gen(self):
 		gen_dialog = UltrasoundDialog()
@@ -227,13 +224,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		print(4)
 
 	def detect_data_signal(self, data: dict):
-		Draws.radio_signal = data["data_radio_signal"]
-		Draws.radio_amplitude = data["data_radio_amplitude"]
-		Draws.compass_radius = data["data_compass_radius"]
-		Draws.infrared_signal = data["data_infrared_signal"]
-		Draws.infrared_data = data["data_infrared_data"]
-		Draws.ultrasound_signal = data["data_ultrasound_signal"]
-		match Draws.tab:
+		IMPORTANT_DATA.radio_signal = data["data_radio_signal"]
+		IMPORTANT_DATA.radio_amplitude = data["data_radio_amplitude"]
+		IMPORTANT_DATA.compass_radius = data["data_compass_radius"]
+		IMPORTANT_DATA.infrared_signal = data["data_infrared_signal"]
+		IMPORTANT_DATA.infrared_data = data["data_infrared_data"]
+		IMPORTANT_DATA.ultrasound_signal = data["data_ultrasound_signal"]
+		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.repaint()
 			case 1:
@@ -244,22 +241,20 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.UltrasoundDrawFrame.repaint()
 			case 4:
 				self.FreeChannelDrawFrame.repaint()
-			case 5:
-				self.StethoscopeDrawFrame.repaint()
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
 
 	def closeEvent(self, event: QCloseEvent):
-		# Завершение программы должно происходить в трее, а не в системном меню
-		# Если программа скрыта, значит доступен трей, а не системное меню
-		# Допустимо завершение в системном меню, если нажат shift
+		# Program termination should occur in the tray, and not in the system menu
+		# If the program is hidden, then the tray is available, not the system menu
+		# Completion is allowed in the system menu if shift is pressed
 		if self.isHidden() or self.shift_bool:
-			# Значит можно завершать программу
+			# So can end the program
 			self.detector.terminate()
-			# event.accept()  # Почему-то не работает
+			# event.accept()  # For some reason it doesn't work
 			QApplication.instance().exit(0)
 		else:
-			# Иначе - скрыть в трей
+			# Else - hide in tray
 			self.tray_Show()
 			event.ignore()

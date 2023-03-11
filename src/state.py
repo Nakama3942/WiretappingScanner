@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-class Draws:
+class IMPORTANT_DATA:
 	# Global settings
 	tab = 0
 	window_height = 0
@@ -20,6 +20,7 @@ class Draws:
 	connect = False
 	IPAddr = "000.000.000.000"
 	Port = "00000"
+	SerialNum = "AAAAA-AAA-AAA-AAAA"
 
 	# Extra settings
 	tfont = None

@@ -73,8 +73,8 @@ class Ui_UltrasoundDialog(object):
     def retranslateUi(self, UltrasoundDialog):
         _translate = QtCore.QCoreApplication.translate
         UltrasoundDialog.setWindowTitle(_translate("UltrasoundDialog", "Ultradound Dialog"))
-        self.label.setText(_translate("UltrasoundDialog", "Частота сигналу"))
-        self.label_2.setText(_translate("UltrasoundDialog", "Час сигналу (мс)"))
+        self.label.setText(_translate("UltrasoundDialog", "Signal frequency"))
+        self.label_2.setText(_translate("UltrasoundDialog", "Signal time (ms)"))
 
 
 if __name__ == "__main__":

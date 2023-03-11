@@ -12,23 +12,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import nmap
-
-def getHost():
-	hosts = []
-
-	scanner = nmap.PortScanner()
-	scanner.scan(hosts='192.168.0.0/24', arguments='-sn -T5 -v')
-
-	for host in scanner.all_hosts():
-		if 'mac' in scanner[host]['addresses']:
-			if scanner[host]['status']['state'] == 'up':
-				mac_address = scanner[host]['addresses']['mac']
-				ip_address = scanner[host]['addresses']['ipv4']
-				hosts.append((ip_address, mac_address))
-		else:
-			if scanner[host]['status']['state'] == 'up':
-				ip_address = scanner[host]['addresses']['ipv4']
-				hosts.append((ip_address, None))
-
-	return hosts
+from qsrc.drawFrame import DrawFrame

@@ -15,7 +15,7 @@
 from PyQt6.QtGui import QPainterPath
 from math import sin
 
-from src.state import Draws
+from src.state import IMPORTANT_DATA
 
 def RadioSignal(grid):
 	# Формула синусоиды: y = A * sin (ωx + φ) + k
@@ -27,14 +27,14 @@ def RadioSignal(grid):
 	#     (frequency = c / radio_signal)
 	# φ - начальная фаза
 	# k - смещение по оси Y
-	amplitude = Draws.radio_amplitude									# A
-	frequency = 300_000_000 / (Draws.radio_signal * 1_000_000 * grid)	# λ
-	initphase = Draws.radio_initphase									# φ
-	offset = 450														# k
+	amplitude = IMPORTANT_DATA.radio_amplitude									# A
+	frequency = 300_000_000 / (IMPORTANT_DATA.radio_signal * 1_000_000 * grid)	# λ
+	initphase = IMPORTANT_DATA.radio_initphase									# φ
+	offset = 450																# k
 
 	wave = QPainterPath()
 	is_start = True
-	for x in range(0, Draws.window_width):  # x - значения (0 ~ frequency) до синусоиды
+	for x in range(0, IMPORTANT_DATA.window_width):  # x - значения (0 ~ frequency) до синусоиды
 		# waveY изменяется при изменении значения x, получая таким образом синусоидальную кривую
 		waveY = (amplitude * sin(frequency * x + initphase)) + offset
 		if is_start:

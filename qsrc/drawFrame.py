@@ -19,8 +19,7 @@ from PyQt6.QtWidgets import QFrame
 from PyQt6.QtCore import QPoint, pyqtSignal
 from PyQt6.QtGui import QPainter, QPainterPath, QPixmap, QColor, QFont, QMouseEvent
 
-from src.state import Draws
-from src.signals import RadioSignal
+from src import IMPORTANT_DATA, RadioSignal
 
 
 class DrawFrame(QFrame):
@@ -28,42 +27,46 @@ class DrawFrame(QFrame):
 	play_sound = pyqtSignal()
 
 	def paintEvent(self, event):
-		if Draws.connect:
-			match Draws.tab:
+		if IMPORTANT_DATA.connect:
+			match IMPORTANT_DATA.tab:
 				case 0:
 					qp = QPainter(self)
-					qp.setFont(Draws.tfont)
-					qp.drawText(100, 100, Draws.text1)
-					qp.drawText(250, 100, str(Draws.radio_signal))
-					qp.drawText(100, 150, Draws.text2)
-					qp.drawText(250, 150, str(Draws.radio_amplitude))
-					qp.drawPath(RadioSignal(10))  # Рисование синуса радиовоны
+					qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
+					qp.setFont(IMPORTANT_DATA.tfont)
+					qp.drawText(100, 100, IMPORTANT_DATA.text1)
+					qp.drawText(250, 100, str(IMPORTANT_DATA.radio_signal))
+					qp.drawText(100, 150, IMPORTANT_DATA.text2)
+					qp.drawText(250, 150, str(IMPORTANT_DATA.radio_amplitude))
+					qp.drawPath(RadioSignal(10))  # Drawing the sine of a radio wave
 				case 1:
 					qp = QPainter(self)
-					qp.setFont(Draws.tfont)
-					qp.drawPixmap(QPoint(200, 200), QPixmap(Draws.tpixmap))
-					qp.drawText(100, 100, Draws.text1)
-					qp.drawText(250, 100, str(Draws.compass_radius))
-					# Рисование компаса
+					qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
+					qp.setFont(IMPORTANT_DATA.tfont)
+					qp.drawPixmap(QPoint(200, 200), QPixmap(IMPORTANT_DATA.tpixmap))
+					qp.drawText(100, 100, IMPORTANT_DATA.text1)
+					qp.drawText(250, 100, str(IMPORTANT_DATA.compass_radius))
+					# Compass drawing
 					circle = QPainterPath()
 					circle.addEllipse(300, 300, 200, 200)
 					qp.drawPath(circle)
 					qp.drawLine(400,
 								400,
-								int(400 + 90 * cos(((Draws.compass_radius - 90) * pi) / 180)),
-								int(400 + 90 * sin(((Draws.compass_radius - 90) * pi) / 180)))
+								int(400 + 90 * cos(((IMPORTANT_DATA.compass_radius - 90) * pi) / 180)),
+								int(400 + 90 * sin(((IMPORTANT_DATA.compass_radius - 90) * pi) / 180)))
 				case 2:
 					qp = QPainter(self)
-					qp.setFont(Draws.tfont)
-					qp.drawText(100, 100, Draws.text1)
-					qp.drawText(300, 100, str(Draws.infrared_signal))
-					qp.drawText(100, 150, Draws.text2)
-					qp.drawText(300, 150, Draws.infrared_data)
+					qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
+					qp.setFont(IMPORTANT_DATA.tfont)
+					qp.drawText(100, 100, IMPORTANT_DATA.text1)
+					qp.drawText(300, 100, str(IMPORTANT_DATA.infrared_signal))
+					qp.drawText(100, 150, IMPORTANT_DATA.text2)
+					qp.drawText(300, 150, IMPORTANT_DATA.infrared_data)
 				case 3:
 					qp = QPainter(self)
-					qp.setFont(Draws.tfont)
-					qp.drawText(100, 100, Draws.text1)
-					qp.drawText(250, 100, str(Draws.ultrasound_signal))
+					qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
+					qp.setFont(IMPORTANT_DATA.tfont)
+					qp.drawText(100, 100, IMPORTANT_DATA.text1)
+					qp.drawText(250, 100, str(IMPORTANT_DATA.ultrasound_signal))
 					# Button 1
 					qp.drawRect(100, 200, 200, 50)
 					qp.fillRect(100, 200, 200, 50, QColor(50, 50, 50, 40))
@@ -74,16 +77,12 @@ class DrawFrame(QFrame):
 					qp.drawText(455, 232, "Play sound")
 				case 4:
 					qp = QPainter(self)
-					qp.setFont(Draws.tfont)
-					qp.drawText(100, 100, Draws.text1)
-				case 5:
-					qp = QPainter(self)
-					qp.setFont(Draws.tfont)
-					qp.drawText(100, 100, Draws.text1)
+					qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
+					qp.setFont(IMPORTANT_DATA.tfont)
+					qp.drawText(100, 100, IMPORTANT_DATA.text1)
 
 	def mousePressEvent(self, event: QMouseEvent):
-		# print(event.pos())
-		if Draws.tab == 3:
+		if IMPORTANT_DATA.tab == 3:
 			if 100 <= event.pos().x() <= 300 and 200 <= event.pos().y() <= 250:
 				self.gen_sound.emit()
 			elif 400 <= event.pos().x() <= 600 and 200 <= event.pos().y() <= 250:

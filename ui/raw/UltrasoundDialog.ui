@@ -37,7 +37,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Частота сигналу</string>
+        <string>Signal frequency</string>
        </property>
       </widget>
      </item>
@@ -80,7 +80,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Час сигналу (мс)</string>
+        <string>Signal time (ms)</string>
        </property>
       </widget>
      </item>

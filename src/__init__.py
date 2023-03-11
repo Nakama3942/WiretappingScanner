@@ -12,7 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src.drawer import DrawFrame
 from src.getHosts import getHost
 from src.signals import RadioSignal
-from src.state import Draws
+from src.state import IMPORTANT_DATA
