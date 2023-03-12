@@ -12,11 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import time
+import time, datetime
 
 from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame
-from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent
+from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from ui.raw import Ui_WindowWiretappingScaner
@@ -32,7 +32,9 @@ class Detector(QThread):
 		super(Detector, self).__init__()
 
 	def run(self):
+		# In the future, connection to the device will be implemented here
 		while True:
+			# Data acquisition simulation
 			IMPORTANT_DATA.radio_signal = 101.4
 			IMPORTANT_DATA.radio_amplitude = 20
 			IMPORTANT_DATA.compass_radius = 70
@@ -51,6 +53,7 @@ class Detector(QThread):
 			time.sleep(0.3)
 
 	def terminate(self):
+		# In the future, disconnection from the device will be implemented here
 		super().terminate()
 
 
@@ -68,6 +71,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.move(qr.topLeft())
 		IMPORTANT_DATA.window_height = self.height()
 		IMPORTANT_DATA.window_width = self.width()
+
+		# Setting service font
+		QFontDatabase.addApplicationFont("/font/fixedsys.ttf")
+		self.font = QFont("fixedsys", 10)
+		self.consoleBrowser.setFont(self.font)
 
 		# Taking out devices connected to the router
 		for i in getHost():
@@ -117,7 +125,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Initialization of process of tracking
 		self.detector = Detector()
-		self.detector.start()
 		self.detector.update_data_signal.connect(self.detect_update_data_signal)
 
 		# Tab selection simulation - start renderer
@@ -138,11 +145,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def buttConnect_clicked(self):
+		self.detector.start()
 		IMPORTANT_DATA.IPAddr = self.IPBox.currentText().split(" ")[1]
 		IMPORTANT_DATA.Port = "12556"
 		IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"
 		IMPORTANT_DATA.connect = True
-		self.statusbar.showMessage(f"STATUS:\t\t\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+		self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+		self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
 		self.statusLine.setText("Connected")
 		self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
@@ -151,11 +160,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.widgetSettings.setEnabled(True)
 
 	def buttDisconnect_clicked(self):
+		self.detector.terminate()
 		IMPORTANT_DATA.IPAddr = "000.000.000.000"
 		IMPORTANT_DATA.Port = "00000"
 		IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
 		IMPORTANT_DATA.connect = False
-		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
+		self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
+		self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tDISCONNECT")
 		self.statusLine.setText("Disconnect")
 		self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
@@ -167,38 +178,30 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match index:
 			case 0:
 				IMPORTANT_DATA.tab = 0
-				font = QFont("JetBrains Mono")
-				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Radio signal (MHz): "
 				IMPORTANT_DATA.text2 = "Radio amplitude: "
 				self.RadioDrawFrame.repaint()
 			case 1:
 				IMPORTANT_DATA.tab = 1
-				font = QFont("Arial")
-				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.tpixmap = "./icon/magnet.png"
-				IMPORTANT_DATA.text1 = "Compass gradus: "
+				IMPORTANT_DATA.text1 = "Compass degree: "
 				self.CompassDrawFrame.repaint()
 			case 2:
 				IMPORTANT_DATA.tab = 2
-				font = QFont("JetBrains Mono")
-				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Infrared signal (THz): "
 				IMPORTANT_DATA.text2 = "Infrared signal data: "
 				self.IRDrawFrame.repaint()
 			case 3:
 				IMPORTANT_DATA.tab = 3
-				font = QFont()
-				font.setPointSize(15)
-				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Ultrasound (Hz): "
 				self.UltrasoundDrawFrame.repaint()
 			case 4:
 				IMPORTANT_DATA.tab = 4
-				font = QFont()
-				font.setPointSize(20)
-				font.setBold(True)
-				IMPORTANT_DATA.tfont = font
+				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Hello 4"
 				self.FreeChannelDrawFrame.repaint()
 
@@ -221,14 +224,19 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.repaint()
+				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\t{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
 			case 1:
 				self.CompassDrawFrame.repaint()
+				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tCompass deviation - {IMPORTANT_DATA.compass_radius} degrees.")
 			case 2:
 				self.IRDrawFrame.repaint()
+				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\t{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
 			case 3:
 				self.UltrasoundDrawFrame.repaint()
+				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\t{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
 			case 4:
 				self.FreeChannelDrawFrame.repaint()
+				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tOpened is 5th tab")
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
