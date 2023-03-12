@@ -26,34 +26,28 @@ from src import IMPORTANT_DATA, getHost
 
 
 class Detector(QThread):
-	data_signal = pyqtSignal(dict)
+	update_data_signal = pyqtSignal()
 
 	def __init__(self):
 		super(Detector, self).__init__()
-		self.wiretapping_data = {"data_radio_signal": 0.0,
-								 "data_radio_amplitude": 0,
-								 "data_compass_radius": 0,
-								 "data_infrared_signal": 0.0,
-								 "data_infrared_data": "",
-								 "data_ultrasound_signal": 0.0}
 
 	def run(self):
 		while True:
-			self.wiretapping_data["data_radio_signal"] = 101.4
-			self.wiretapping_data["data_radio_amplitude"] = 20
-			self.wiretapping_data["data_compass_radius"] = 70
-			self.wiretapping_data["data_infrared_signal"] = 0.9
-			self.wiretapping_data["data_infrared_data"] = "2 (Exit)"
-			self.wiretapping_data["data_ultrasound_signal"] = 10778
-			self.data_signal.emit(self.wiretapping_data)
+			IMPORTANT_DATA.radio_signal = 101.4
+			IMPORTANT_DATA.radio_amplitude = 20
+			IMPORTANT_DATA.compass_radius = 70
+			IMPORTANT_DATA.infrared_signal = 0.9
+			IMPORTANT_DATA.infrared_data = "2 (Exit)"
+			IMPORTANT_DATA.ultrasound_signal = 10778
+			self.update_data_signal.emit()
 			time.sleep(0.3)
-			self.wiretapping_data["data_radio_signal"] = 97.5
-			self.wiretapping_data["data_radio_amplitude"] = 28
-			self.wiretapping_data["data_compass_radius"] = 76
-			self.wiretapping_data["data_infrared_signal"] = 17.1
-			self.wiretapping_data["data_infrared_data"] = "5 (Clear)"
-			self.wiretapping_data["data_ultrasound_signal"] = 96333
-			self.data_signal.emit(self.wiretapping_data)
+			IMPORTANT_DATA.radio_signal = 97.5
+			IMPORTANT_DATA.radio_amplitude = 28
+			IMPORTANT_DATA.compass_radius = 76
+			IMPORTANT_DATA.infrared_signal = 17.1
+			IMPORTANT_DATA.infrared_data = "5 (Clear)"
+			IMPORTANT_DATA.ultrasound_signal = 96333
+			self.update_data_signal.emit()
 			time.sleep(0.3)
 
 	def terminate(self):
@@ -124,7 +118,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Initialization of process of tracking
 		self.detector = Detector()
 		self.detector.start()
-		self.detector.data_signal.connect(self.detect_data_signal)
+		self.detector.update_data_signal.connect(self.detect_update_data_signal)
 
 		# Tab selection simulation - start renderer
 		# (without this, the program refuses to work after the connection)
@@ -223,13 +217,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def ultrasound_Play(self):
 		print(4)
 
-	def detect_data_signal(self, data: dict):
-		IMPORTANT_DATA.radio_signal = data["data_radio_signal"]
-		IMPORTANT_DATA.radio_amplitude = data["data_radio_amplitude"]
-		IMPORTANT_DATA.compass_radius = data["data_compass_radius"]
-		IMPORTANT_DATA.infrared_signal = data["data_infrared_signal"]
-		IMPORTANT_DATA.infrared_data = data["data_infrared_data"]
-		IMPORTANT_DATA.ultrasound_signal = data["data_ultrasound_signal"]
+	def detect_update_data_signal(self):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.repaint()
