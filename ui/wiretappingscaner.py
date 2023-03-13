@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import time, datetime
+import time
 
 from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame
@@ -22,7 +22,7 @@ from PyQt6.QtCore import QThread, pyqtSignal
 from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
 
-from src import IMPORTANT_DATA, getHost
+from src import IMPORTANT_DATA, getHost, LoggerQ
 
 
 class Detector(QThread):
@@ -64,6 +64,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Constant
 		self.shift_bool = False
+		self.logger = LoggerQ(status_message=False)
 
 		# Set window to center
 		qr = self.frameGeometry()
@@ -151,7 +152,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"
 		IMPORTANT_DATA.connect = True
 		self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
-		self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+		self.consoleBrowser.append(self.logger.INFO(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}"))
 		self.statusLine.setText("Connected")
 		self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
@@ -161,18 +162,26 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def buttDisconnect_clicked(self):
 		self.detector.terminate()
+		self.clearWidget()
 		IMPORTANT_DATA.IPAddr = "000.000.000.000"
 		IMPORTANT_DATA.Port = "00000"
 		IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
 		IMPORTANT_DATA.connect = False
 		self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
-		self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tDISCONNECT")
+		self.consoleBrowser.append(self.logger.INFO(message_text=f"DISCONNECT"))
 		self.statusLine.setText("Disconnect")
 		self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 		self.labelPort.setText(IMPORTANT_DATA.Port)
 		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
 		self.widgetSettings.setEnabled(False)
+
+	def clearWidget(self):
+		self.RadioDrawFrame.update()
+		self.CompassDrawFrame.update()
+		self.UltrasoundDrawFrame.update()
+		self.UltrasoundDrawFrame.update()
+		self.FreeChannelDrawFrame.update()
 
 	def tabWidget_Clicked(self, index):
 		match index:
@@ -202,7 +211,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			case 4:
 				IMPORTANT_DATA.tab = 4
 				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "Hello 4"
+				IMPORTANT_DATA.text1 = "UNFINISHED"
 				self.FreeChannelDrawFrame.repaint()
 
 	def ultrasound_Gen(self):
@@ -211,32 +220,36 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		result: int = gen_dialog.exec()
 		match result:
 			case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
-				print(1)
+				# Unimplemented
+				self.consoleBrowser.append(self.logger.ERROR(message_text="1 (Unimplemented)"))
 			case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
-				print(2)
+				# Unimplemented
+				self.consoleBrowser.append(self.logger.ERROR(message_text="2 (Unimplemented)"))
 			case _:
-				print(3)
+				# Unimplemented
+				self.consoleBrowser.append(self.logger.ERROR(message_text="3 (Unimplemented)"))
 
 	def ultrasound_Play(self):
-		print(4)
+		# Unimplemented
+		self.consoleBrowser.append(self.logger.ERROR(message_text="4 (Unimplemented)"))
 
 	def detect_update_data_signal(self):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.repaint()
-				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\t{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
+				self.consoleBrowser.append(self.logger.INFO(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected"))
 			case 1:
 				self.CompassDrawFrame.repaint()
-				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tCompass deviation - {IMPORTANT_DATA.compass_radius} degrees.")
+				self.consoleBrowser.append(self.logger.INFO(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees"))
 			case 2:
 				self.IRDrawFrame.repaint()
-				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\t{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
+				self.consoleBrowser.append(self.logger.INFO(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected"))
 			case 3:
 				self.UltrasoundDrawFrame.repaint()
-				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\t{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
+				self.consoleBrowser.append(self.logger.INFO(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected"))
 			case 4:
 				self.FreeChannelDrawFrame.repaint()
-				self.consoleBrowser.append(f"{datetime.datetime.now()}\t<span style='color: #FFA500;'>STATUS:</span>\tOpened is 5th tab")
+				self.consoleBrowser.append(self.logger.ERROR(message_text=f"Opened is unfinished 5th tab"))
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
