@@ -23,7 +23,7 @@ from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
 
 from qt_colored_logger import LoggerQ
-from src import IMPORTANT_DATA, getHost
+from src import IMPORTANT_DATA, getHost, lastIndex
 
 
 class Detector(QThread):
@@ -87,6 +87,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# It's a tracking of button clicks in the window
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
 		self.buttDisconnect.clicked.connect(self.buttDisconnect_clicked)
+		self.buttWidgetScreenshot.clicked.connect(self.buttWidgetScreenshot_clicked)
+		self.buttProgramScreenshot.clicked.connect(self.buttProgramScreenshot_clicked)
+		self.buttSaveLog.clicked.connect(self.buttSaveLog_clicked)
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
 		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
 		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
@@ -176,6 +179,26 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.labelPort.setText(IMPORTANT_DATA.Port)
 		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
 		self.widgetSettings.setEnabled(False)
+
+	def buttWidgetScreenshot_clicked(self):
+		match IMPORTANT_DATA.tab:
+			case 0:
+				self.RadioDrawFrame.grab().save(f"RadioDrawFrameScreen{lastIndex('RadioDrawFrameScreen.png', '{:07}')}.png")
+			case 1:
+				self.CompassDrawFrame.grab().save(f"CompassDrawFrameScreen{lastIndex('CompassDrawFrameScreen.png', '{:07}')}.png")
+			case 2:
+				self.IRDrawFrame.grab().save(f"IRDrawFrameScreen{lastIndex('IRDrawFrameScreen.png', '{:07}')}.png")
+			case 3:
+				self.UltrasoundDrawFrame.grab().save(f"UltrasoundDrawFrameScreen{lastIndex('UltrasoundDrawFrameScreen.png', '{:07}')}.png")
+			case 4:
+				self.FreeChannelDrawFrame.grab().save(f"FreeChannelDrawFrameScreen{lastIndex('FreeChannelDrawFrameScreen.png', '{:07}')}.png")
+
+	def buttProgramScreenshot_clicked(self):
+		self.grab().save(f"ProgramScreen{lastIndex('ProgramScreen.png', '{:07}')}.png")
+
+	def buttSaveLog_clicked(self):
+		with open(f"log{lastIndex('log', '{:07}')}", "wt") as save:
+			save.write(self.consoleBrowser.toPlainText())
 
 	def clearWidget(self):
 		self.RadioDrawFrame.update()
