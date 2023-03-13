@@ -22,7 +22,8 @@ from PyQt6.QtCore import QThread, pyqtSignal
 from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
 
-from src import IMPORTANT_DATA, getHost, LoggerQ
+from qt_colored_logger import LoggerQ
+from src import IMPORTANT_DATA, getHost
 
 
 class Detector(QThread):

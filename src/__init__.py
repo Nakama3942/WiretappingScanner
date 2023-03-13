@@ -13,6 +13,5 @@
 #  limitations under the License.
 
 from src.getHosts import getHost
-from src.logger import LoggerQ, PickerModifierQ
 from src.signals import RadioSignal
 from src.state import IMPORTANT_DATA
