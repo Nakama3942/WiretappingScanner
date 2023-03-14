@@ -39,7 +39,7 @@ def lastIndex(file_name: str, number_format: str) -> str:
 	parts_file_name = file_name.split(".")
 	for i in range(1, 0xffffffff):
 		path = f"{parts_file_name[0]}{number_format.format(i)}" if len(parts_file_name) == 1 else \
-			f"{''.join(parts_file_name[:-1])}{number_format.format(i)}.{parts_file_name[-1]}"
+			f"{'.'.join(parts_file_name[:-1])}{number_format.format(i)}.{parts_file_name[-1]}"
 		if not os.path.isfile(path):
 			value = i
 			break
