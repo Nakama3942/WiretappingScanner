@@ -12,51 +12,16 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import time
-
 from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame
 from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
-from PyQt6.QtCore import QThread, pyqtSignal
 
 from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
+from ui.qsrc import Detector
 
 from qt_colored_logger import LoggerQ
 from src import IMPORTANT_DATA, getHost, lastIndex
-
-
-class Detector(QThread):
-	update_data_signal = pyqtSignal()
-
-	def __init__(self):
-		super(Detector, self).__init__()
-
-	def run(self):
-		# In the future, connection to the device will be implemented here
-		while True:
-			# Data acquisition simulation
-			IMPORTANT_DATA.radio_signal = 101.4
-			IMPORTANT_DATA.radio_amplitude = 20
-			IMPORTANT_DATA.compass_radius = 70
-			IMPORTANT_DATA.infrared_signal = 0.9
-			IMPORTANT_DATA.infrared_data = "2 (Exit)"
-			IMPORTANT_DATA.ultrasound_signal = 10778
-			self.update_data_signal.emit()
-			time.sleep(0.3)
-			IMPORTANT_DATA.radio_signal = 97.5
-			IMPORTANT_DATA.radio_amplitude = 28
-			IMPORTANT_DATA.compass_radius = 76
-			IMPORTANT_DATA.infrared_signal = 17.1
-			IMPORTANT_DATA.infrared_data = "5 (Clear)"
-			IMPORTANT_DATA.ultrasound_signal = 96333
-			self.update_data_signal.emit()
-			time.sleep(0.3)
-
-	def terminate(self):
-		# In the future, disconnection from the device will be implemented here
-		super().terminate()
-
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def __init__(self):
@@ -106,12 +71,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		compass_action = QAction("Compass", self)
 		compass_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		compass_action.triggered.connect(lambda: self.openTab(1))
-		IR_action = QAction("InfraRed radiation", self)
-		IR_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		IR_action.triggered.connect(lambda: self.openTab(2))
-		US_action = QAction("Ultrasound", self)
-		US_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		US_action.triggered.connect(lambda: self.openTab(3))
+		ir_action = QAction("InfraRed radiation", self)
+		ir_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		ir_action.triggered.connect(lambda: self.openTab(2))
+		us_action = QAction("Ultrasound", self)
+		us_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
+		us_action.triggered.connect(lambda: self.openTab(3))
 		channel_action = QAction("Link quality", self)
 		channel_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
 		channel_action.triggered.connect(lambda: self.openTab(4))
@@ -122,8 +87,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		tray_menu.addAction(show_action)
 		tray_menu.addAction(radio_action)
 		tray_menu.addAction(compass_action)
-		tray_menu.addAction(IR_action)
-		tray_menu.addAction(US_action)
+		tray_menu.addAction(ir_action)
+		tray_menu.addAction(us_action)
 		tray_menu.addAction(channel_action)
 		tray_menu.addAction(close_action)
 		self.tray_icon.setContextMenu(tray_menu)
@@ -162,7 +127,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 		self.labelPort.setText(IMPORTANT_DATA.Port)
 		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
-		self.widgetSettings.setEnabled(True)
+		self.groupSettings.setEnabled(True)
 
 	def buttDisconnect_clicked(self):
 		self.detector.terminate()
@@ -178,7 +143,14 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 		self.labelPort.setText(IMPORTANT_DATA.Port)
 		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
-		self.widgetSettings.setEnabled(False)
+		self.groupSettings.setEnabled(False)
+
+	def clearWidget(self):
+		self.RadioDrawFrame.update()
+		self.CompassDrawFrame.update()
+		self.UltrasoundDrawFrame.update()
+		self.UltrasoundDrawFrame.update()
+		self.FreeChannelDrawFrame.update()
 
 	def buttWidgetScreenshot_clicked(self):
 		match IMPORTANT_DATA.tab:
@@ -200,40 +172,33 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		with open(f"log{lastIndex('log', '{:07}')}", "wt") as save:
 			save.write(self.consoleBrowser.toPlainText())
 
-	def clearWidget(self):
-		self.RadioDrawFrame.update()
-		self.CompassDrawFrame.update()
-		self.UltrasoundDrawFrame.update()
-		self.UltrasoundDrawFrame.update()
-		self.FreeChannelDrawFrame.update()
-
 	def tabWidget_Clicked(self, index):
 		match index:
 			case 0:
-				IMPORTANT_DATA.tab = 0
+				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Radio signal (MHz): "
 				IMPORTANT_DATA.text2 = "Radio amplitude: "
 				self.RadioDrawFrame.repaint()
 			case 1:
-				IMPORTANT_DATA.tab = 1
+				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.tpixmap = "./icon/magnet.png"
 				IMPORTANT_DATA.text1 = "Compass degree: "
 				self.CompassDrawFrame.repaint()
 			case 2:
-				IMPORTANT_DATA.tab = 2
+				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Infrared signal (THz): "
 				IMPORTANT_DATA.text2 = "Infrared signal data: "
 				self.IRDrawFrame.repaint()
 			case 3:
-				IMPORTANT_DATA.tab = 3
+				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Ultrasound (Hz): "
 				self.UltrasoundDrawFrame.repaint()
 			case 4:
-				IMPORTANT_DATA.tab = 4
+				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "UNFINISHED"
 				self.FreeChannelDrawFrame.repaint()

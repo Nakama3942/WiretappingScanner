@@ -12,4 +12,5 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from qsrc.drawFrame import DrawFrame
+from ui.qsrc.detector import Detector
+from ui.qsrc.drawFrame import DrawFrame
