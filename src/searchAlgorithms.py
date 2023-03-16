@@ -15,7 +15,7 @@
 import os
 
 def lastIndex(file_name: str, number_format: str) -> str:
-	'''
+	"""
 	Imagine that we need to do a numbered search through a file with one name, for example,
 	IRDrawFrameScreen.png, and the numbering, respectively, will be IRDrawFrameScreen0001.png,
 	IRDrawFrameScreen0002.png, etc. The function will do everything for the programmer. It is
@@ -34,7 +34,7 @@ def lastIndex(file_name: str, number_format: str) -> str:
 	:param file_name: Name (possibly path) of the file
 	:param number_format: Digital format
 	:return: The next file number in the format
-	'''
+	"""
 	value = 0
 	parts_file_name = file_name.split(".")
 	for i in range(1, 0xffffffff):

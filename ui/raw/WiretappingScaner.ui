@@ -394,14 +394,44 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-119</y>
+            <y>0</y>
             <width>301</width>
-            <height>491</height>
+            <height>521</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
+          <layout class="QVBoxLayout" name="verticalLayout">
            <item>
             <widget class="QComboBox" name="IPBox"/>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout1">
+             <item>
+              <spacer name="horizontalSpacer1">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QToolButton" name="reloadTool">
+               <property name="text">
+                <string>Update list</string>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <widget class="Line" name="line1">
@@ -413,7 +443,7 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayout1">
              <item>
-              <widget class="QPushButton" name="buttConnect">
+              <widget class="InactiveButton" name="buttConnect">
                <property name="font">
                 <font>
                  <pointsize>-1</pointsize>
@@ -439,7 +469,7 @@ font-size: 20px;</string>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="buttDisconnect">
+              <widget class="InactiveButton" name="buttDisconnect">
                <property name="font">
                 <font>
                  <pointsize>-1</pointsize>
@@ -503,7 +533,7 @@ font-size: 18px;</string>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout1">
+            <layout class="QHBoxLayout" name="horizontalLayout2">
              <item>
               <widget class="QLabel" name="label1">
                <property name="font">
@@ -517,7 +547,7 @@ font-size: 18px;</string>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer1">
+              <spacer name="horizontalSpacer2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -539,7 +569,7 @@ font-size: 18px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout2">
+            <layout class="QHBoxLayout" name="horizontalLayout3">
              <item>
               <widget class="QLabel" name="label2">
                <property name="text">
@@ -548,7 +578,7 @@ font-size: 18px;</string>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer2">
+              <spacer name="horizontalSpacer3">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -570,7 +600,7 @@ font-size: 18px;</string>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout3">
+            <layout class="QHBoxLayout" name="horizontalLayout4">
              <item>
               <widget class="QLabel" name="label3">
                <property name="text">
@@ -579,7 +609,7 @@ font-size: 18px;</string>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer3">
+              <spacer name="horizontalSpacer4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -729,7 +759,7 @@ font-size: 18px;</string>
               <item>
                <layout class="QVBoxLayout" name="verticalLayout4">
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout4">
+                 <layout class="QHBoxLayout" name="horizontalLayout5">
                   <item>
                    <widget class="QLabel" name="label4">
                     <property name="text">
@@ -857,6 +887,11 @@ color: rgb(255, 255, 255);</string>
    <extends>QFrame</extends>
    <header>ui/qsrc/drawFrame</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>InactiveButton</class>
+   <extends>QPushButton</extends>
+   <header>ui/qsrc/inactiveButton</header>
   </customwidget>
  </customwidgets>
  <resources/>

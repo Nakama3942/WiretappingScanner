@@ -12,23 +12,16 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import nmap, glob
+from PyQt6.QtWidgets import QPushButton
 
-def getHost():
-	hosts = []
+class InactiveButton(QPushButton):
+    # Used in the connection button group in case there are no devices to connect, since this
+    # property becomes True only in this case. This property is needed for the buttons in the
+    # connection system to work correctly, on which the optimization of the program depends.
+    trouble = False
 
-	scanner = nmap.PortScanner()
-	scanner.scan(hosts=f'192.168.{glob.glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v')
-
-	for host in scanner.all_hosts():
-		if 'mac' in scanner[host]['addresses']:
-			if scanner[host]['status']['state'] == 'up':
-				mac_address = scanner[host]['addresses']['mac']
-				ip_address = scanner[host]['addresses']['ipv4']
-				hosts.append((ip_address, mac_address))
-		else:
-			if scanner[host]['status']['state'] == 'up':
-				ip_address = scanner[host]['addresses']['ipv4']
-				hosts.append((ip_address, None))
-
-	return hosts
+    def mousePressEvent(self, event):
+        if self.isChecked():
+            event.ignore()
+        else:
+            super().mousePressEvent(event)

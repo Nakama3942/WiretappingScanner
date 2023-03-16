@@ -36,6 +36,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
+		self.reloadTool.setIcon(QIcon("./icon/reload.png"))
 		IMPORTANT_DATA.window_height = self.height()
 		IMPORTANT_DATA.window_width = self.width()
 
@@ -45,11 +46,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.consoleBrowser.setFont(self.font)
 
 		# Taking out devices connected to the router
-		for i in getHost():
-			self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
+		self.reloadTool_clicked()
 		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 
 		# It's a tracking of button clicks in the window
+		self.reloadTool.clicked.connect(self.reloadTool_clicked)
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
 		self.buttDisconnect.clicked.connect(self.buttDisconnect_clicked)
 		self.buttWidgetScreenshot.clicked.connect(self.buttWidgetScreenshot_clicked)
@@ -114,36 +115,48 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget.setCurrentIndex(index)
 		self.tabWidget_Clicked(index)
 
+	def reloadTool_clicked(self):
+		for i in getHost():
+			self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
+
 	def buttConnect_clicked(self):
-		self.detector.start()
-		IMPORTANT_DATA.IPAddr = self.IPBox.currentText().split(" ")[1]
-		IMPORTANT_DATA.Port = "12556"
-		IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"
-		IMPORTANT_DATA.connect = True
-		self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
-		self.consoleBrowser.append(self.logger.INFO(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}"))
-		self.statusLine.setText("Connected")
-		self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
-		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
-		self.labelPort.setText(IMPORTANT_DATA.Port)
-		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
-		self.groupSettings.setEnabled(True)
+		try:
+			IMPORTANT_DATA.IPAddr = self.IPBox.currentText().split(" ")[1]
+			IMPORTANT_DATA.Port = "12556"
+			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
+			IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"  # Will be moved to Detector later
+			IMPORTANT_DATA.connect = True # Will be moved to Detector later
+		except:
+			self.buttDisconnect.trouble = True
+			self.consoleBrowser.append(self.logger.FAIL(message_text=f"Connection not established: no connected devices"))
+			self.buttDisconnect.click()
+		else:
+			self.buttDisconnect.trouble = False
+			self.consoleBrowser.append(self.logger.SUCCESS(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}"))
+			self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+			self.statusLine.setText("Connected")
+			self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
+			self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
+			self.labelPort.setText(IMPORTANT_DATA.Port)
+			self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+			self.groupSettings.setEnabled(True)
 
 	def buttDisconnect_clicked(self):
-		self.detector.terminate()
-		self.clearWidget()
-		IMPORTANT_DATA.IPAddr = "000.000.000.000"
-		IMPORTANT_DATA.Port = "00000"
-		IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
-		IMPORTANT_DATA.connect = False
-		self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
-		self.consoleBrowser.append(self.logger.INFO(message_text=f"DISCONNECT"))
-		self.statusLine.setText("Disconnect")
-		self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
-		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
-		self.labelPort.setText(IMPORTANT_DATA.Port)
-		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
-		self.groupSettings.setEnabled(False)
+		if not self.buttDisconnect.trouble:
+			self.detector.terminate()
+			self.clearWidget()
+			IMPORTANT_DATA.IPAddr = "000.000.000.000"
+			IMPORTANT_DATA.Port = "00000"
+			IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
+			IMPORTANT_DATA.connect = False
+			self.consoleBrowser.append(self.logger.INFO(message_text=f"DISCONNECT"))
+			self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
+			self.statusLine.setText("Disconnect")
+			self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
+			self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
+			self.labelPort.setText(IMPORTANT_DATA.Port)
+			self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+			self.groupSettings.setEnabled(False)
 
 	def clearWidget(self):
 		self.RadioDrawFrame.update()
@@ -164,13 +177,16 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.UltrasoundDrawFrame.grab().save(f"UltrasoundDrawFrameScreen{lastIndex('UltrasoundDrawFrameScreen.png', '{:07}')}.png")
 			case 4:
 				self.FreeChannelDrawFrame.grab().save(f"FreeChannelDrawFrameScreen{lastIndex('FreeChannelDrawFrameScreen.png', '{:07}')}.png")
+		self.consoleBrowser.append(self.logger.INFO(message_text=f"Widget screenshot saved"))
 
 	def buttProgramScreenshot_clicked(self):
 		self.grab().save(f"ProgramScreen{lastIndex('ProgramScreen.png', '{:07}')}.png")
+		self.consoleBrowser.append(self.logger.INFO(message_text=f"Program screenshot saved"))
 
 	def buttSaveLog_clicked(self):
 		with open(f"log{lastIndex('log', '{:07}')}", "wt") as save:
 			save.write(self.consoleBrowser.toPlainText())
+			self.consoleBrowser.append(self.logger.INFO(message_text=f"Log saved"))
 
 	def tabWidget_Clicked(self, index):
 		match index:
