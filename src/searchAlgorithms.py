@@ -16,31 +16,32 @@ import os
 
 def lastIndex(file_name: str, number_format: str) -> str:
 	"""
-	Imagine that we need to do a numbered search through a file with one name, for example,
-	IRDrawFrameScreen.png, and the numbering, respectively, will be IRDrawFrameScreen0001.png,
-	IRDrawFrameScreen0002.png, etc. The function will do everything for the programmer. It is
-	enough to pass the file name (it is also possible with the full path to the file) and the
-	numeric enumeration format (in our case '{:04}'). We get the line:
+	Imagine that we need to do a numbered search on a file with the same name, for
+	example, IRDrawFrameScreen.png, and the numbering, respectively, will be
+	IRDrawFrameScreen0001.png, IRDrawFrameScreen0002.png, etc. Let's say the last file is:
+	`IRDrawFrameScreen0176.png`
+	The function will do everything for the programmer. It is enough to pass the name of the file
+	(it is also possible with the full path to the file) and the numeric format of the enumeration
+	(in our case '{:04}'). We get the string:
 	`lastIndex('IRDrawFrameScreen.png', '{:04}')`
-	This function will return the next file number after the last one (this is very convenient
-	for saving a file) in the same format (i.e. string) that you need to use in the name of
-	the new file, so that the next time the algorithm continues to work:
-	`f"IRDrawFrameScreen{lastIndex('IRDrawFrameScreen.png', '{:04}')}.png"')`
-	This is the name of the new file. You can save:
-	`self.IRDrawFrame.grab().save(f"IRDrawFrameScreen{lastIndex('IRDrawFrameScreen.png', '{:04}')}.png")`
+	This function will return the full name of the file with the next number
+	after the last one (this is very convenient for saving the file):
+	`IRDrawFrameScreen0177.png`
+	Then you can save the new file:
+	`self.IRDrawFrame.grab().save(lastIndex('IRDrawFrameScreen.png', '{:04}'))`
 	Another example:
-	`with open(f"log{lastIndex('log.txt', '{:07}')}.txt", "wt") as save: save.write(self.consoleBrowser.toPlainText())`
+	`with open(lastIndex("log.txt", "{:07}"), "wt") as save: save.write(self.consoleBrowser.toPlainText())`
 
 	:param file_name: Name (possibly path) of the file
 	:param number_format: Digital format
 	:return: The next file number in the format
 	"""
-	value = 0
+	value = ""
 	parts_file_name = file_name.split(".")
 	for i in range(1, 0xffffffff):
 		path = f"{parts_file_name[0]}{number_format.format(i)}" if len(parts_file_name) == 1 else \
 			f"{'.'.join(parts_file_name[:-1])}{number_format.format(i)}.{parts_file_name[-1]}"
 		if not os.path.isfile(path):
-			value = i
+			value = path
 			break
-	return number_format.format(value)
+	return value

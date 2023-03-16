@@ -168,23 +168,23 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def buttWidgetScreenshot_clicked(self):
 		match IMPORTANT_DATA.tab:
 			case 0:
-				self.RadioDrawFrame.grab().save(f"RadioDrawFrameScreen{lastIndex('RadioDrawFrameScreen.png', '{:07}')}.png")
+				self.RadioDrawFrame.grab().save(lastIndex("RadioDrawFrameScreen.png", "{:07}"))
 			case 1:
-				self.CompassDrawFrame.grab().save(f"CompassDrawFrameScreen{lastIndex('CompassDrawFrameScreen.png', '{:07}')}.png")
+				self.CompassDrawFrame.grab().save(lastIndex("CompassDrawFrameScreen.png", "{:07}"))
 			case 2:
-				self.IRDrawFrame.grab().save(f"IRDrawFrameScreen{lastIndex('IRDrawFrameScreen.png', '{:07}')}.png")
+				self.IRDrawFrame.grab().save(lastIndex("IRDrawFrameScreen.png", "{:07}"))
 			case 3:
-				self.UltrasoundDrawFrame.grab().save(f"UltrasoundDrawFrameScreen{lastIndex('UltrasoundDrawFrameScreen.png', '{:07}')}.png")
+				self.UltrasoundDrawFrame.grab().save(lastIndex("UltrasoundDrawFrameScreen.png", "{:07}"))
 			case 4:
-				self.FreeChannelDrawFrame.grab().save(f"FreeChannelDrawFrameScreen{lastIndex('FreeChannelDrawFrameScreen.png', '{:07}')}.png")
+				self.FreeChannelDrawFrame.grab().save(lastIndex("FreeChannelDrawFrameScreen.png", "{:07}"))
 		self.consoleBrowser.append(self.logger.INFO(message_text=f"Widget screenshot saved"))
 
 	def buttProgramScreenshot_clicked(self):
-		self.grab().save(f"ProgramScreen{lastIndex('ProgramScreen.png', '{:07}')}.png")
+		self.grab().save(lastIndex("ProgramScreen.png", "{:07}"))
 		self.consoleBrowser.append(self.logger.INFO(message_text=f"Program screenshot saved"))
 
 	def buttSaveLog_clicked(self):
-		with open(f"log{lastIndex('log', '{:07}')}", "wt") as save:
+		with open(lastIndex("log", "{:07}"), "wt") as save:
 			save.write(self.consoleBrowser.toPlainText())
 			self.consoleBrowser.append(self.logger.INFO(message_text=f"Log saved"))
 
