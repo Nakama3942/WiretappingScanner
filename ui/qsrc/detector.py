@@ -16,13 +16,24 @@ import time
 
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from src import IMPORTANT_DATA
+from src import Connector, IMPORTANT_DATA
 
 class Detector(QThread):
 	update_data_signal = pyqtSignal()
 
-	def __init__(self):
+	def __init__(self, logger):
 		super(Detector, self).__init__()
+		self._log = logger
+		self._connector = Connector()
+
+	def set_ip(self, ip: str):
+		self._connector.set_ip(ip)
+
+	def connect(self) -> bool:
+		return self._connector.connect()
+
+	def disconnect(self) -> bool:
+		return self._connector.disconnect()
 
 	def run(self):
 		# In the future, connection to the device will be implemented here

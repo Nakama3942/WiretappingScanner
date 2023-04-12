@@ -20,7 +20,7 @@ from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
 from ui.qsrc import Detector
 
-from qt_colored_logger import LoggerQ
+from mighty_logger import Logger
 from src import IMPORTANT_DATA, getHost, lastIndex
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
@@ -30,7 +30,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Constant
 		self.shift_bool = False
-		self.logger = LoggerQ(status_message=False)
+		self.logger = Logger(program_name="WiretappingScaner", status_message_global_entry=False, log_environment="html")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 		# Set window to center
 		qr = self.frameGeometry()
@@ -95,7 +96,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tray_icon.setContextMenu(tray_menu)
 
 		# Initialization of process of tracking
-		self.detector = Detector()
+		self.detector = Detector(self.logger)
 		self.detector.update_data_signal.connect(self.detect_update_data_signal)
 
 		# Tab selection simulation - start renderer
@@ -121,18 +122,30 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def buttConnect_clicked(self):
 		try:
-			IMPORTANT_DATA.IPAddr = self.IPBox.currentText().split(" ")[1]
+			if self.IPLine.text() == "":
+				self.IPLine.setText(self.IPBox.currentText().split(" ")[1])
+			IMPORTANT_DATA.IPAddr = self.IPLine.text()
 			IMPORTANT_DATA.Port = "12556"
+			self.detector.set_ip(self.IPLine.text())
+			if not self.detector.connect():
+				pass
+				# self.buttDisconnect.trouble = True
+				# self.logger.fail(message_text=f"Connection Failed")
+				# self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+				# self.buttDisconnect.click()
+				# return
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
 			IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"  # Will be moved to Detector later
 			IMPORTANT_DATA.connect = True # Will be moved to Detector later
 		except:
 			self.buttDisconnect.trouble = True
-			self.consoleBrowser.append(self.logger.FAIL(message_text=f"Connection not established: no connected devices"))
+			self.logger.fail(message_text=f"Connection not established: no connected devices")
+			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.buttDisconnect.click()
 		else:
 			self.buttDisconnect.trouble = False
-			self.consoleBrowser.append(self.logger.SUCCESS(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}"))
+			self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
 			self.statusLine.setText("Connected")
 			self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
@@ -149,7 +162,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			IMPORTANT_DATA.Port = "00000"
 			IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
 			IMPORTANT_DATA.connect = False
-			self.consoleBrowser.append(self.logger.INFO(message_text=f"DISCONNECT"))
+			self.logger.info(message_text=f"DISCONNECT")
+			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
 			self.statusLine.setText("Disconnect")
 			self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
@@ -164,6 +178,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.UltrasoundDrawFrame.update()
 		self.UltrasoundDrawFrame.update()
 		self.FreeChannelDrawFrame.update()
+		self.StethoscopeDrawFrame.update()
 
 	def buttWidgetScreenshot_clicked(self):
 		match IMPORTANT_DATA.tab:
@@ -177,16 +192,21 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.UltrasoundDrawFrame.grab().save(lastIndex("UltrasoundDrawFrameScreen.png", "{:07}"))
 			case 4:
 				self.FreeChannelDrawFrame.grab().save(lastIndex("FreeChannelDrawFrameScreen.png", "{:07}"))
-		self.consoleBrowser.append(self.logger.INFO(message_text=f"Widget screenshot saved"))
+			case 5:
+				self.StethoscopeDrawFrame.grab().save(lastIndex("StethoscopeDrawFrameScreen.png", "{:07}"))
+		self.logger.info(message_text=f"Widget screenshot saved")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttProgramScreenshot_clicked(self):
 		self.grab().save(lastIndex("ProgramScreen.png", "{:07}"))
-		self.consoleBrowser.append(self.logger.INFO(message_text=f"Program screenshot saved"))
+		self.logger.info(message_text=f"Program screenshot saved")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttSaveLog_clicked(self):
 		with open(lastIndex("log", "{:07}"), "wt") as save:
 			save.write(self.consoleBrowser.toPlainText())
-			self.consoleBrowser.append(self.logger.INFO(message_text=f"Log saved"))
+			self.logger.info(message_text=f"Log saved")
+			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def tabWidget_Clicked(self, index):
 		match index:
@@ -216,8 +236,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			case 4:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "UNFINISHED"
+				IMPORTANT_DATA.text1 = "LINK QUALITY UNFINISHED"
 				self.FreeChannelDrawFrame.repaint()
+			case 5:
+				IMPORTANT_DATA.tab = index
+				IMPORTANT_DATA.tfont = self.font
+				IMPORTANT_DATA.text1 = "STETHOSCOPE UNFINISHED"
+				self.StethoscopeDrawFrame.repaint()
 
 	def ultrasound_Gen(self):
 		gen_dialog = UltrasoundDialog()
@@ -226,35 +251,55 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match result:
 			case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
 				# Unimplemented
-				self.consoleBrowser.append(self.logger.ERROR(message_text="1 (Unimplemented)"))
+				self.logger.error(message_text="1 (Unimplemented)")
 			case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
 				# Unimplemented
-				self.consoleBrowser.append(self.logger.ERROR(message_text="2 (Unimplemented)"))
+				self.logger.error(message_text="2 (Unimplemented)")
 			case _:
 				# Unimplemented
-				self.consoleBrowser.append(self.logger.ERROR(message_text="3 (Unimplemented)"))
+				self.logger.error(message_text="3 (Unimplemented)")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def ultrasound_Play(self):
 		# Unimplemented
-		self.consoleBrowser.append(self.logger.ERROR(message_text="4 (Unimplemented)"))
+		self.logger.error(message_text="4 (Unimplemented)")
+		self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.event(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.audit(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.metrics(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.user(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.message(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.info(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.notice(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.warning(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def detect_update_data_signal(self):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.repaint()
-				self.consoleBrowser.append(self.logger.INFO(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected"))
+				self.logger.info(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
 			case 1:
 				self.CompassDrawFrame.repaint()
-				self.consoleBrowser.append(self.logger.INFO(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees"))
+				self.logger.info(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees")
 			case 2:
 				self.IRDrawFrame.repaint()
-				self.consoleBrowser.append(self.logger.INFO(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected"))
+				self.logger.info(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
 			case 3:
 				self.UltrasoundDrawFrame.repaint()
-				self.consoleBrowser.append(self.logger.INFO(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected"))
+				self.logger.info(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
 			case 4:
 				self.FreeChannelDrawFrame.repaint()
-				self.consoleBrowser.append(self.logger.ERROR(message_text=f"Opened is unfinished 5th tab"))
+				self.logger.error(message_text=f"Opened is unfinished 5th tab")
+			case 5:
+				self.StethoscopeDrawFrame.repaint()
+				self.logger.error(message_text=f"Opened is unfinished 6th tab")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)

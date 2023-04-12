@@ -55,6 +55,9 @@
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
       <property name="tabShape">
        <enum>QTabWidget::Rounded</enum>
       </property>
@@ -198,10 +201,10 @@
       </widget>
       <widget class="QWidget" name="tabIR">
        <property name="toolTip">
-        <string>IR tab</string>
+        <string>Infrared tab</string>
        </property>
        <attribute name="title">
-        <string>InfraRed</string>
+        <string>IR</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
@@ -258,7 +261,7 @@
         <string>Ultrasound tab</string>
        </property>
        <attribute name="title">
-        <string>Ultrasound</string>
+        <string>US</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
@@ -381,6 +384,74 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tabStethoscope">
+       <property name="toolTip">
+        <string>Stethoscope tab</string>
+       </property>
+       <attribute name="title">
+        <string>Stethoscope</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="QScrollArea" name="scrollArea6">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents6">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>818</width>
+             <height>618</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <widget class="DrawFrame" name="StethoscopeDrawFrame">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>800</width>
+                <height>600</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>800</width>
+                <height>600</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Drawing zone</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
     <item>
@@ -426,7 +497,7 @@
             <x>0</x>
             <y>0</y>
             <width>301</width>
-            <height>521</height>
+            <height>549</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -469,6 +540,9 @@
               </widget>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="IPLine"/>
            </item>
            <item>
             <widget class="Line" name="line1">

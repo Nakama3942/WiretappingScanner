@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from src.connector import Connector
 from src.getHosts import getHost
 from src.searchAlgorithms import lastIndex
 from src.signals import RadioSignal
