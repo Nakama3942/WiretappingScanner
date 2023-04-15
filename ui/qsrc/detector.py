@@ -29,11 +29,17 @@ class Detector(QThread):
 	def set_ip(self, ip: str):
 		self._connector.set_ip(ip)
 
-	def connect(self) -> bool:
-		return self._connector.connect()
+	def con(self) -> bool:
+		# return self._connector.connect()
+		return True
 
-	def disconnect(self) -> bool:
-		return self._connector.disconnect()
+	def coff(self) -> bool:
+		# return self._connector.disconnect()
+		return True
+
+	def _exc(self) -> bool:
+		# return self._connector.request()
+		return True
 
 	def run(self):
 		# In the future, connection to the device will be implemented here
@@ -45,7 +51,8 @@ class Detector(QThread):
 			IMPORTANT_DATA.infrared_signal = 0.9
 			IMPORTANT_DATA.infrared_data = "2 (Exit)"
 			IMPORTANT_DATA.ultrasound_signal = 10778
-			self.update_data_signal.emit()
+			if self._exc():
+				self.update_data_signal.emit()
 			time.sleep(0.3)
 			IMPORTANT_DATA.radio_signal = 97.5
 			IMPORTANT_DATA.radio_amplitude = 28
@@ -53,9 +60,12 @@ class Detector(QThread):
 			IMPORTANT_DATA.infrared_signal = 17.1
 			IMPORTANT_DATA.infrared_data = "5 (Clear)"
 			IMPORTANT_DATA.ultrasound_signal = 96333
-			self.update_data_signal.emit()
+			if self._exc():
+				self.update_data_signal.emit()
 			time.sleep(0.3)
 
 	def terminate(self):
-		# In the future, disconnection from the device will be implemented here
-		super().terminate()
+		if not self._connector.isConnected:
+			super().terminate()
+		else:
+			Exception("Завершить процесс невозможно при установленном соединении")

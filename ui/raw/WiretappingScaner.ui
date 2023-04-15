@@ -497,7 +497,7 @@
             <x>0</x>
             <y>0</y>
             <width>301</width>
-            <height>549</height>
+            <height>560</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -525,8 +525,20 @@
              </item>
              <item>
               <widget class="QToolButton" name="reloadTool">
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
                <property name="toolTip">
-                <string>Update IP list</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Update IP list&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Attention: nmap is required!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string>Update list</string>
@@ -542,7 +554,23 @@
             </layout>
            </item>
            <item>
-            <widget class="QLineEdit" name="IPLine"/>
+            <widget class="QLineEdit" name="IPLine">
+             <property name="styleSheet">
+              <string notr="true">font-size: 16px;</string>
+             </property>
+             <property name="maxLength">
+              <number>15</number>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="placeholderText">
+              <string>192.168.XXX.XXX</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="Line" name="line1">
@@ -574,6 +602,9 @@ font-size: 20px;</string>
                <property name="text">
                 <string>Connect</string>
                </property>
+               <property name="shortcut">
+                <string>Return</string>
+               </property>
                <property name="checkable">
                 <bool>true</bool>
                </property>
@@ -602,6 +633,9 @@ font-size: 20px;</string>
                </property>
                <property name="text">
                 <string>Disconnect</string>
+               </property>
+               <property name="shortcut">
+                <string>Esc</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -807,6 +841,9 @@ font-size: 18px;</string>
                </property>
                <property name="text">
                 <string>Save log</string>
+               </property>
+               <property name="shortcut">
+                <string>Ctrl+S</string>
                </property>
               </widget>
              </item>

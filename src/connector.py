@@ -29,15 +29,23 @@ class Connector:
 		self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:
 			self._sock.connect((self._ip, self._port))
-			self._sock.sendall(b'LED ON')
+			self._sock.sendall(b'CON')
 			self.isConnected = True
+			return True
+		except:
+			return False
+
+	def request(self) -> bool:
+		try:
+			# Заполнение данными будет тут
+			self._sock.sendall(b'EXC')
 			return True
 		except:
 			return False
 
 	def disconnect(self) -> bool:
 		try:
-			self._sock.sendall(b'LED OFF')
+			self._sock.sendall(b'COFF')
 			self._sock.close()
 			self.isConnected = False
 			return True

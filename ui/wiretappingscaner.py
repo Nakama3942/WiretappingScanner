@@ -14,7 +14,8 @@
 
 from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame
-from PyQt6.QtGui import QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
+from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
 
 from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
@@ -37,18 +38,20 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
-		self.reloadTool.setIcon(QIcon("./icon/reload.png"))
+		self.reloadTool.setIcon(QIcon("./icon/search.png"))
+		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 		IMPORTANT_DATA.window_height = self.height()
 		IMPORTANT_DATA.window_width = self.width()
 
+		# It's creating a validator for the input field of the list of ports
+		rx = QRegularExpression(r'^192\.168\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+		validator = QRegularExpressionValidator(rx, self)
+		self.IPLine.setValidator(validator)
+
 		# Setting service font
 		QFontDatabase.addApplicationFont("/font/fixedsys.ttf")
-		self.font = QFont("fixedsys", 10)
+		self.font = QFont("fixedsys", 13)
 		self.consoleBrowser.setFont(self.font)
-
-		# Taking out devices connected to the router
-		self.reloadTool_clicked()
-		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 
 		# It's a tracking of button clicks in the window
 		self.reloadTool.clicked.connect(self.reloadTool_clicked)
@@ -119,6 +122,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def reloadTool_clicked(self):
 		for i in getHost():
 			self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
+		self.reloadTool.setIcon(QIcon("./icon/reload.png"))
 
 	def buttConnect_clicked(self):
 		try:
@@ -127,13 +131,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			IMPORTANT_DATA.IPAddr = self.IPLine.text()
 			IMPORTANT_DATA.Port = "12556"
 			self.detector.set_ip(self.IPLine.text())
-			if not self.detector.connect():
-				pass
-				# self.buttDisconnect.trouble = True
-				# self.logger.fail(message_text=f"Connection Failed")
-				# self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-				# self.buttDisconnect.click()
-				# return
+			if not self.detector.con():
+				self.buttDisconnect.trouble = True
+				self.logger.fail(message_text=f"Connection Failed")
+				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+				self.buttDisconnect.click()
+				return
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
 			IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"  # Will be moved to Detector later
 			IMPORTANT_DATA.connect = True # Will be moved to Detector later
@@ -156,6 +159,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def buttDisconnect_clicked(self):
 		if not self.buttDisconnect.trouble:
+			self.detector.coff()
 			self.detector.terminate()
 			self.clearWidget()
 			IMPORTANT_DATA.IPAddr = "000.000.000.000"
@@ -203,10 +207,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttSaveLog_clicked(self):
-		with open(lastIndex("log", "{:07}"), "wt") as save:
-			save.write(self.consoleBrowser.toPlainText())
-			self.logger.info(message_text=f"Log saved")
-			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		self.logger.buffer().save("log.html")
+		self.logger.info(message_text=f"Log saved")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def tabWidget_Clicked(self, index):
 		match index:
@@ -307,9 +310,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def closeEvent(self, event: QCloseEvent):
 		# Program termination should occur in the tray, and not in the system menu
 		# If the program is hidden, then the tray is available, not the system menu
-		# Completion is allowed in the system menu if shift is pressed
-		if self.isHidden() or self.shift_bool:
+		# Completion is allowed in the system menu if shift is pressed or not connected
+		if self.isHidden() or self.shift_bool or not IMPORTANT_DATA.connect:
 			# So can end the program
+			self.detector.coff()
 			self.detector.terminate()
 			# event.accept()  # For some reason it doesn't work
 			QApplication.instance().exit(0)
