@@ -12,13 +12,24 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import nmap, glob
+from subprocess import run, PIPE
+from nmap import PortScanner
+from glob import glob
 
-def getHost():
+def gotNmap() -> bool:
+	try:
+		result = run(['nmap', '--version'], stdout=PIPE, stderr=PIPE)
+		if result.returncode == 0:
+			return True
+		else:
+			return False
+	except FileNotFoundError:
+		return False
+
+def getHost(queue):
 	hosts = []
-
-	scanner = nmap.PortScanner()
-	scanner.scan(hosts=f'192.168.{glob.glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v')
+	scanner = PortScanner()
+	scanner.scan(hosts=f'192.168.{glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v')
 
 	for host in scanner.all_hosts():
 		if 'mac' in scanner[host]['addresses']:
@@ -30,5 +41,5 @@ def getHost():
 			if scanner[host]['status']['state'] == 'up':
 				ip_address = scanner[host]['addresses']['ipv4']
 				hosts.append((ip_address, None))
-
-	return hosts
+	queue.put(hosts)
+	return

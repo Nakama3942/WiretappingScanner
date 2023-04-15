@@ -12,9 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from queue import Queue
+from threading import Thread
+
 from PyQt6 import QtWidgets, QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame
-from PyQt6.QtCore import QRegularExpression
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame, QProgressDialog
+from PyQt6.QtCore import QRegularExpression, Qt, QCoreApplication
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
 
 from ui.raw import Ui_WindowWiretappingScaner
@@ -22,7 +25,7 @@ from ui import UltrasoundDialog
 from ui.qsrc import Detector
 
 from mighty_logger import Logger
-from src import IMPORTANT_DATA, getHost, lastIndex
+from src import IMPORTANT_DATA, gotNmap, getHost, lastIndex
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def __init__(self):
@@ -120,9 +123,35 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def reloadTool_clicked(self):
-		for i in getHost():
-			self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
-		self.reloadTool.setIcon(QIcon("./icon/reload.png"))
+		if gotNmap():
+			progress_dialog = QProgressDialog()  # вынести в поток
+			progress_dialog.setRange(0, 0)
+			progress_dialog.setLabelText("Please wait...")
+			progress_dialog.setWindowTitle("Progress")
+			progress_dialog.setWindowModality(Qt.WindowModality.WindowModal)
+			progress_dialog.setCancelButton(None)
+
+			queue = Queue()
+			external_process = Thread(target=getHost, args=(queue,))
+			external_process.start()
+
+			progress_dialog.show()  # вынести в поток
+			QCoreApplication.processEvents()
+
+			external_process.join(timeout=self.timeoutSpin.value())
+			hosts = queue.get()
+			if external_process.is_alive():
+				external_process.terminate()
+				self.logger.error(message_text=f"Timeout expired")
+				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+			else:
+				for i in hosts:
+					self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
+				self.reloadTool.setIcon(QIcon("./icon/reload.png"))
+
+		else:
+			self.logger.error(message_text=f"Nmap is not installed")
+			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttConnect_clicked(self):
 		try:
