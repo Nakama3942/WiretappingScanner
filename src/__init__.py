@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from src.connector import Connector
-from src.getHosts import gotNmap, getHost
+from src.getHosts import getHost
 from src.searchAlgorithms import lastIndex
 from src.signals import RadioSignal
 from src.state import IMPORTANT_DATA

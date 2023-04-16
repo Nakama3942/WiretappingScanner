@@ -14,10 +14,11 @@
 
 from queue import Queue
 from threading import Thread
+# from concurrent.futures import ThreadPoolExecutor
 
 from PyQt6 import QtWidgets, QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame, QProgressDialog
-from PyQt6.QtCore import QRegularExpression, Qt, QCoreApplication
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame, QProgressDialog, QMessageBox
+from PyQt6.QtCore import QRegularExpression, Qt
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
 
 from ui.raw import Ui_WindowWiretappingScaner
@@ -25,7 +26,7 @@ from ui import UltrasoundDialog
 from ui.qsrc import Detector
 
 from mighty_logger import Logger
-from src import IMPORTANT_DATA, gotNmap, getHost, lastIndex
+from src import IMPORTANT_DATA, getHost, lastIndex
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def __init__(self):
@@ -123,35 +124,34 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def reloadTool_clicked(self):
-		if gotNmap():
-			progress_dialog = QProgressDialog()  # вынести в поток
-			progress_dialog.setRange(0, 0)
-			progress_dialog.setLabelText("Please wait...")
-			progress_dialog.setWindowTitle("Progress")
-			progress_dialog.setWindowModality(Qt.WindowModality.WindowModal)
-			progress_dialog.setCancelButton(None)
+		self.IPBox.clear()
+		wait = QMessageBox()
+		wait.setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowTitleHint)
+		wait.setModal(True)
+		wait.setIcon(QMessageBox.Icon.Information)
+		wait.setText("<font size=14>Please wait...</font>")
+		wait.setInformativeText("The process of determining the static IP addresses of the local network is in progress")
+		wait.setStandardButtons(QMessageBox.StandardButton.NoButton)
+		wait.show()
+		QApplication.processEvents()
 
-			queue = Queue()
-			external_process = Thread(target=getHost, args=(queue,))
-			external_process.start()
-
-			progress_dialog.show()  # вынести в поток
-			QCoreApplication.processEvents()
-
-			external_process.join(timeout=self.timeoutSpin.value())
-			hosts = queue.get()
-			if external_process.is_alive():
-				external_process.terminate()
-				self.logger.error(message_text=f"Timeout expired")
-				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-			else:
-				for i in hosts:
-					self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
-				self.reloadTool.setIcon(QIcon("./icon/reload.png"))
-
+		result, hosts_list, error = getHost(self.timeoutSpin.value())
+		if result:
+			for i in hosts_list:
+				self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
+			self.reloadTool.setIcon(QIcon("./icon/reload.png"))
 		else:
-			self.logger.error(message_text=f"Nmap is not installed")
-			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+			err = QMessageBox()
+			err.setIcon(QMessageBox.Icon.Critical)
+			err.setText("<font size=14 color='red'>Error...</font>")
+			err.setInformativeText(f"<font color='darkred'>{error}</font>")
+			err.setStandardButtons(QMessageBox.StandardButton.Cancel)
+			ret: int = err.exec()
+			match ret:
+				case QMessageBox.StandardButton.Cancel:
+					self.logger.error(message_text=error)
+					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		wait.close()
 
 	def buttConnect_clicked(self):
 		try:

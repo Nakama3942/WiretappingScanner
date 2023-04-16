@@ -12,24 +12,37 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from subprocess import run, PIPE
-from nmap import PortScanner
+from subprocess import run, PIPE, TimeoutExpired
+from nmap import PortScanner, PortScannerError
 from glob import glob
 
-def gotNmap() -> bool:
-	try:
-		result = run(['nmap', '--version'], stdout=PIPE, stderr=PIPE)
-		if result.returncode == 0:
-			return True
-		else:
-			return False
-	except FileNotFoundError:
-		return False
+# def gotNmap() -> bool:
+# 	try:
+# 		result = run(['nmap', '--version'], stdout=PIPE, stderr=PIPE)
+# 		if result.returncode == 0:
+# 			return True
+# 		else:
+# 			return False
+# 	except FileNotFoundError:
+# 		return False
 
-def getHost(queue):
+def getHost(_timeout: int):
 	hosts = []
 	scanner = PortScanner()
-	scanner.scan(hosts=f'192.168.{glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v')
+	try:
+		# scanner.scan(hosts=f'192.168.{glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v', timeout=_timeout)
+		cmd = f'nmap 192.168.{glob("*.ip")[0].split(".")[0]}.0/24 -sn -T5 -v -oX -'
+		result = run(cmd.split(), stdout=PIPE, stderr=PIPE, timeout=1, shell=True)
+		if not result.returncode:
+			scanner.analyse_nmap_xml_scan(result.stdout.decode('utf-8'))
+		else:
+			raise PortScannerError(f"Error executing nmap: {result.stderr.decode('utf-8')}")
+	except TimeoutExpired:
+		return False, [], "Timeout expired"
+	except PortScannerError as error:
+		return False, [], str(error)
+	except FileNotFoundError:
+		return False, [], "Nmap is not installed"
 
 	for host in scanner.all_hosts():
 		if 'mac' in scanner[host]['addresses']:
@@ -41,5 +54,4 @@ def getHost(queue):
 			if scanner[host]['status']['state'] == 'up':
 				ip_address = scanner[host]['addresses']['ipv4']
 				hosts.append((ip_address, None))
-	queue.put(hosts)
-	return
+	return True, hosts, ""
