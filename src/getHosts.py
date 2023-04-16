@@ -32,7 +32,7 @@ def getHost(_timeout: int):
 	try:
 		# scanner.scan(hosts=f'192.168.{glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v', timeout=_timeout)
 		cmd = f'nmap 192.168.{glob("*.ip")[0].split(".")[0]}.0/24 -sn -T5 -v -oX -'
-		result = run(cmd.split(), stdout=PIPE, stderr=PIPE, timeout=1, shell=True)
+		result = run(cmd.split(), stdout=PIPE, stderr=PIPE, timeout=_timeout, shell=True)
 		if not result.returncode:
 			scanner.analyse_nmap_xml_scan(result.stdout.decode('utf-8'))
 		else:
