@@ -14,43 +14,62 @@
 
 import socket, re
 
-def _verify(connection_packet: bytes) -> str:
+def _connection_verify(connection_packet: bytes) -> str:
 	serial_number = ""
-	if connection_packet.startswith(b"\x08\x07\x00\x01") and connection_packet.endswith(b"\x04\x1b"):
-		if not re.search(b"\x08\x07\x00\x01", connection_packet):
-			ValueError("Broken header")
+	if connection_packet.startswith(b"\x08\x07\x00\x01") and connection_packet.endswith(b"\x1b"):
+		if not re.search(b"\x08\x07\x00\x01\x05\x02", connection_packet):
+			raise ValueError("Broken header")
 
-		if not re.search(b"\x08\x07\x00\x01(.+?)\x05\x02", connection_packet):
-			ValueError("There is data between program and serial number")
+		if re.search(b"\x05\x02(.+?)\x03", connection_packet).group(1) != b"WIRETAPPING-SCANER":
+			raise ValueError("Broken program name")
 
-		if program_name := re.search(b"\x05\x02(.+?)\x03", connection_packet):
-			if program_name != b"WIRETAPPING-SCANER":
-				ValueError("Broken program name")
+		if not re.search(b"\x03\x05\x01", connection_packet):
+			raise ValueError("There is data between program name and serial number")
 
-		if not re.search(b"\x03(.+?)\x1b\x01", connection_packet):
-			ValueError("There is data between program and serial number")
-
-		if serial_match := re.search(b"\x1b\x01(.+?)\x18\x1a", connection_packet):
+		if serial_match := re.search(b"\x05\x01(.+?)\x18\x1a", connection_packet):
 			if re.match(b'^[A-Z0-9]{5}-[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{4}$', serial_match.group(1)):
 				serial_number = serial_match.group(1).decode("utf-8")
 			else:
-				ValueError("Serial number format is invalid")
+				raise ValueError("Serial number format is invalid")
 
-		if not re.search(b"\x18\x1a(.+?)\x16\x01", connection_packet):
-			ValueError("There is data between program and serial number")
+		if not re.search(b"\x18\x1a\x16\x01", connection_packet):
+			raise ValueError("There is data between serial number and device status")
 
-		if device_status := re.search(b"\x16\x01(.+?)\x04", connection_packet):
-			if device_status != b"OK":
-				ValueError("Status is not OK")
+		if re.search(b"\x16\x01(.+?)\x04", connection_packet).group(1) != b"OK":
+				raise ValueError("Status is not OK")
 
-		if not re.search(b"\x04(.+?)\x1b", connection_packet):
-			ValueError("There is data between program and serial number")
-
-		if not re.search(b"\x1b", connection_packet):
-			ValueError("Broken end")
+		if not re.search(b"\x04\x1b", connection_packet):
+			raise ValueError("Broken footer")
 	else:
-		ValueError("Invalid packet")
+		raise ValueError("Invalid packet")
 	return serial_number
+
+def _data_verify(data_packet: bytes) -> list:
+	data = []
+	if data_packet.startswith(b"\x08\x07\x16") and data_packet.endswith(b"\x1f\x1b"):
+		if not re.search(b"\x08\x07\x16\x1e", data_packet):
+			raise ValueError("Broken header")
+		for datas in data_packet.split(b"\x1e")[1:-1]:
+			data.append(datas)
+		if not re.search(b"\x1e\x1f\x1b", data_packet):
+			raise ValueError("Broken footer")
+	else:
+		raise ValueError("Invalid packet")
+	return data
+
+def _disconnection_verify(disconnection_packet: bytes) -> bool:
+	if disconnection_packet.startswith(b"\x08\x07\x00\x04") and disconnection_packet.endswith(b"\x18\x1b"):
+		if not re.search(b"\x08\x07\x00\x04\x16\x01", disconnection_packet):
+			raise ValueError("Broken header")
+
+		if re.search(b"\x16\x01(.+?)\x04", disconnection_packet).group(1) != b"STOP":
+			raise ValueError("Status is not STOP")
+
+		if not re.search(b"\x04\x18\x1b", disconnection_packet):
+			raise ValueError("Broken footer")
+	else:
+		raise ValueError("Invalid packet")
+	return True
 
 class Connector:
 	def __init__(self, ip: str = '192.168.0.0'):
@@ -68,8 +87,6 @@ class Connector:
 		try:
 			self._sock.connect((self._ip, self._port))
 			self._sock.sendall(b'CON')
-			# got connection packet data
-			# b"\x08\x07\x00\x01\x05\x02\x57\x49\x52\x45\x54\x41\x50\x50\x49\x4e\x47\x2d\x53\x43\x41\x4e\x45\x52\x03\x1b\x01\x41\x51\x57\x5a\x45\x2d\x42\x43\x45\x2d\x59\x50\x41\x2d\x4d\x4f\x52\x48\x18\x1a\x16\x01\x4f\x4b\x04\x1b"
 			self.isConnected = True
 			return True
 		except:
@@ -93,5 +110,11 @@ class Connector:
 			return False
 
 if __name__ == "__main__":
-	data_bytes = b"\x08\x07\x00\x01\x05\x02\x57\x49\x52\x45\x54\x41\x50\x50\x49\x4e\x47\x2d\x53\x43\x41\x4e\x45\x52\x03\x1b\x01\x41\x51\x57\x5a\x45\x2d\x42\x43\x45\x2d\x59\x50\x41\x2d\x4d\x4f\x52\x48\x18\x1a\x16\x01\x4f\x4b\x04\x1b"
-	print(_verify(data_bytes))
+	connection_bytes = b"\x08\x07\x00\x01\x05\x02\x57\x49\x52\x45\x54\x41\x50\x50\x49\x4e\x47\x2d\x53\x43\x41\x4e\x45\x52\x03\x05\x01\x41\x51\x57\x5a\x45\x2d\x42\x43\x45\x2d\x59\x50\x41\x2d\x4d\x4f\x52\x48\x18\x1a\x16\x01\x4f\x4b\x04\x1b"
+	print(_connection_verify(connection_bytes))
+
+	data_bytes = b"\x08\x07\x16\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x1f\x1b"
+	print(_data_verify(data_bytes))
+
+	disconnection_bytes = b"\x08\x07\x00\x04\x16\x01\x53\x54\x4f\x50\x04\x18\x1b"
+	print(_disconnection_verify(disconnection_bytes))
