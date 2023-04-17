@@ -71,50 +71,100 @@ def _disconnection_verify(disconnection_packet: bytes) -> bool:
 		raise ValueError("Invalid packet")
 	return True
 
+# Temporary class
 class Connector:
 	def __init__(self, ip: str = '192.168.0.0'):
 		self._ip = ip
 		self._port = 12556
 		self._sock: socket = None
 		self.isConnected = False
+		self.__tempCount = 0  # Потом удалить
 
 	def set_ip(self, ip: str):
 		if not self.isConnected:
 			self._ip = ip
 
-	def connect(self) -> bool:
-		self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	def connect(self) -> str:
 		try:
-			self._sock.connect((self._ip, self._port))
-			self._sock.sendall(b'CON')
+			# Симуляция соединения
+			# Симуляция подключения
+			# Симуляция отправки сигнала
+			connection_bytes = b"\x08\x07\x00\x01\x05\x02\x57\x49\x52\x45\x54\x41\x50\x50\x49\x4e\x47\x2d\x53\x43\x41\x4e\x45\x52\x03\x05\x01\x41\x51\x57\x5a\x45\x2d\x42\x43\x45\x2d\x59\x50\x41\x2d\x4d\x4f\x52\x48\x18\x1a\x16\x01\x4f\x4b\x04\x1b"  # Симуляция получения ответа
+			serial = _connection_verify(connection_bytes)  # Верификация ответа
 			self.isConnected = True
-			return True
-		except:
-			return False
+			return serial
+		except ValueError as err:  # Если не пройдена верификация подключения
+			raise ValueError(str(err))
+		# except:  # Если не установлено соединение
+		# 	return False
 
-	def request(self) -> bool:
-		try:
-			# Заполнение данными будет тут
-			self._sock.sendall(b'EXC')
-			return True
-		except:
-			return False
+	# Real
+	# def request(self) -> list:
+	# 	try:
+	# 		# Симуляция отправки сигнала
+	# 		data_bytes = b"\x08\x07\x16\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x1f\x1b"  # Симуляция получения ответа
+	# 		return _data_verify(data_bytes)  # Верификация ответа
+	# 	except ValueError as err:  # Если не пройдена верификация данных
+	# 		raise ValueError(str(err))
 
-	def disconnect(self) -> bool:
+	# Temporary
+	def request(self) -> list:
 		try:
-			self._sock.sendall(b'COFF')
-			self._sock.close()
+			if self.__tempCount == 0:
+				data_bytes = b"\x08\x07\x16\x1e\x31\x30\x31\x2e\x34\x1e\x32\x30\x1e\x37\x30\x1e\x30\x2e\x39\x1e\x32\x20\x28\x45\x78\x69\x74\x29\x1e\x31\x30\x37\x37\x38\x1e\x1f\x1b"
+				self.__tempCount += 1
+			else:
+				data_bytes = b"\x08\x07\x16\x1e\x39\x37\x2e\x35\x1e\x32\x38\x1e\x37\x36\x1e\x31\x37\x2e\x31\x1e\x35\x20\x28\x43\x6c\x65\x61\x72\x29\x1e\x39\x36\x33\x33\x33\x1e\x1f\x1b"
+				self.__tempCount -= 1
+			return _data_verify(data_bytes)
+		except ValueError as err:
+			raise ValueError(str(err))
+
+	def disconnect(self) -> None:
+		try:
+			# Симуляция отправки сигнала
+			disconnection_bytes = b"\x08\x07\x00\x04\x16\x01\x53\x54\x4f\x50\x04\x18\x1b"  # Симуляция получения ответа
+			if _disconnection_verify(disconnection_bytes):  # Верификация ответа
+				pass # Симуляция отключения
 			self.isConnected = False
-			return True
-		except:
-			return False
+		except ValueError as err:  # Если не пройдена верификация отключения
+			raise ValueError(str(err))
 
-if __name__ == "__main__":
-	connection_bytes = b"\x08\x07\x00\x01\x05\x02\x57\x49\x52\x45\x54\x41\x50\x50\x49\x4e\x47\x2d\x53\x43\x41\x4e\x45\x52\x03\x05\x01\x41\x51\x57\x5a\x45\x2d\x42\x43\x45\x2d\x59\x50\x41\x2d\x4d\x4f\x52\x48\x18\x1a\x16\x01\x4f\x4b\x04\x1b"
-	print(_connection_verify(connection_bytes))
-
-	data_bytes = b"\x08\x07\x16\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x00\x1e\x00\x00\x00\x00\x00\x00\x00\x00\x1e\x1f\x1b"
-	print(_data_verify(data_bytes))
-
-	disconnection_bytes = b"\x08\x07\x00\x04\x16\x01\x53\x54\x4f\x50\x04\x18\x1b"
-	print(_disconnection_verify(disconnection_bytes))
+# Real class:
+# class Connector:
+# 	def __init__(self, ip: str = '192.168.0.0'):
+# 		self._ip = ip
+# 		self._port = 12556
+# 		self._sock: socket = None
+# 		self.isConnected = False
+#
+# 	def set_ip(self, ip: str):
+# 		if not self.isConnected:
+# 			self._ip = ip
+#
+# 	def connect(self) -> bool:
+# 		self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# 		try:
+# 			self._sock.connect((self._ip, self._port))
+# 			self._sock.sendall(b'CON')
+# 			self.isConnected = True
+# 			return True
+# 		except:
+# 			return False
+#
+# 	def request(self) -> bool:
+# 		try:
+# 			# Заполнение данными будет тут
+# 			self._sock.sendall(b'EXC')
+# 			return True
+# 		except:
+# 			return False
+#
+# 	def disconnect(self) -> bool:
+# 		try:
+# 			self._sock.sendall(b'COFF')
+# 			self._sock.close()
+# 			self.isConnected = False
+# 			return True
+# 		except:
+# 			return False

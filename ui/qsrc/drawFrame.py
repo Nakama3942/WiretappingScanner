@@ -25,9 +25,10 @@ from src import IMPORTANT_DATA, RadioSignal
 class DrawFrame(QFrame):
 	gen_sound = pyqtSignal()
 	play_sound = pyqtSignal()
+	draw = False
 
 	def paintEvent(self, event):
-		if IMPORTANT_DATA.connect:
+		if IMPORTANT_DATA.connect and self.draw:
 			qp = QPainter(self)
 			qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
 			qp.setFont(IMPORTANT_DATA.tfont)
@@ -70,6 +71,16 @@ class DrawFrame(QFrame):
 					qp.drawText(100, 100, IMPORTANT_DATA.text1)
 				case 5:
 					qp.drawText(100, 100, IMPORTANT_DATA.text1)
+
+	def customRepaint(self):
+		self.draw = True
+		super().repaint()
+		self.draw = False
+
+	def customUpdate(self):
+		self.draw = True
+		super().update()
+		self.draw = False
 
 	def mousePressEvent(self, event: QMouseEvent):
 		if IMPORTANT_DATA.tab == 3:

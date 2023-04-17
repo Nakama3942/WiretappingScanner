@@ -124,6 +124,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def reloadTool_clicked(self):
+		# if not connected
 		self.IPBox.clear()
 		wait = QMessageBox()
 		wait.setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowTitleHint)
@@ -156,24 +157,21 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def buttConnect_clicked(self):
 		try:
 			if self.IPLine.text() == "":
+				# if self.IPBox is not empty
 				self.IPLine.setText(self.IPBox.currentText().split(" ")[1])
 			IMPORTANT_DATA.IPAddr = self.IPLine.text()
 			IMPORTANT_DATA.Port = "12556"
 			self.detector.set_ip(self.IPLine.text())
-			if not self.detector.con():
-				self.buttDisconnect.trouble = True
-				self.logger.fail(message_text=f"Connection Failed")
-				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-				self.buttDisconnect.click()
-				return
+			self.detector.con()
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
-			IMPORTANT_DATA.SerialNum = "AQWZE-BCE-YPA-MORH"  # Will be moved to Detector later
-			IMPORTANT_DATA.connect = True # Will be moved to Detector later
-		except:
+		except ValueError as err:  # Если не пройдена верификация подключения
 			self.buttDisconnect.trouble = True
-			self.logger.fail(message_text=f"Connection not established: no connected devices")
+			self.logger.fail(message_text=str(err))
 			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.buttDisconnect.click()
+			return
+		# except:  # Если не установлено соединение
+		# 	return False
 		else:
 			self.buttDisconnect.trouble = False
 			self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
@@ -188,13 +186,17 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def buttDisconnect_clicked(self):
 		if not self.buttDisconnect.trouble:
-			self.detector.coff()
+			try:
+				self.detector.coff()
+			except ValueError as err:
+				self.logger.fail(message_text=str(err))
+				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+				self.buttConnect.click()
+				return
 			self.detector.terminate()
 			self.clearWidget()
 			IMPORTANT_DATA.IPAddr = "000.000.000.000"
 			IMPORTANT_DATA.Port = "00000"
-			IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
-			IMPORTANT_DATA.connect = False
 			self.logger.info(message_text=f"DISCONNECT")
 			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
@@ -206,12 +208,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			self.groupSettings.setEnabled(False)
 
 	def clearWidget(self):
-		self.RadioDrawFrame.update()
-		self.CompassDrawFrame.update()
-		self.UltrasoundDrawFrame.update()
-		self.UltrasoundDrawFrame.update()
-		self.FreeChannelDrawFrame.update()
-		self.StethoscopeDrawFrame.update()
+		self.RadioDrawFrame.customUpdate()
+		self.CompassDrawFrame.customUpdate()
+		self.UltrasoundDrawFrame.customUpdate()
+		self.UltrasoundDrawFrame.customUpdate()
+		self.FreeChannelDrawFrame.customUpdate()
+		self.StethoscopeDrawFrame.customUpdate()
 
 	def buttWidgetScreenshot_clicked(self):
 		match IMPORTANT_DATA.tab:
@@ -247,34 +249,34 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Radio signal (MHz): "
 				IMPORTANT_DATA.text2 = "Radio amplitude: "
-				self.RadioDrawFrame.repaint()
+				self.RadioDrawFrame.customRepaint()
 			case 1:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.tpixmap = "./icon/magnet.png"
 				IMPORTANT_DATA.text1 = "Compass degree: "
-				self.CompassDrawFrame.repaint()
+				self.CompassDrawFrame.customRepaint()
 			case 2:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Infrared signal (THz): "
 				IMPORTANT_DATA.text2 = "Infrared signal data: "
-				self.IRDrawFrame.repaint()
+				self.IRDrawFrame.customRepaint()
 			case 3:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "Ultrasound (Hz): "
-				self.UltrasoundDrawFrame.repaint()
+				self.UltrasoundDrawFrame.customRepaint()
 			case 4:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "LINK QUALITY UNFINISHED"
-				self.FreeChannelDrawFrame.repaint()
+				self.FreeChannelDrawFrame.customRepaint()
 			case 5:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tfont = self.font
 				IMPORTANT_DATA.text1 = "STETHOSCOPE UNFINISHED"
-				self.StethoscopeDrawFrame.repaint()
+				self.StethoscopeDrawFrame.customRepaint()
 
 	def ultrasound_Gen(self):
 		gen_dialog = UltrasoundDialog()
@@ -314,22 +316,22 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def detect_update_data_signal(self):
 		match IMPORTANT_DATA.tab:
 			case 0:
-				self.RadioDrawFrame.repaint()
+				self.RadioDrawFrame.customRepaint()
 				self.logger.info(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
 			case 1:
-				self.CompassDrawFrame.repaint()
+				self.CompassDrawFrame.customRepaint()
 				self.logger.info(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees")
 			case 2:
-				self.IRDrawFrame.repaint()
+				self.IRDrawFrame.customRepaint()
 				self.logger.info(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
 			case 3:
-				self.UltrasoundDrawFrame.repaint()
+				self.UltrasoundDrawFrame.customRepaint()
 				self.logger.info(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
 			case 4:
-				self.FreeChannelDrawFrame.repaint()
+				self.FreeChannelDrawFrame.customRepaint()
 				self.logger.error(message_text=f"Opened is unfinished 5th tab")
 			case 5:
-				self.StethoscopeDrawFrame.repaint()
+				self.StethoscopeDrawFrame.customRepaint()
 				self.logger.error(message_text=f"Opened is unfinished 6th tab")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 

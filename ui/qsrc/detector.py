@@ -29,43 +29,41 @@ class Detector(QThread):
 	def set_ip(self, ip: str):
 		self._connector.set_ip(ip)
 
-	def con(self) -> bool:
-		# return self._connector.connect()
-		return True
+	def con(self) -> None:
+		try:
+			IMPORTANT_DATA.SerialNum = self._connector.connect()
+			IMPORTANT_DATA.connect = True
+		except ValueError as err:  # Если не пройдена верификация подключения
+			raise ValueError(str(err))
+		# except:  # Если не установлено соединение
+		# 	return False
 
-	def coff(self) -> bool:
-		# return self._connector.disconnect()
-		return True
-
-	def _exc(self) -> bool:
-		# return self._connector.request()
-		return True
+	def coff(self) -> None:
+		try:
+			self._connector.disconnect()
+			IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
+			IMPORTANT_DATA.connect = False
+		except ValueError as err:  # Если не пройдена верификация подключения
+			raise ValueError(str(err))
 
 	def run(self):
-		# In the future, connection to the device will be implemented here
 		while True:
-			# Data acquisition simulation
-			IMPORTANT_DATA.radio_signal = 101.4
-			IMPORTANT_DATA.radio_amplitude = 20
-			IMPORTANT_DATA.compass_radius = 70
-			IMPORTANT_DATA.infrared_signal = 0.9
-			IMPORTANT_DATA.infrared_data = "2 (Exit)"
-			IMPORTANT_DATA.ultrasound_signal = 10778
-			if self._exc():
+			try:
+				data_list = self._connector.request()
+				IMPORTANT_DATA.radio_signal = float(data_list[0].decode("utf-8"))
+				IMPORTANT_DATA.radio_amplitude = int(data_list[1].decode("utf-8"))
+				IMPORTANT_DATA.compass_radius = int(data_list[2].decode("utf-8"))
+				IMPORTANT_DATA.infrared_signal = float(data_list[3].decode("utf-8"))
+				IMPORTANT_DATA.infrared_data = data_list[4].decode("utf-8")
+				IMPORTANT_DATA.ultrasound_signal = int(data_list[5].decode("utf-8"))
 				self.update_data_signal.emit()
-			time.sleep(0.3)
-			IMPORTANT_DATA.radio_signal = 97.5
-			IMPORTANT_DATA.radio_amplitude = 28
-			IMPORTANT_DATA.compass_radius = 76
-			IMPORTANT_DATA.infrared_signal = 17.1
-			IMPORTANT_DATA.infrared_data = "5 (Clear)"
-			IMPORTANT_DATA.ultrasound_signal = 96333
-			if self._exc():
-				self.update_data_signal.emit()
+			except ValueError as err:  # Если не пройдена верификация данных
+				self._log.fail(message_text=str(err))
+				# self.consoleBrowser.append(self._log.buffer().get_data()[-1])
 			time.sleep(0.3)
 
 	def terminate(self):
 		if not self._connector.isConnected:
 			super().terminate()
 		else:
-			Exception("Завершить процесс невозможно при установленном соединении")
+			raise ConnectionError("The process cannot be terminated while the connection is established")
