@@ -19,27 +19,21 @@ def _connection_verify(connection_packet: bytes) -> str:
 	if connection_packet.startswith(b"\x08\x07\x00\x01") and connection_packet.endswith(b"\x1b"):
 		if not re.search(b"\x08\x07\x00\x01\x05\x02", connection_packet):
 			raise ValueError("Broken header")
-
 		if re.search(b"\x05\x02(.+?)\x03", connection_packet).group(1) != b"WIRETAPPING-SCANER":
 			raise ValueError("Broken program name")
-
 		if not re.search(b"\x03\x05\x01", connection_packet):
 			raise ValueError("There is data between program name and serial number")
-
+		if not re.search(b"\x18\x1a\x16\x01", connection_packet):
+			raise ValueError("There is data between serial number and device status")
+		if re.search(b"\x16\x01(.+?)\x04", connection_packet).group(1) != b"OK":
+				raise ValueError("Status is not OK")
+		if not re.search(b"\x04\x1b", connection_packet):
+			raise ValueError("Broken footer")
 		if serial_match := re.search(b"\x05\x01(.+?)\x18\x1a", connection_packet):
 			if re.match(b'^[A-Z0-9]{5}-[A-Z0-9]{3}-[A-Z0-9]{3}-[A-Z0-9]{4}$', serial_match.group(1)):
 				serial_number = serial_match.group(1).decode("utf-8")
 			else:
 				raise ValueError("Serial number format is invalid")
-
-		if not re.search(b"\x18\x1a\x16\x01", connection_packet):
-			raise ValueError("There is data between serial number and device status")
-
-		if re.search(b"\x16\x01(.+?)\x04", connection_packet).group(1) != b"OK":
-				raise ValueError("Status is not OK")
-
-		if not re.search(b"\x04\x1b", connection_packet):
-			raise ValueError("Broken footer")
 	else:
 		raise ValueError("Invalid packet")
 	return serial_number
@@ -49,10 +43,10 @@ def _data_verify(data_packet: bytes) -> list:
 	if data_packet.startswith(b"\x08\x07\x16") and data_packet.endswith(b"\x1f\x1b"):
 		if not re.search(b"\x08\x07\x16\x1e", data_packet):
 			raise ValueError("Broken header")
-		for datas in data_packet.split(b"\x1e")[1:-1]:
-			data.append(datas)
 		if not re.search(b"\x1e\x1f\x1b", data_packet):
 			raise ValueError("Broken footer")
+		for datas in data_packet.split(b"\x1e")[1:-1]:
+			data.append(datas)
 	else:
 		raise ValueError("Invalid packet")
 	return data
@@ -61,10 +55,8 @@ def _disconnection_verify(disconnection_packet: bytes) -> bool:
 	if disconnection_packet.startswith(b"\x08\x07\x00\x04") and disconnection_packet.endswith(b"\x18\x1b"):
 		if not re.search(b"\x08\x07\x00\x04\x16\x01", disconnection_packet):
 			raise ValueError("Broken header")
-
 		if re.search(b"\x16\x01(.+?)\x04", disconnection_packet).group(1) != b"STOP":
 			raise ValueError("Status is not STOP")
-
 		if not re.search(b"\x04\x18\x1b", disconnection_packet):
 			raise ValueError("Broken footer")
 	else:

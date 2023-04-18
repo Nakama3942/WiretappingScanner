@@ -485,6 +485,7 @@ class Ui_WindowWiretappingScaner(object):
         self.consoleBrowser = QtWidgets.QTextBrowser(self.dockWidgetContents)
         self.consoleBrowser.setStyleSheet("background-color: rgb(0, 0, 0);\n"
 "color: rgb(255, 255, 255);")
+        self.consoleBrowser.setLineWrapMode(QtWidgets.QTextEdit.LineWrapMode.NoWrap)
         self.consoleBrowser.setObjectName("consoleBrowser")
         self.verticalLayout_10.addWidget(self.consoleBrowser)
         self.dockWidget.setWidget(self.dockWidgetContents)

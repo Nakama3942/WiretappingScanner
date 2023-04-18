@@ -1084,6 +1084,9 @@ font-size: 18px;</string>
         <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 255, 255);</string>
        </property>
+       <property name="lineWrapMode">
+        <enum>QTextEdit::NoWrap</enum>
+       </property>
       </widget>
      </item>
     </layout>

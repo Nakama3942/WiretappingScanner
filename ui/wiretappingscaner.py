@@ -124,7 +124,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget_Clicked(index)
 
 	def reloadTool_clicked(self):
-		# if not connected
+		if IMPORTANT_DATA.connect:
+			self.logger.fail(message_text="Can't use Nmap while connected")
+			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+			return
 		self.IPBox.clear()
 		wait = QMessageBox()
 		wait.setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowTitleHint)
@@ -157,21 +160,20 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def buttConnect_clicked(self):
 		try:
 			if self.IPLine.text() == "":
-				# if self.IPBox is not empty
-				self.IPLine.setText(self.IPBox.currentText().split(" ")[1])
+				if self.IPBox.count() == 0:
+					raise ConnectionError("IP address is not specified")
+				else:
+					self.IPLine.setText(self.IPBox.currentText().split(" ")[1])
 			IMPORTANT_DATA.IPAddr = self.IPLine.text()
 			IMPORTANT_DATA.Port = "12556"
 			self.detector.set_ip(self.IPLine.text())
 			self.detector.con()
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
-		except ValueError as err:  # Если не пройдена верификация подключения
-			self.buttDisconnect.trouble = True
+		except Exception as err:  # Если не пройдена верификация подключения
 			self.logger.fail(message_text=str(err))
 			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+			self.buttDisconnect.trouble = True
 			self.buttDisconnect.click()
-			return
-		# except:  # Если не установлено соединение
-		# 	return False
 		else:
 			self.buttDisconnect.trouble = False
 			self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
