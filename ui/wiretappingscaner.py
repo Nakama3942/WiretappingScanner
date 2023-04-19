@@ -12,14 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from queue import Queue
-from threading import Thread
+# from queue import Queue
+# from threading import Thread
 # from concurrent.futures import ThreadPoolExecutor
+from markdown_it import MarkdownIt
 
 from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame, QProgressDialog, QMessageBox
-from PyQt6.QtCore import QRegularExpression, Qt
-from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase
+from PyQt6.QtCore import QRegularExpression, Qt, QDir
+from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase, QPixmap
 
 from ui.raw import Ui_WindowWiretappingScaner
 from ui import UltrasoundDialog
@@ -43,9 +44,14 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
 		self.reloadTool.setIcon(QIcon("./icon/search.png"))
+		self.aboutTool.setIcon(QIcon("./icon/about.png"))
 		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 		IMPORTANT_DATA.window_height = self.height()
 		IMPORTANT_DATA.window_width = self.width()
+
+		# Icon initialization
+		# QDir.addSearchPath('icons', 'icon/')
+		# self.setWindowIcon(QIcon('icons:about.png'))
 
 		# It's creating a validator for the input field of the list of ports
 		rx = QRegularExpression(r'^192\.168\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
@@ -59,6 +65,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# It's a tracking of button clicks in the window
 		self.reloadTool.clicked.connect(self.reloadTool_clicked)
+		self.aboutTool.clicked.connect(self.aboutTool_clicked)
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
 		self.buttDisconnect.clicked.connect(self.buttDisconnect_clicked)
 		self.buttWidgetScreenshot.clicked.connect(self.buttWidgetScreenshot_clicked)
@@ -132,6 +139,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		wait = QMessageBox()
 		wait.setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowTitleHint)
 		wait.setModal(True)
+		wait.setWindowTitle("Information")
 		wait.setIcon(QMessageBox.Icon.Information)
 		wait.setText("<font size=14>Please wait...</font>")
 		wait.setInformativeText("The process of determining the static IP addresses of the local network is in progress")
@@ -156,6 +164,20 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 					self.logger.error(message_text=error)
 					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		wait.close()
+
+	def aboutTool_clicked(self):
+		with open('About.md', 'r') as f:
+			text = f.read()
+			md = MarkdownIt()
+			html = md.render(text)
+
+		about_program_container = QMessageBox()
+		about_program_container.setWindowIcon(QIcon("./icon/about.png"))
+		about_program = QMessageBox()
+		about_program.about(about_program_container, "About program", html)
+
+		self.logger.user(message_text="Viewed information about the program")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttConnect_clicked(self):
 		try:
