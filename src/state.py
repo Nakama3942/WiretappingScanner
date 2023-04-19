@@ -22,23 +22,80 @@ class IMPORTANT_DATA:
 	Port = "00000"
 	SerialNum = "AAAAA-AAA-AAA-AAAA"
 
-	# Extra settings
+	# Local settings
 	tfont = None
 	text1 = ""
 	text2 = ""
-	tpixmap = ""
+	text3 = ""
+	text4 = ""
+	text5 = ""
+	text6 = ""
+	text7 = ""
+	text8 = ""
+	text9 = ""
+	text10 = ""
+	reserve_text1 = ""
+	reserve_text2 = ""
+	reserve_text3 = ""
+	tpixmap1 = ""
+	tpixmap2 = ""
+	tpixmap3 = ""
+	tpixmap4 = ""
+	tpixmap5 = ""
+	tpixmap6 = ""
+	tpixmap7 = ""
+	tpixmap8 = ""
+	tpixmap9 = ""
+	tpixmap10 = ""
+	tpixmap11 = ""
+	tpixmap12 = ""
 
 	# Radio wiretapping data
-	radio_signal = 0.0
-	radio_amplitude = 0
-	radio_initphase = 0
+	radio_impulse = 0  # seconds (s)
+	radio_noise = 0.0  # decibel (dB)
+	radio_signal_spectrum_width = 0.0  # hertz (Hz)  # old: radio_signal = 0.0
+	radio_signal_duration = 0  # seconds (s)
+	radio_transfer_rate = 0  # bits per second (bps)
+	radio_antenna_impedance = 0  # ohm (Ω)
+	radio_antenna_directivity = 0.0  # decibel (dB)
+	radio_signal_strength = 0.0  # decibel (dB)  # old: radio_amplitude = 0
 
 	# Compass wiretapping data
-	compass_radius = 0
+	compass_magnetic_field = 0  # microtesla (μT)
+	compass_tilt_angle = 0  # degrees (°)
+	compass_north_direction = 0  # degrees (°)  # old: compass_radius = 0
+	compass_field_strength = 0.0  # ampere-vits per meter (A/m)
+	compass_temperature = 0  # degree Celsius (°C)
 
 	# Infrared wiretapping data
-	infrared_signal = 0.0
-	infrared_data = ""
+	infrared_wavelength = 0.0  # micrometers (μm)  # old: infrared_signal = 0.0
+	infrared_signal_strength = 0.0  # decibel (dB)
+	infrared_signal_power = 0.0  # decibel milliwatt (dBm)
+	infrared_reception_angle = 0  # degrees (°)
+	infrared_transfer_rate = 0  # bits per second (bps)
+	# Questionable: infrared_data = ""
 
 	# Ultrasound wiretapping data
-	ultrasound_signal = 0.0
+	ultrasound_wavelength = 0.0  # millimeters (mm)  # old: ultrasound_signal = 0.0
+	ultrasound_signal_strength = 0.0  # decibel (dB)
+	ultrasound_signal_power = 0.0  # decibel milliwatt (dBm)
+	ultrasound_resolution = 0.0  # millimeters (mm)
+	ultrasound_transfer_rate = 0  # bits per second (bps)
+
+	# Link quality wiretapping data
+	link_transfer_rate = 0  # bits per second (bps)
+	link_frequency_range = 0  # hertz (Hz)
+	link_signal_strength = 0.0  # decibel (dB)
+	link_signal_power = 0.0  # decibel milliwatt (dBm)
+	link_noise = 0.0  # decibel milliwatt (dBm)
+	link_signal_spectrum_width = 0  # hertz (Hz)
+	link_interference_level = 0.0  # decibel (dB)
+	link_bit_error_rate = 0  # proportion of erroneously transmitted bits (-)
+	link_transmission_power = 0.0  # decibel milliwatt (dBm)
+
+	# Stethoscope wiretapping data
+	stethoscope_sound_amplitude = 0.0  # decibel (dB)
+	stethoscope_sound_frequency = 0  # hertz (Hz)
+	stethoscope_sound_pressure = 0  # pascal (Pa)
+	stethoscope_sound_direction = 0  # degrees (°)
+	stethoscope_transfer_rate = 0  # bits per second (bps)

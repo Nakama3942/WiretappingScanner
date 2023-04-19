@@ -62,6 +62,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		QFontDatabase.addApplicationFont("/font/fixedsys.ttf")
 		self.font = QFont("fixedsys", 13)
 		self.consoleBrowser.setFont(self.font)
+		IMPORTANT_DATA.tfont = self.font
 
 		# It's a tracking of button clicks in the window
 		self.reloadTool.clicked.connect(self.reloadTool_clicked)
@@ -270,36 +271,95 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match index:
 			case 0:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "Radio signal (MHz): "
-				IMPORTANT_DATA.text2 = "Radio amplitude: "
+				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "Radio impulse (s): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.text2 = "Signal noise (dB): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.text3 = "Signal Spectrum Width (Hz): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.text4 = "Signal duration (s): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
+				IMPORTANT_DATA.tpixmap6 = "./icon/magnet.png"
+				IMPORTANT_DATA.text6 = "Antenna impedance (Ω): "
+				IMPORTANT_DATA.tpixmap7 = "./icon/magnet.png"
+				IMPORTANT_DATA.text7 = "Antenna directivity (dB): "
+				IMPORTANT_DATA.tpixmap8 = "./icon/magnet.png"
+				IMPORTANT_DATA.text8 = "Signal strength (dB): "
 				self.RadioDrawFrame.customRepaint()
 			case 1:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.tpixmap = "./icon/magnet.png"
-				IMPORTANT_DATA.text1 = "Compass degree: "
+				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "A magnetic field (μT): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.text2 = "Tilt angle (°): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.text3 = "North direction (°): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.text4 = "Field strength (A/m): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.text5 = "Temperature (°C): "
 				self.CompassDrawFrame.customRepaint()
 			case 2:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "Infrared signal (THz): "
-				IMPORTANT_DATA.text2 = "Infrared signal data: "
+				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "Wavelength (μm): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.text2 = "Signal strength (dB): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.text3 = "Signal power (dBm): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.text4 = "Reception angle (°): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.IRDrawFrame.customRepaint()
 			case 3:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "Ultrasound (Hz): "
+				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "Wavelength (mm): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.text2 = "Signal strength (dB): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.text3 = "Signal power (dBm): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.text4 = "Resolution (mm): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.UltrasoundDrawFrame.customRepaint()
 			case 4:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "LINK QUALITY UNFINISHED"
+				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "Transfer rate (bps): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.text2 = "Frequency range (Hz): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.text3 = "Signal strength (dB): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.text4 = "Signal power (dBm): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.text5 = "Signal noise (dBm): "
+				IMPORTANT_DATA.tpixmap6 = "./icon/magnet.png"
+				IMPORTANT_DATA.text6 = "Signal Spectrum Width (Hz): "
+				IMPORTANT_DATA.tpixmap7 = "./icon/magnet.png"
+				IMPORTANT_DATA.text7 = "Interference level (dB): "
+				IMPORTANT_DATA.tpixmap8 = "./icon/magnet.png"
+				IMPORTANT_DATA.text8 = "Bit error rate (-): "
+				IMPORTANT_DATA.tpixmap9 = "./icon/magnet.png"
+				IMPORTANT_DATA.text9 = "Transmission power (dBm): "
 				self.FreeChannelDrawFrame.customRepaint()
 			case 5:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tfont = self.font
-				IMPORTANT_DATA.text1 = "STETHOSCOPE UNFINISHED"
+				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.text1 = "Sound amplitude (dB): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.text2 = "Sound frequency (Hz): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.text3 = "Sound pressure (Pa): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.text4 = "Sound direction (°): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.StethoscopeDrawFrame.customRepaint()
 
 	def ultrasound_Gen(self):
@@ -341,23 +401,23 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.customRepaint()
-				self.logger.info(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
+				# self.logger.info(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
 			case 1:
 				self.CompassDrawFrame.customRepaint()
-				self.logger.info(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees")
+				# self.logger.info(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees")
 			case 2:
 				self.IRDrawFrame.customRepaint()
-				self.logger.info(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
+				# self.logger.info(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
 			case 3:
 				self.UltrasoundDrawFrame.customRepaint()
-				self.logger.info(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
+				# self.logger.info(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
 			case 4:
 				self.FreeChannelDrawFrame.customRepaint()
-				self.logger.error(message_text=f"Opened is unfinished 5th tab")
+				# self.logger.error(message_text=f"Opened is unfinished 5th tab")
 			case 5:
 				self.StethoscopeDrawFrame.customRepaint()
-				self.logger.error(message_text=f"Opened is unfinished 6th tab")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+				# self.logger.error(message_text=f"Opened is unfinished 6th tab")
+		# self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
