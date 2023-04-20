@@ -65,6 +65,15 @@ class DrawFrame(QFrame):
 					qp.drawText(270, 340, IMPORTANT_DATA.text7)
 					qp.drawText(510, 340, str(IMPORTANT_DATA.radio_antenna_directivity))
 
+					if 5 < IMPORTANT_DATA.radio_signal_strength <= 40:
+						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "1")
+					elif 40 < IMPORTANT_DATA.radio_signal_strength <= 80:
+						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "2")
+					elif 80 < IMPORTANT_DATA.radio_signal_strength:
+						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "3")
+					else:
+						pass
+
 					qp.drawPixmap(QPoint(230, 360), QPixmap(IMPORTANT_DATA.tpixmap8))
 					qp.drawText(270, 380, IMPORTANT_DATA.text8)
 					qp.drawText(510, 380, str(IMPORTANT_DATA.radio_signal_strength))
@@ -151,6 +160,15 @@ class DrawFrame(QFrame):
 					qp.drawText(270, 140, IMPORTANT_DATA.text2)
 					qp.drawText(510, 140, str(IMPORTANT_DATA.infrared_wavelength))
 
+					if 5 < IMPORTANT_DATA.infrared_signal_strength <= 40:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
+					elif 40 < IMPORTANT_DATA.infrared_signal_strength <= 80:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
+					elif 80 < IMPORTANT_DATA.infrared_signal_strength:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
+					else:
+						pass
+
 					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
 					qp.drawText(270, 180, IMPORTANT_DATA.text3)
 					qp.drawText(510, 180, str(IMPORTANT_DATA.infrared_signal_strength))
@@ -181,6 +199,15 @@ class DrawFrame(QFrame):
 					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
 					qp.drawText(270, 140, IMPORTANT_DATA.text2)
 					qp.drawText(510, 140, str(IMPORTANT_DATA.ultrasound_wavelength))
+
+					if 5 < IMPORTANT_DATA.ultrasound_signal_strength <= 40:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
+					elif 40 < IMPORTANT_DATA.ultrasound_signal_strength <= 80:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
+					elif 80 < IMPORTANT_DATA.ultrasound_signal_strength:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
+					else:
+						pass
 
 					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
 					qp.drawText(270, 180, IMPORTANT_DATA.text3)
@@ -220,6 +247,15 @@ class DrawFrame(QFrame):
 					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
 					qp.drawText(270, 140, IMPORTANT_DATA.text2)
 					qp.drawText(510, 140, str(IMPORTANT_DATA.link_frequency_range))
+
+					if 5 < IMPORTANT_DATA.link_signal_strength <= 40:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
+					elif 40 < IMPORTANT_DATA.link_signal_strength <= 80:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
+					elif 80 < IMPORTANT_DATA.link_signal_strength:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
+					else:
+						pass
 
 					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
 					qp.drawText(270, 180, IMPORTANT_DATA.text3)

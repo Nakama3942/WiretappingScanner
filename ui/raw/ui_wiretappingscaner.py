@@ -33,7 +33,7 @@ class Ui_WindowWiretappingScaner(object):
         self.tabWidget.setSizePolicy(sizePolicy)
         self.tabWidget.setMinimumSize(QtCore.QSize(430, 410))
         font = QtGui.QFont()
-        font.setPointSize(10)
+        font.setPointSize(12)
         self.tabWidget.setFont(font)
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.TabPosition.North)
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.TabShape.Rounded)

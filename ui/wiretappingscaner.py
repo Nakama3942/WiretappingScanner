@@ -13,8 +13,6 @@
 #  limitations under the License.
 
 # todo
-#  3. Завершить логирование
-#  4. Завершить QMessageBoxes
 #  5. Завершить README.md и About.md
 
 from markdown_it import MarkdownIt
@@ -38,8 +36,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Constant
 		self.shift_bool = False
-		self.logger = Logger(program_name="WiretappingScaner", status_message_global_entry=False, log_environment="html")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 		# Set window to center
 		qr = self.frameGeometry()
@@ -51,7 +47,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Icon initialization
 		QDir.addSearchPath('icons', 'icon/')
-		self.setWindowIcon(QIcon('icons:about.png'))
+		self.setWindowIcon(QIcon('icons:wiretapping_scaner.png'))
 
 		self.reloadTool.setIcon(QIcon("./icon/search.png"))
 		self.aboutTool.setIcon(QIcon("./icon/about.png"))
@@ -83,8 +79,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.buttProgramScreenshot.clicked.connect(self.buttProgramScreenshot_clicked)
 		self.buttSaveLog.clicked.connect(self.buttSaveLog_clicked)
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
-		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
-		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
+		# self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
+		# self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
 
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
@@ -120,6 +116,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		tray_menu.addAction(close_action)
 		self.tray_icon.setContextMenu(tray_menu)
 
+		self.logger = Logger(program_name="WiretappingScaner", status_message_global_entry=False, log_environment="html")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
 		# Initialization of process of tracking
 		self.detector = Detector(self.logger)
 		self.detector.update_data_signal.connect(self.detect_update_data_signal)
@@ -131,10 +130,14 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def tray_Show(self):
 		self.tray_icon.show()
 		self.hide()
+		self.logger.user(message_text="Program closed to tray")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def tray_Hide(self):
 		self.tray_icon.hide()
 		self.show()
+		self.logger.user(message_text="Program opened from tray")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def openTab(self, index):
 		self.tray_Hide()
@@ -165,6 +168,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			self.reloadTool.setIcon(QIcon("./icon/reload.png"))
 		else:
 			err = QMessageBox()
+			err.setWindowTitle("Error")
+			err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
 			err.setIcon(QMessageBox.Icon.Critical)
 			err.setText("<font size=14 color='red'>Error...</font>")
 			err.setInformativeText(f"<font color='darkred'>{error}</font>")
@@ -202,9 +207,19 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			self.detector.set_ip(self.IPLine.text())
 			self.detector.con()
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
-		except Exception as err:  # Если не пройдена верификация подключения
-			self.logger.fail(message_text=str(err))
-			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		except Exception as error:  # Если не пройдена верификация подключения
+			err = QMessageBox()
+			err.setWindowTitle("Error")
+			err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
+			err.setIcon(QMessageBox.Icon.Warning)
+			err.setText("<font size=14 color='red'>Error...</font>")
+			err.setInformativeText(f"<font color='darkred'>{str(error)}</font>")
+			err.setStandardButtons(QMessageBox.StandardButton.Cancel)
+			ret: int = err.exec()
+			match ret:
+				case QMessageBox.StandardButton.Cancel:
+					self.logger.fail(message_text=str(error))
+					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.buttDisconnect.trouble = True
 			self.buttDisconnect.click()
 		else:
@@ -223,16 +238,26 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		if not self.buttDisconnect.trouble:
 			try:
 				self.detector.coff()
-			except ValueError as err:
-				self.logger.fail(message_text=str(err))
-				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+			except ValueError as error:
+				err = QMessageBox()
+				err.setWindowTitle("Error")
+				err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
+				err.setIcon(QMessageBox.Icon.Warning)
+				err.setText("<font size=14 color='red'>Error...</font>")
+				err.setInformativeText(f"<font color='darkred'>{str(error)}</font>")
+				err.setStandardButtons(QMessageBox.StandardButton.Cancel)
+				ret: int = err.exec()
+				match ret:
+					case QMessageBox.StandardButton.Cancel:
+						self.logger.fail(message_text=str(error))
+						self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 				self.buttConnect.click()
 				return
 			self.detector.terminate()
 			self.clearWidget()
 			IMPORTANT_DATA.IPAddr = "000.000.000.000"
 			IMPORTANT_DATA.Port = "00000"
-			self.logger.info(message_text=f"DISCONNECT")
+			self.logger.success(message_text=f"DISCONNECT")
 			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 			self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
 			self.statusLine.setText("Disconnect")
@@ -264,17 +289,17 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.FreeChannelDrawFrame.grab().save(lastIndex("FreeChannelDrawFrameScreen.png", "{:07}"))
 			case 5:
 				self.StethoscopeDrawFrame.grab().save(lastIndex("StethoscopeDrawFrameScreen.png", "{:07}"))
-		self.logger.info(message_text=f"Widget screenshot saved")
+		self.logger.event(message_text=f"Widget screenshot saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttProgramScreenshot_clicked(self):
 		self.grab().save(lastIndex("ProgramScreen.png", "{:07}"))
-		self.logger.info(message_text=f"Program screenshot saved")
+		self.logger.event(message_text=f"Program screenshot saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttSaveLog_clicked(self):
 		self.logger.buffer().save("log.html")
-		self.logger.info(message_text=f"Log saved")
+		self.logger.event(message_text=f"Log saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def tabWidget_Clicked(self, index):
@@ -376,62 +401,62 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.StethoscopeDrawFrame.customRepaint()
 
-	def ultrasound_Gen(self):
-		gen_dialog = UltrasoundDialog()
-		gen_dialog.show()
-		result: int = gen_dialog.exec()
-		match result:
-			case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
-				# Unimplemented
-				self.logger.error(message_text="1 (Unimplemented)")
-			case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
-				# Unimplemented
-				self.logger.error(message_text="2 (Unimplemented)")
-			case _:
-				# Unimplemented
-				self.logger.error(message_text="3 (Unimplemented)")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-
-	def ultrasound_Play(self):
-		# Unimplemented
-		self.logger.error(message_text="4 (Unimplemented)")
-		self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.event(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.audit(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.metrics(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.user(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.message(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.info(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.notice(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.warning(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
-		self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+	# def ultrasound_Gen(self):
+	# 	gen_dialog = UltrasoundDialog()
+	# 	gen_dialog.show()
+	# 	result: int = gen_dialog.exec()
+	# 	match result:
+	# 		case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
+	# 			# Unimplemented
+	# 			self.logger.error(message_text="1 (Unimplemented)")
+	# 		case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
+	# 			# Unimplemented
+	# 			self.logger.error(message_text="2 (Unimplemented)")
+	# 		case _:
+	# 			# Unimplemented
+	# 			self.logger.error(message_text="3 (Unimplemented)")
+	# 	self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+	#
+	# def ultrasound_Play(self):
+	# 	# Unimplemented
+	# 	self.logger.error(message_text="4 (Unimplemented)")
+	# 	self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.event(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.audit(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.metrics(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.user(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.message(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.info(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.notice(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.warning(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
+	# 	self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def detect_update_data_signal(self):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.customRepaint()
-				# self.logger.info(message_text=f"{IMPORTANT_DATA.radio_signal} MHz radio signal detected")
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.radio_signal_spectrum_width} MHz radio signal spectrum width detected")
 			case 1:
 				self.CompassDrawFrame.customRepaint()
-				# self.logger.info(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_radius} degrees")
+				self.logger.metrics(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees")
 			case 2:
 				self.IRDrawFrame.customRepaint()
-				# self.logger.info(message_text=f"{IMPORTANT_DATA.infrared_signal} THz infrared signal detected")
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.infrared_frequency_of_wavefront} THz infrared frequency of wavefront detected")
 			case 3:
 				self.UltrasoundDrawFrame.customRepaint()
-				# self.logger.info(message_text=f"{IMPORTANT_DATA.ultrasound_signal} Hz ultrasound signal detected")
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected")
 			case 4:
 				self.FreeChannelDrawFrame.customRepaint()
-				# self.logger.error(message_text=f"Opened is unfinished 5th tab")
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.link_signal_strength} Hz link quality detected")
 			case 5:
 				self.StethoscopeDrawFrame.customRepaint()
-				# self.logger.error(message_text=f"Opened is unfinished 6th tab")
-		# self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
