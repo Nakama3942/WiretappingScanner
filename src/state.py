@@ -57,7 +57,7 @@ class IMPORTANT_DATA:
 	radio_signal_duration = 0  # seconds (s)
 	radio_transfer_rate = 0  # bits per second (bps)
 	radio_antenna_impedance = 0  # ohm (Ω)
-	radio_antenna_directivity = 0.0  # decibel (dB)
+	radio_antenna_directivity = 0.0  # decibel (dBi)
 	radio_signal_strength = 0.0  # decibel (dB)  # old: radio_amplitude = 0
 
 	# Compass wiretapping data
@@ -68,14 +68,15 @@ class IMPORTANT_DATA:
 	compass_temperature = 0  # degree Celsius (°C)
 
 	# Infrared wiretapping data
+	infrared_frequency_of_wavefront = 0.0  # hertz (Hz)
 	infrared_wavelength = 0.0  # micrometers (μm)  # old: infrared_signal = 0.0
 	infrared_signal_strength = 0.0  # decibel (dB)
 	infrared_signal_power = 0.0  # decibel milliwatt (dBm)
 	infrared_reception_angle = 0  # degrees (°)
 	infrared_transfer_rate = 0  # bits per second (bps)
-	# Questionable: infrared_data = ""
 
 	# Ultrasound wiretapping data
+	ultrasound_frequency_of_wavefront = 0.0  # hertz (Hz)
 	ultrasound_wavelength = 0.0  # millimeters (mm)  # old: ultrasound_signal = 0.0
 	ultrasound_signal_strength = 0.0  # decibel (dB)
 	ultrasound_signal_power = 0.0  # decibel milliwatt (dBm)
@@ -88,14 +89,14 @@ class IMPORTANT_DATA:
 	link_signal_strength = 0.0  # decibel (dB)
 	link_signal_power = 0.0  # decibel milliwatt (dBm)
 	link_noise = 0.0  # decibel milliwatt (dBm)
-	link_signal_spectrum_width = 0  # hertz (Hz)
+	link_signal_spectrum_width = 0.0  # hertz (Hz)
 	link_interference_level = 0.0  # decibel (dB)
 	link_bit_error_rate = 0  # proportion of erroneously transmitted bits (-)
 	link_transmission_power = 0.0  # decibel milliwatt (dBm)
 
 	# Stethoscope wiretapping data
 	stethoscope_sound_amplitude = 0.0  # decibel (dB)
-	stethoscope_sound_frequency = 0  # hertz (Hz)
+	stethoscope_sound_frequency = 0.0  # hertz (Hz)
 	stethoscope_sound_pressure = 0  # pascal (Pa)
 	stethoscope_sound_direction = 0  # degrees (°)
 	stethoscope_transfer_rate = 0  # bits per second (bps)

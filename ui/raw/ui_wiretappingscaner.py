@@ -37,6 +37,7 @@ class Ui_WindowWiretappingScaner(object):
         self.tabWidget.setFont(font)
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.TabPosition.North)
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.TabShape.Rounded)
+        self.tabWidget.setIconSize(QtCore.QSize(30, 30))
         self.tabWidget.setDocumentMode(False)
         self.tabWidget.setTabsClosable(False)
         self.tabWidget.setMovable(False)

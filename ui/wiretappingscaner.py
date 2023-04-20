@@ -12,9 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# from queue import Queue
-# from threading import Thread
-# from concurrent.futures import ThreadPoolExecutor
+# todo
+#  3. Завершить логирование
+#  4. Завершить QMessageBoxes
+#  5. Завершить README.md и About.md
+
 from markdown_it import MarkdownIt
 
 from PyQt6 import QtWidgets, QtCore
@@ -43,15 +45,23 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
 		self.move(qr.topLeft())
-		self.reloadTool.setIcon(QIcon("./icon/search.png"))
-		self.aboutTool.setIcon(QIcon("./icon/about.png"))
 		self.statusbar.showMessage(f"STATUS\tDISCONNECT")
 		IMPORTANT_DATA.window_height = self.height()
 		IMPORTANT_DATA.window_width = self.width()
 
 		# Icon initialization
-		# QDir.addSearchPath('icons', 'icon/')
-		# self.setWindowIcon(QIcon('icons:about.png'))
+		QDir.addSearchPath('icons', 'icon/')
+		self.setWindowIcon(QIcon('icons:about.png'))
+
+		self.reloadTool.setIcon(QIcon("./icon/search.png"))
+		self.aboutTool.setIcon(QIcon("./icon/about.png"))
+
+		self.tabWidget.setTabIcon(0, QIcon("./icon/radio.png"))
+		self.tabWidget.setTabIcon(1, QIcon("./icon/compass.png"))
+		self.tabWidget.setTabIcon(2, QIcon("./icon/infrared.png"))
+		self.tabWidget.setTabIcon(3, QIcon("./icon/ultrasound.png"))
+		self.tabWidget.setTabIcon(4, QIcon("./icon/wifi.png"))
+		self.tabWidget.setTabIcon(5, QIcon("./icon/stethoscope.png"))
 
 		# It's creating a validator for the input field of the list of ports
 		rx = QRegularExpression(r'^192\.168\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
@@ -271,94 +281,98 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match index:
 			case 0:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap1 = "./icon/pulse.png"
 				IMPORTANT_DATA.text1 = "Radio impulse (s): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap2 = "./icon/wave.png"
 				IMPORTANT_DATA.text2 = "Signal noise (dB): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap3 = "./icon/spectrum_width.png"
 				IMPORTANT_DATA.text3 = "Signal Spectrum Width (Hz): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap4 = "./icon/signal_duration.png"
 				IMPORTANT_DATA.text4 = "Signal duration (s): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap5 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
-				IMPORTANT_DATA.tpixmap6 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap6 = "./icon/fork.png"
 				IMPORTANT_DATA.text6 = "Antenna impedance (Ω): "
-				IMPORTANT_DATA.tpixmap7 = "./icon/magnet.png"
-				IMPORTANT_DATA.text7 = "Antenna directivity (dB): "
-				IMPORTANT_DATA.tpixmap8 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap7 = "./icon/direction.png"
+				IMPORTANT_DATA.text7 = "Antenna directivity (dBi): "
+				IMPORTANT_DATA.tpixmap8 = "./icon/signal_strength_0.png"
 				IMPORTANT_DATA.text8 = "Signal strength (dB): "
 				self.RadioDrawFrame.customRepaint()
 			case 1:
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
 				IMPORTANT_DATA.text1 = "A magnetic field (μT): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap2 = "./icon/angle.png"
 				IMPORTANT_DATA.text2 = "Tilt angle (°): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap3 = "./icon/north_direction.png"
 				IMPORTANT_DATA.text3 = "North direction (°): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap4 = "./icon/field_strength.png"
 				IMPORTANT_DATA.text4 = "Field strength (A/m): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap5 = "./icon/temperature.png"
 				IMPORTANT_DATA.text5 = "Temperature (°C): "
 				self.CompassDrawFrame.customRepaint()
 			case 2:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
-				IMPORTANT_DATA.text1 = "Wavelength (μm): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
-				IMPORTANT_DATA.text2 = "Signal strength (dB): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
-				IMPORTANT_DATA.text3 = "Signal power (dBm): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
-				IMPORTANT_DATA.text4 = "Reception angle (°): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
-				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
+				IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
+				IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
+				IMPORTANT_DATA.text2 = "Wavelength (μm): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
+				IMPORTANT_DATA.text3 = "Signal strength (dB): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
+				IMPORTANT_DATA.text4 = "Signal power (dBm): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/angle.png"
+				IMPORTANT_DATA.text5 = "Reception angle (°): "
+				IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
+				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
 				self.IRDrawFrame.customRepaint()
 			case 3:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
-				IMPORTANT_DATA.text1 = "Wavelength (mm): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
-				IMPORTANT_DATA.text2 = "Signal strength (dB): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
-				IMPORTANT_DATA.text3 = "Signal power (dBm): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
-				IMPORTANT_DATA.text4 = "Resolution (mm): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
-				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
+				IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
+				IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
+				IMPORTANT_DATA.text2 = "Wavelength (mm): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
+				IMPORTANT_DATA.text3 = "Signal strength (dB): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
+				IMPORTANT_DATA.text4 = "Signal power (dBm): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/wave.png"
+				IMPORTANT_DATA.text5 = "Resolution (mm): "
+				IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
+				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
 				self.UltrasoundDrawFrame.customRepaint()
 			case 4:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap1 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text1 = "Transfer rate (bps): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap2 = "./icon/spectrum_width.png"
 				IMPORTANT_DATA.text2 = "Frequency range (Hz): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
 				IMPORTANT_DATA.text3 = "Signal strength (dB): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
 				IMPORTANT_DATA.text4 = "Signal power (dBm): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap5 = "./icon/wave.png"
 				IMPORTANT_DATA.text5 = "Signal noise (dBm): "
-				IMPORTANT_DATA.tpixmap6 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap6 = "./icon/spectrum_width.png"
 				IMPORTANT_DATA.text6 = "Signal Spectrum Width (Hz): "
-				IMPORTANT_DATA.tpixmap7 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap7 = "./icon/interference.png"
 				IMPORTANT_DATA.text7 = "Interference level (dB): "
-				IMPORTANT_DATA.tpixmap8 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap8 = "./icon/warning.png"
 				IMPORTANT_DATA.text8 = "Bit error rate (-): "
-				IMPORTANT_DATA.tpixmap9 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap9 = "./icon/engine.png"
 				IMPORTANT_DATA.text9 = "Transmission power (dBm): "
 				self.FreeChannelDrawFrame.customRepaint()
 			case 5:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap1 = "./icon/amplitude.png"
 				IMPORTANT_DATA.text1 = "Sound amplitude (dB): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap2 = "./icon/sinus.png"
 				IMPORTANT_DATA.text2 = "Sound frequency (Hz): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap3 = "./icon/sound_pressure.png"
 				IMPORTANT_DATA.text3 = "Sound pressure (Pa): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap4 = "./icon/direction.png"
 				IMPORTANT_DATA.text4 = "Sound direction (°): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/magnet.png"
+				IMPORTANT_DATA.tpixmap5 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.StethoscopeDrawFrame.customRepaint()
 

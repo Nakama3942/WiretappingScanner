@@ -64,6 +64,12 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
       <property name="documentMode">
        <bool>false</bool>
       </property>

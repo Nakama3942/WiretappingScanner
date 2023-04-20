@@ -12,12 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from PyQt6.QtGui import QPainterPath
+from PyQt6.QtGui import QPainterPath, QTransform
 from math import sin
 
-from src.state import IMPORTANT_DATA
-
-def RadioSignal(grid):
+def sinus(grid, window_width, spectrum_width, amplitude):
 	# Формула синусоиды: y = A * sin (ωx + φ) + k
 	# Формула длины волны по частоте: λ = c / v
 	# A - амплитуда, которую можно понимать как высоту волны
@@ -27,14 +25,15 @@ def RadioSignal(grid):
 	#     (frequency = c / radio_signal)
 	# φ - начальная фаза
 	# k - смещение по оси Y
-	amplitude = IMPORTANT_DATA.radio_signal_strength											# A
-	frequency = 300_000_000 / (IMPORTANT_DATA.radio_signal_spectrum_width * 1_000_000 * grid)	# λ
-	initphase = 0																				# φ
-	offset = 450																				# k
+
+	# amplitude = IMPORTANT_DATA.radio_signal_strength				# A
+	frequency = 300_000_000 / (spectrum_width * 1_000_000 * grid)	# λ
+	initphase = 0													# φ
+	offset = 500													# k
 
 	wave = QPainterPath()
 	is_start = True
-	for x in range(0, IMPORTANT_DATA.window_width):  # x - значения (0 ~ frequency) до синусоиды
+	for x in range(0, window_width):  # x - значения (0 ~ frequency) до синусоиды
 		# waveY изменяется при изменении значения x, получая таким образом синусоидальную кривую
 		waveY = (amplitude * sin(frequency * x + initphase)) + offset
 		if is_start:
@@ -46,3 +45,13 @@ def RadioSignal(grid):
 			wave.lineTo(x, waveY)
 
 	return wave
+
+def rotatePath(path, degrees):
+	# Создаем объект QTransform для поворота пути
+	transform = QTransform()
+	transform.translate(400, 400)
+	transform.rotate(degrees)
+	transform.translate(-400, -400)
+
+	# Поворачиваем путь и возвращаем результат
+	return transform.map(path)
