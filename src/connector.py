@@ -134,29 +134,40 @@ class Connector:
 # 		if not self.isConnected:
 # 			self._ip = ip
 #
-# 	def connect(self) -> bool:
-# 		self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# 	def connect(self) -> str:
 # 		try:
+# 			self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # 			self._sock.connect((self._ip, self._port))
 # 			self._sock.sendall(b'CON')
+# 			connection_bytes = self._sock.recv(53)
+# 			serial = _connection_verify(connection_bytes)  # Верификация ответа
 # 			self.isConnected = True
-# 			return True
-# 		except:
-# 			return False
+# 			return serial
+# 		except ValueError as err:  # Если не пройдена верификация подключения
+# 			raise ValueError(str(err))
 #
-# 	def request(self) -> bool:
+# 	def request(self) -> list:
 # 		try:
-# 			# Заполнение данными будет тут
 # 			self._sock.sendall(b'EXC')
-# 			return True
-# 		except:
-# 			return False
+# 			buffer_size = 256
+# 			data_bytes = b''
+# 			while True:
+# 				chunk = self._sock.recv(1)  # чтение одного байта
+# 				if not chunk:
+# 					break  # если нет данных, выходим из цикла
+# 				data_bytes += chunk
+# 				if len(data_bytes) >= buffer_size or chunk == b'\x1b':
+# 					break  # достигнут максимальный размер буфера или найден символ окончания пакета
+# 			return _data_verify(data_bytes)  # Верификация ответа
+# 		except ValueError as err:  # Если не пройдена верификация данных
+# 			raise ValueError(str(err))
 #
-# 	def disconnect(self) -> bool:
+# 	def disconnect(self) -> None:
 # 		try:
 # 			self._sock.sendall(b'COFF')
-# 			self._sock.close()
+# 			disconnection_bytes = self._sock.recv(13)
+# 			if _disconnection_verify(disconnection_bytes):  # Верификация ответа
+# 				self._sock.close()
 # 			self.isConnected = False
-# 			return True
-# 		except:
-# 			return False
+# 		except ValueError as err:  # Если не пройдена верификация отключения
+# 			raise ValueError(str(err))

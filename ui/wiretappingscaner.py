@@ -127,6 +127,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# (without this, the program refuses to work after the connection)
 		self.tabWidget_Clicked(0)
 
+		# Canceled again...
+		self.tabWidget.setTabVisible(5, False)
+
 	def tray_Show(self):
 		self.tray_icon.show()
 		self.hide()
@@ -232,6 +235,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 			self.labelPort.setText(IMPORTANT_DATA.Port)
 			self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+			self.tabWidget.setEnabled(True)
 			self.groupSettings.setEnabled(True)
 
 	def buttDisconnect_clicked(self):
@@ -265,12 +269,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 			self.labelPort.setText(IMPORTANT_DATA.Port)
 			self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+			self.tabWidget.setEnabled(False)
 			self.groupSettings.setEnabled(False)
 
 	def clearWidget(self):
 		self.RadioDrawFrame.customUpdate()
 		self.CompassDrawFrame.customUpdate()
-		self.UltrasoundDrawFrame.customUpdate()
+		self.IRDrawFrame.customUpdate()
 		self.UltrasoundDrawFrame.customUpdate()
 		self.FreeChannelDrawFrame.customUpdate()
 		self.StethoscopeDrawFrame.customUpdate()
@@ -338,18 +343,18 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.CompassDrawFrame.customRepaint()
 			case 2:
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
-				IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
-				IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
-				IMPORTANT_DATA.text2 = "Wavelength (μm): "
-				IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
-				IMPORTANT_DATA.text3 = "Signal strength (dB): "
-				IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
-				IMPORTANT_DATA.text4 = "Signal power (dBm): "
-				IMPORTANT_DATA.tpixmap5 = "./icon/angle.png"
-				IMPORTANT_DATA.text5 = "Reception angle (°): "
-				IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
-				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
+				# IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
+				IMPORTANT_DATA.text1 = "The sensor is broken"
+				# IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
+				# IMPORTANT_DATA.text2 = "Wavelength (μm): "
+				# IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
+				# IMPORTANT_DATA.text3 = "Signal strength (dB): "
+				# IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
+				# IMPORTANT_DATA.text4 = "Signal power (dBm): "
+				# IMPORTANT_DATA.tpixmap5 = "./icon/angle.png"
+				# IMPORTANT_DATA.text5 = "Reception angle (°): "
+				# IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
+				# IMPORTANT_DATA.text6 = "Transfer rate (bps): "
 				self.IRDrawFrame.customRepaint()
 			case 3:
 				IMPORTANT_DATA.tab = index
@@ -446,7 +451,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.logger.metrics(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees")
 			case 2:
 				self.IRDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.infrared_frequency_of_wavefront} THz infrared frequency of wavefront detected")
+				self.logger.fail(message_text=f"The sensor is broken")
 			case 3:
 				self.UltrasoundDrawFrame.customRepaint()
 				self.logger.metrics(message_text=f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected")
