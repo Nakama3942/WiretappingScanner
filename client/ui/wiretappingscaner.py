@@ -80,8 +80,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.buttProgramScreenshot.clicked.connect(self.buttProgramScreenshot_clicked)
 		self.buttSaveLog.clicked.connect(self.buttSaveLog_clicked)
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
-		# self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
-		# self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
+		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
+		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
 
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
@@ -283,7 +283,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.success(message_text=f"DISCONNECT")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
-		self.statusLine.setText("Disconnect")
+		self.statusLine.setText("Disconnected")
 		self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 		self.labelPort.setText(IMPORTANT_DATA.Port)
@@ -442,40 +442,42 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.StethoscopeDrawFrame.customRepaint()
 
-	# def ultrasound_Gen(self):
-	# 	gen_dialog = UltrasoundDialog()
-	# 	gen_dialog.show()
-	# 	result: int = gen_dialog.exec()
-	# 	match result:
-	# 		case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
-	# 			# Unimplemented
-	# 			self.logger.error(message_text="1 (Unimplemented)")
-	# 		case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
-	# 			# Unimplemented
-	# 			self.logger.error(message_text="2 (Unimplemented)")
-	# 		case _:
-	# 			# Unimplemented
-	# 			self.logger.error(message_text="3 (Unimplemented)")
-	# 	self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-	#
-	# def ultrasound_Play(self):
-	# 	# Unimplemented
-	# 	self.logger.error(message_text="4 (Unimplemented)")
-	# 	self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.event(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.audit(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.metrics(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.user(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.message(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.info(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.notice(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.warning(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
-	# 	self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+	def ultrasound_Gen(self):
+		# Unimplemented
+		# gen_dialog = UltrasoundDialog()
+		# gen_dialog.show()
+		# result: int = gen_dialog.exec()
+		# match result:
+		# 	case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
+		# 		# Unimplemented
+		# 		self.logger.error(message_text="1 (Unimplemented)")
+		# 	case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
+		# 		# Unimplemented
+		# 		self.logger.error(message_text="2 (Unimplemented)")
+		# 	case _:
+		# 		# Unimplemented
+		# 		self.logger.error(message_text="3 (Unimplemented)")
+		self.logger.notice(message_text="No ultrasound generation module")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
+	def ultrasound_Play(self):
+		# Unimplemented
+		self.logger.notice(message_text="Unimplemented")
+		# self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.event(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.audit(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.metrics(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.user(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.message(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.info(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.notice(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.warning(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
+		# self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)

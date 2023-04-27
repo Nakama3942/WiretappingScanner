@@ -232,14 +232,15 @@ class DrawFrame(QFrame):
 						IMPORTANT_DATA.ultrasound_frequency_of_wavefront,
 						IMPORTANT_DATA.ultrasound_signal_strength
 					))
-					# # Button 1
-					# qp.drawRect(100, 200, 200, 50)
-					# qp.fillRect(100, 200, 200, 50, QColor(50, 50, 50, 40))
-					# qp.drawText(130, 232, "Generate sound")
-					# # Button 2
-					# qp.drawRect(400, 200, 200, 50)
-					# qp.fillRect(400, 200, 200, 50, QColor(50, 50, 50, 40))
-					# qp.drawText(455, 232, "Play sound")
+
+					# Button 1
+					qp.drawRect(150, 350, 200, 50)
+					qp.fillRect(150, 350, 200, 50, QColor(50, 50, 50, 40))
+					qp.drawText(180, 382, "Generate sound")
+					# Button 2
+					qp.drawRect(450, 350, 200, 50)
+					qp.fillRect(450, 350, 200, 50, QColor(50, 50, 50, 40))
+					qp.drawText(505, 382, "Play sound")
 				case 4:
 					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(270, 100, IMPORTANT_DATA.text1)
@@ -330,9 +331,9 @@ class DrawFrame(QFrame):
 		super().update()
 		self.draw = False
 
-	# def mousePressEvent(self, event: QMouseEvent):
-	# 	if IMPORTANT_DATA.tab == 3:
-	# 		if 100 <= event.pos().x() <= 300 and 200 <= event.pos().y() <= 250:
-	# 			self.gen_sound.emit()
-	# 		elif 400 <= event.pos().x() <= 600 and 200 <= event.pos().y() <= 250:
-	# 			self.play_sound.emit()
+	def mousePressEvent(self, event: QMouseEvent):
+		if IMPORTANT_DATA.tab == 3:
+			if 150 <= event.pos().x() <= 350 and 350 <= event.pos().y() <= 400:
+				self.gen_sound.emit()
+			elif 450 <= event.pos().x() <= 650 and 350 <= event.pos().y() <= 400:
+				self.play_sound.emit()
