@@ -4,7 +4,272 @@ const char* ssid = "F*ck you, not ssid";
 const char* password = "F*ck you, not password";
 //192.168.0.105
 
-int temp = 0;
+int temp = 0; // Временное решение
+
+// ========================================================================
+//                                   DATA
+// ========================================================================
+
+// Radio wiretapping data
+int radio_impulse = 0;  // seconds (s)
+float radio_noise = 0.0;  // decibel (dB)
+float radio_signal_spectrum_width = 0.0;  // hertz (Hz)
+int radio_signal_duration = 0;  // seconds (s)
+int radio_transfer_rate = 0;  // bits per second (bps)
+int radio_antenna_impedance = 0;  // ohm (Ω)
+float radio_antenna_directivity = 0.0;  // decibel (dBi)
+float radio_signal_strength = 0.0;  // decibel (dB)
+
+// Compass wiretapping data
+int compass_magnetic_field = 0;  // microtesla (μT)
+int compass_tilt_angle = 0;  // degrees (°)
+int compass_north_direction = 0;  // degrees (°)
+float compass_field_strength = 0.0;  // ampere-vits per meter (A/m)
+int compass_temperature = 0;  // degree Celsius (°C)
+
+// Infrared wiretapping data
+float infrared_frequency_of_wavefront = 0.0;  // hertz (Hz)
+float infrared_wavelength = 0.0;  // micrometers (μm)
+float infrared_signal_strength = 0.0;  // decibel (dB)
+float infrared_signal_power = 0.0;  // decibel milliwatt (dBm)
+int infrared_reception_angle = 0;  // degrees (°)
+int infrared_transfer_rate = 0;  // bits per second (bps)
+
+// Ultrasound wiretapping data
+float ultrasound_frequency_of_wavefront = 0.0;  // hertz (Hz)
+float ultrasound_wavelength = 0.0;  // millimeters (mm)
+float ultrasound_signal_strength = 0.0;  // decibel (dB)
+float ultrasound_signal_power = 0.0;  // decibel milliwatt (dBm)
+float ultrasound_resolution = 0.0;  // millimeters (mm)
+int ultrasound_transfer_rate = 0;  // bits per second (bps)
+
+// Link quality wiretapping data
+int link_transfer_rate = 0;  // bits per second (bps)
+int link_frequency_range = 0;  // hertz (Hz)
+float link_signal_strength = 0.0;  // decibel (dB)
+float link_signal_power = 0.0;  // decibel milliwatt (dBm)
+float link_noise = 0.0;  // decibel milliwatt (dBm)
+float link_signal_spectrum_width = 0.0;  // hertz (Hz)
+float link_interference_level = 0.0;  // decibel (dB)
+int link_bit_error_rate = 0;  // proportion of erroneously transmitted bits (-)
+float link_transmission_power = 0.0;  // decibel milliwatt (dBm)
+
+// Stethoscope wiretapping data
+float stethoscope_sound_amplitude = 0.0;  // decibel (dB)
+float stethoscope_sound_frequency = 0.0;  // hertz (Hz)
+int stethoscope_sound_pressure = 0;  // pascal (Pa)
+int stethoscope_sound_direction = 0;  // degrees (°)
+int stethoscope_transfer_rate = 0;  // bits per second (bps)
+
+// ========================================================================
+//                                 FUNCTION
+// ========================================================================
+
+void radio()
+{
+	if (temp == 0)
+	{
+		radio_impulse = 1;
+		radio_noise = 2.2;
+		radio_signal_spectrum_width = 97.1;
+		radio_signal_duration = 4;
+		radio_transfer_rate = 5;
+		radio_antenna_impedance = 6;
+		radio_antenna_directivity = 7.7;
+		radio_signal_strength = 20.0;
+	}
+	else
+	{
+		radio_impulse = 5;
+		radio_noise = 6.6;
+		radio_signal_spectrum_width = 101.4;
+		radio_signal_duration = 8;
+		radio_transfer_rate = 9;
+		radio_antenna_impedance = 1;
+		radio_antenna_directivity = 2.2;
+		radio_signal_strength = 28.1;
+	}
+}
+
+void compass()
+{
+	if (temp == 0)
+	{
+		compass_magnetic_field = 9;
+		compass_tilt_angle = 70;
+		compass_north_direction = 270;
+		compass_field_strength = 3.3;
+		compass_temperature = 4;
+	}
+	else
+	{
+		compass_magnetic_field = 4;
+		compass_tilt_angle = 240;
+		compass_north_direction = 76;
+		compass_field_strength = 7.7;
+		compass_temperature = 8;
+	}
+}
+
+void infrared()
+{
+	if (temp == 0)
+	{
+		infrared_frequency_of_wavefront = 55.9;
+		infrared_wavelength = 5.5;
+		infrared_signal_strength = 95.2;
+		infrared_signal_power = 7.7;
+		infrared_reception_angle = 8;
+		infrared_transfer_rate = 9;
+	}
+	else
+	{
+		infrared_frequency_of_wavefront = 99.2;
+		infrared_wavelength = 9.9;
+		infrared_signal_strength = 97.1;
+		infrared_signal_power = 2.2;
+		infrared_reception_angle = 3;
+		infrared_transfer_rate = 4;
+	}
+}
+
+void ultrasound()
+{
+	if (temp == 0)
+	{
+		ultrasound_frequency_of_wavefront = 69.2;
+		ultrasound_wavelength = 1.1;
+		ultrasound_signal_strength = 29.2;
+		ultrasound_signal_power = 3.3;
+		ultrasound_resolution = 4.4;
+		ultrasound_transfer_rate = 5;
+	}
+	else
+	{
+		ultrasound_frequency_of_wavefront = 69.3;
+		ultrasound_wavelength = 5.5;
+		ultrasound_signal_strength = 31.6;
+		ultrasound_signal_power = 7.7;
+		ultrasound_resolution = 8.8;
+		ultrasound_transfer_rate = 9;
+	}
+}
+
+void link_quality()
+{
+	if (temp == 0)
+	{
+		link_transfer_rate = 6;
+		link_frequency_range = 7;
+		link_signal_strength = 29.9;
+		link_signal_power = 9.9;
+		link_noise = 1.1;
+		link_signal_spectrum_width = 79.9;
+		link_interference_level = 3.3;
+		link_bit_error_rate = 4;
+		link_transmission_power = 5.5;
+	}
+	else
+	{
+		link_transfer_rate = 1;
+		link_frequency_range = 2;
+		link_signal_strength = 39.9;
+		link_signal_power = 4.4;
+		link_noise = 5.5;
+		link_signal_spectrum_width = 61.2;
+		link_interference_level = 7.7;
+		link_bit_error_rate = 8;
+		link_transmission_power = 9.9;
+	}
+}
+
+void stethoscope()
+{
+	if (temp == 0)
+	{
+		stethoscope_sound_amplitude = 36.6;
+		stethoscope_sound_frequency = 76.6;
+		stethoscope_sound_pressure = 8;
+		stethoscope_sound_direction = 9;
+		stethoscope_transfer_rate = 1;
+	}
+	else
+	{
+		stethoscope_sound_amplitude = 37.8;
+		stethoscope_sound_frequency = 88.9;
+		stethoscope_sound_pressure = 3;
+		stethoscope_sound_direction = 4;
+		stethoscope_transfer_rate = 5;
+	}
+}
+
+// ========================================================================
+//                              DATA PACKAGING
+// ========================================================================
+
+uint8_t* connection_packet()
+{
+	uint8_t *packet_data = new uint8_t[53] {0x08, 0x07, 0x00, 0x01, 0x05, 0x02, 0x57, 0x49, 0x52, 0x45, 0x54, 0x41, 0x50, 0x50, 0x49, 0x4e, 0x47, 0x2d, 0x53, 0x43, 0x41, 0x4e, 0x45, 0x52, 0x03, 0x05, 0x01, 0x41, 0x51, 0x57, 0x5a, 0x45, 0x2d, 0x42, 0x43, 0x45, 0x2d, 0x59, 0x50, 0x41, 0x2d, 0x4d, 0x4f, 0x52, 0x48, 0x18, 0x1a, 0x16, 0x01, 0x4f, 0x4b, 0x04, 0x1b};
+	return packet_data;
+}
+
+uint8_t* data_packet(int *size)
+{
+	String packet = "\x08\x07\x16\x1e"
+	+ String(radio_impulse) + "\x1e"
+	+ String(radio_noise, 1) + "\x1e"
+	+ String(radio_signal_spectrum_width, 1) + "\x1e"
+	+ String(radio_signal_duration) + "\x1e"
+	+ String(radio_transfer_rate) + "\x1e"
+	+ String(radio_antenna_impedance) + "\x1e"
+	+ String(radio_antenna_directivity, 1) + "\x1e"
+	+ String(radio_signal_strength, 1) + "\x1e"
+	+ String(compass_magnetic_field) + "\x1e"
+	+ String(compass_tilt_angle) + "\x1e"
+	+ String(compass_north_direction) + "\x1e"
+	+ String(compass_field_strength, 1) + "\x1e"
+	+ String(compass_temperature) + "\x1e"
+	+ String(infrared_frequency_of_wavefront, 1) + "\x1e"
+	+ String(infrared_wavelength, 1) + "\x1e"
+	+ String(infrared_signal_strength, 1) + "\x1e"
+	+ String(infrared_signal_power, 1) + "\x1e"
+	+ String(infrared_reception_angle) + "\x1e"
+	+ String(infrared_transfer_rate) + "\x1e"
+	+ String(ultrasound_frequency_of_wavefront, 1) + "\x1e"
+	+ String(ultrasound_wavelength, 1) + "\x1e"
+	+ String(ultrasound_signal_strength, 1) + "\x1e"
+	+ String(ultrasound_signal_power, 1) + "\x1e"
+	+ String(ultrasound_resolution, 1) + "\x1e"
+	+ String(ultrasound_transfer_rate) + "\x1e"
+	+ String(link_transfer_rate) + "\x1e"
+	+ String(link_frequency_range) + "\x1e"
+	+ String(link_signal_strength, 1) + "\x1e"
+	+ String(link_signal_power, 1) + "\x1e"
+	+ String(link_noise, 1) + "\x1e"
+	+ String(link_signal_spectrum_width, 1) + "\x1e"
+	+ String(link_interference_level, 1) + "\x1e"
+	+ String(link_bit_error_rate) + "\x1e"
+	+ String(link_transmission_power, 1) + "\x1e"
+	+ String(stethoscope_sound_amplitude, 1) + "\x1e"
+	+ String(stethoscope_sound_frequency, 1) + "\x1e"
+	+ String(stethoscope_sound_pressure) + "\x1e"
+	+ String(stethoscope_sound_direction) + "\x1e"
+	+ String(stethoscope_transfer_rate) + "\x1e\x1f\x1b";
+	*size = packet.length();
+	uint8_t *packet_data = new uint8_t[*size];
+	memcpy(packet_data, packet.c_str(), *size);
+	return packet_data;
+}
+
+uint8_t* disconnection_packet()
+{
+	uint8_t *packet_data = new uint8_t[13] {0x08, 0x07, 0x00, 0x04, 0x16, 0x01, 0x53, 0x54, 0x4f, 0x50, 0x04, 0x18, 0x1b};;
+	return packet_data;
+}
+
+// ========================================================================
+//                                 FIRMWARE
+// ========================================================================
 
 WiFiServer server(12556); //Порт для подключения
 
@@ -39,7 +304,7 @@ void loop()
 {
 	WiFiClient client = server.available(); //Проверить наличие клиентского соединения
 	if (client)
-		{
+	{
 		Serial.println("New client connected");
 		while (client.connected())
 		{
@@ -61,24 +326,24 @@ void loop()
 
 				if (command == "CON_ON") // CONECTION ON
 				{
-					client.write("\x08\x07\x00\x01\x05\x02\x57\x49\x52\x45\x54\x41\x50\x50\x49\x4e\x47\x2d\x53\x43\x41\x4e\x45\x52\x03\x05\x01\x41\x51\x57\x5a\x45\x2d\x42\x43\x45\x2d\x59\x50\x41\x2d\x4d\x4f\x52\x48\x18\x1a\x16\x01\x4f\x4b\x04\x1b", 53);
+					client.write(connection_packet(), 53);
 				}
 				else if (command == "EXEC_REQ") // EXECUTION REQUEST
 				{
-					if (temp == 0)
-					{
-						client.write("\x08\x07\x16\x1e\x31\x1e\x32\x2e\x32\x1e\x39\x37\x2e\x31\x1e\x34\x1e\x35\x1e\x36\x1e\x37\x2e\x37\x1e\x32\x30\x2e\x30\x1e\x39\x1e\x37\x30\x1e\x32\x37\x30\x1e\x33\x2e\x33\x1e\x34\x1e\x35\x35\x2e\x39\x1e\x35\x2e\x35\x1e\x39\x35\x2e\x32\x1e\x37\x2e\x37\x1e\x38\x1e\x39\x1e\x36\x39\x2e\x32\x1e\x31\x2e\x31\x1e\x32\x39\x2e\x32\x1e\x33\x2e\x33\x1e\x34\x2e\x34\x1e\x35\x1e\x36\x1e\x37\x1e\x32\x39\x2e\x39\x1e\x39\x2e\x39\x1e\x31\x2e\x31\x1e\x37\x39\x2e\x39\x1e\x33\x2e\x33\x1e\x34\x1e\x35\x2e\x35\x1e\x33\x36\x2e\x36\x1e\x37\x36\x2e\x36\x1e\x38\x1e\x39\x1e\x31\x1e\x1f\x1b");
-						temp++;
-					}
-					else
-					{
-						client.write("\x08\x07\x16\x1e\x35\x1e\x36\x2e\x36\x1e\x31\x30\x31\x2e\x34\x1e\x38\x1e\x39\x1e\x31\x1e\x32\x2e\x32\x1e\x32\x38\x2e\x31\x1e\x34\x1e\x32\x34\x30\x1e\x37\x36\x1e\x37\x2e\x37\x1e\x38\x1e\x39\x39\x2e\x32\x1e\x39\x2e\x39\x1e\x39\x37\x2e\x31\x1e\x32\x2e\x32\x1e\x33\x1e\x34\x1e\x36\x39\x2e\x33\x1e\x35\x2e\x35\x1e\x33\x31\x2e\x36\x1e\x37\x2e\x37\x1e\x38\x2e\x38\x1e\x39\x1e\x31\x1e\x32\x1e\x33\x39\x2e\x39\x1e\x34\x2e\x34\x1e\x35\x2e\x35\x1e\x36\x31\x2e\x32\x1e\x37\x2e\x37\x1e\x38\x1e\x39\x2e\x39\x1e\x33\x37\x2e\x38\x1e\x38\x38\x2e\x39\x1e\x33\x1e\x34\x1e\x35\x1e\x1f\x1b");
-						temp--;
-					}
+					radio();
+					compass();
+					infrared();
+					ultrasound();
+					link_quality();
+					stethoscope();
+					int *size = new int;
+					uint8_t *data = data_packet(size);
+					client.write(data, *size);
+					temp == 0 ? temp++ : temp--; // Временное решение
 				}
 				else if (command == "CON_OFF") // CONECTION OFF
 				{
-					client.write("\x08\x07\x00\x04\x16\x01\x53\x54\x4f\x50\x04\x18\x1b", 13);
+					client.write(disconnection_packet(), 13);
 				}
 			}
 		}
