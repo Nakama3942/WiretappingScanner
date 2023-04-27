@@ -15,6 +15,7 @@
 # todo
 #  5. Завершить README.md и About.md
 
+from time import sleep
 from markdown_it import MarkdownIt
 
 from PyQt6 import QtWidgets, QtCore
@@ -120,8 +121,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 		# Initialization of process of tracking
-		self.detector = Detector(self.logger)
+		self.detector = Detector()
+		self.detector.starting_signal.connect(self.detect_starting_signal)
+		self.detector.starting_error_signal.connect(self.detect_starting_error_signal)
 		self.detector.update_data_signal.connect(self.detect_update_data_signal)
+		self.detector.update_data_error_signal.connect(self.detect_update_data_error_signal)
+		self.detector.stopping_signal.connect(self.detect_stopping_signal)
+		self.detector.stopping_error_signal.connect(self.detect_stopping_error_signal)
 
 		# Tab selection simulation - start renderer
 		# (without this, the program refuses to work after the connection)
@@ -199,7 +205,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttConnect_clicked(self):
-		try:
+		if not self.buttConnect.trouble:
 			if self.IPLine.text() == "":
 				if self.IPBox.count() == 0:
 					raise ConnectionError("IP address is not specified")
@@ -208,69 +214,99 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			IMPORTANT_DATA.IPAddr = self.IPLine.text()
 			IMPORTANT_DATA.Port = "12556"
 			self.detector.set_ip(self.IPLine.text())
-			self.detector.con()
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
-		except Exception as error:  # Если не пройдена верификация подключения
-			err = QMessageBox()
-			err.setWindowTitle("Error")
-			err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
-			err.setIcon(QMessageBox.Icon.Warning)
-			err.setText("<font size=14 color='red'>Error...</font>")
-			err.setInformativeText(f"<font color='darkred'>{str(error)}</font>")
-			err.setStandardButtons(QMessageBox.StandardButton.Cancel)
-			ret: int = err.exec()
-			match ret:
-				case QMessageBox.StandardButton.Cancel:
-					self.logger.fail(message_text=str(error))
-					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-			self.buttDisconnect.trouble = True
-			self.buttDisconnect.click()
-		else:
-			self.buttDisconnect.trouble = False
-			self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
-			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-			self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
-			self.statusLine.setText("Connected")
-			self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
-			self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
-			self.labelPort.setText(IMPORTANT_DATA.Port)
-			self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
-			self.tabWidget.setEnabled(True)
-			self.groupSettings.setEnabled(True)
+
+	def detect_starting_signal(self):
+		self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
+		self.statusLine.setText("Connected")
+		self.statusLine.setStyleSheet("color: rgb(0, 150, 0);\nfont: italic;\nfont-size: 18px;")
+		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
+		self.labelPort.setText(IMPORTANT_DATA.Port)
+		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+		self.tabWidget.setEnabled(True)
+		self.groupSettings.setEnabled(True)
+		self.buttDisconnect.trouble = False
+
+	def detect_starting_error_signal(self, error: str):
+		err = QMessageBox()
+		err.setWindowTitle("Error")
+		err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
+		err.setIcon(QMessageBox.Icon.Warning)
+		err.setText("<font size=14 color='red'>Error...</font>")
+		err.setInformativeText(f"<font color='darkred'>{error}</font>")
+		err.setStandardButtons(QMessageBox.StandardButton.Cancel)
+		ret: int = err.exec()
+		match ret:
+			case QMessageBox.StandardButton.Cancel:
+				self.logger.fail(message_text=error)
+				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		self.buttDisconnect.trouble = True
+		self.buttDisconnect.click()
+
+	def detect_update_data_signal(self):
+		match IMPORTANT_DATA.tab:
+			case 0:
+				self.RadioDrawFrame.customRepaint()
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.radio_signal_spectrum_width} MHz radio signal spectrum width detected")
+			case 1:
+				self.CompassDrawFrame.customRepaint()
+				self.logger.metrics(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees")
+			case 2:
+				self.IRDrawFrame.customRepaint()
+				self.logger.fail(message_text=f"The sensor is broken")
+			case 3:
+				self.UltrasoundDrawFrame.customRepaint()
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected")
+			case 4:
+				self.FreeChannelDrawFrame.customRepaint()
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.link_signal_strength} Hz link quality detected")
+			case 5:
+				self.StethoscopeDrawFrame.customRepaint()
+				self.logger.metrics(message_text=f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
+	def detect_update_data_error_signal(self, error: str):
+		self.logger.fail(message_text=error)
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def buttDisconnect_clicked(self):
 		if not self.buttDisconnect.trouble:
-			try:
-				self.detector.coff()
-			except ValueError as error:
-				err = QMessageBox()
-				err.setWindowTitle("Error")
-				err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
-				err.setIcon(QMessageBox.Icon.Warning)
-				err.setText("<font size=14 color='red'>Error...</font>")
-				err.setInformativeText(f"<font color='darkred'>{str(error)}</font>")
-				err.setStandardButtons(QMessageBox.StandardButton.Cancel)
-				ret: int = err.exec()
-				match ret:
-					case QMessageBox.StandardButton.Cancel:
-						self.logger.fail(message_text=str(error))
-						self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-				self.buttConnect.click()
-				return
-			self.detector.terminate()
-			self.clearWidget()
-			IMPORTANT_DATA.IPAddr = "000.000.000.000"
-			IMPORTANT_DATA.Port = "00000"
-			self.logger.success(message_text=f"DISCONNECT")
-			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-			self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
-			self.statusLine.setText("Disconnect")
-			self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
-			self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
-			self.labelPort.setText(IMPORTANT_DATA.Port)
-			self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
-			self.tabWidget.setEnabled(False)
-			self.groupSettings.setEnabled(False)
+			self.detector.stop()
+
+	def detect_stopping_signal(self):
+		self.detector.terminate()
+		self.clearWidget()
+		IMPORTANT_DATA.IPAddr = "000.000.000.000"
+		IMPORTANT_DATA.Port = "00000"
+		self.logger.success(message_text=f"DISCONNECT")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		self.statusbar.showMessage(f"STATUS:\tDISCONNECT")
+		self.statusLine.setText("Disconnect")
+		self.statusLine.setStyleSheet("color: rgb(200, 0, 0);\nfont: italic;\nfont-size: 18px;")
+		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
+		self.labelPort.setText(IMPORTANT_DATA.Port)
+		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+		self.tabWidget.setEnabled(False)
+		self.groupSettings.setEnabled(False)
+		self.buttConnect.trouble = False
+
+	def detect_stopping_error_signal(self, error: str):
+		err = QMessageBox()
+		err.setWindowTitle("Error")
+		err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
+		err.setIcon(QMessageBox.Icon.Warning)
+		err.setText("<font size=14 color='red'>Error...</font>")
+		err.setInformativeText(f"<font color='darkred'>{error}</font>")
+		err.setStandardButtons(QMessageBox.StandardButton.Cancel)
+		ret: int = err.exec()
+		match ret:
+			case QMessageBox.StandardButton.Cancel:
+				self.logger.fail(message_text=error)
+				self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+		self.buttConnect.trouble = True
+		self.buttConnect.click()
 
 	def clearWidget(self):
 		self.RadioDrawFrame.customUpdate()
@@ -441,28 +477,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	# 	self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
 	# 	self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def detect_update_data_signal(self):
-		match IMPORTANT_DATA.tab:
-			case 0:
-				self.RadioDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.radio_signal_spectrum_width} MHz radio signal spectrum width detected")
-			case 1:
-				self.CompassDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees")
-			case 2:
-				self.IRDrawFrame.customRepaint()
-				self.logger.fail(message_text=f"The sensor is broken")
-			case 3:
-				self.UltrasoundDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected")
-			case 4:
-				self.FreeChannelDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.link_signal_strength} Hz link quality detected")
-			case 5:
-				self.StethoscopeDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-
 	def keyPressEvent(self, event: QKeyEvent):
 		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
 
@@ -470,10 +484,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Program termination should occur in the tray, and not in the system menu
 		# If the program is hidden, then the tray is available, not the system menu
 		# Completion is allowed in the system menu if shift is pressed or not connected
-		if self.isHidden() or self.shift_bool or not IMPORTANT_DATA.connect:
+		if not IMPORTANT_DATA.connect:
+			QApplication.instance().exit(0)
+		elif self.isHidden() or self.shift_bool:
 			# So can end the program
-			self.detector.coff()
-			self.detector.terminate()
+			self.buttDisconnect_clicked()
 			# event.accept()  # For some reason it doesn't work
 			QApplication.instance().exit(0)
 		else:
