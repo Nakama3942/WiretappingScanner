@@ -15,7 +15,6 @@
 # todo
 #  5. Завершить README.md и About.md
 
-from time import sleep
 from markdown_it import MarkdownIt
 
 from PyQt6 import QtWidgets, QtCore
@@ -462,7 +461,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def ultrasound_Play(self):
 		# Unimplemented
-		self.logger.notice(message_text="Unimplemented")
 		# self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
 		# self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
 		# self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
@@ -477,6 +475,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
 		# self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
 		# self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
+		self.logger.notice(message_text="Unimplemented")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def keyPressEvent(self, event: QKeyEvent):

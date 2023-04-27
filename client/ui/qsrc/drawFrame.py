@@ -193,13 +193,13 @@ class DrawFrame(QFrame):
 					# 	IMPORTANT_DATA.infrared_signal_strength
 					# ))
 				case 3:
-					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					qp.drawText(510, 100, str(IMPORTANT_DATA.ultrasound_frequency_of_wavefront))
+					qp.drawPixmap(QPoint(130, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(170, 100, IMPORTANT_DATA.text1)
+					qp.drawText(410, 100, str(IMPORTANT_DATA.ultrasound_frequency_of_wavefront))
 
-					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					qp.drawText(510, 140, str(IMPORTANT_DATA.ultrasound_wavelength))
+					qp.drawPixmap(QPoint(130, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(170, 140, IMPORTANT_DATA.text2)
+					qp.drawText(410, 140, str(IMPORTANT_DATA.ultrasound_wavelength))
 
 					if 5 < IMPORTANT_DATA.ultrasound_signal_strength <= 40:
 						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
@@ -210,21 +210,21 @@ class DrawFrame(QFrame):
 					else:
 						pass
 
-					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					qp.drawText(510, 180, str(IMPORTANT_DATA.ultrasound_signal_strength))
+					qp.drawPixmap(QPoint(130, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(170, 180, IMPORTANT_DATA.text3)
+					qp.drawText(410, 180, str(IMPORTANT_DATA.ultrasound_signal_strength))
 
-					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					qp.drawText(510, 220, str(IMPORTANT_DATA.ultrasound_signal_power))
+					qp.drawPixmap(QPoint(130, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(170, 220, IMPORTANT_DATA.text4)
+					qp.drawText(410, 220, str(IMPORTANT_DATA.ultrasound_signal_power))
 
-					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					qp.drawText(510, 260, str(IMPORTANT_DATA.ultrasound_resolution))
+					qp.drawPixmap(QPoint(130, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(170, 260, IMPORTANT_DATA.text5)
+					qp.drawText(410, 260, str(IMPORTANT_DATA.ultrasound_resolution))
 
-					qp.drawPixmap(QPoint(230, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
-					qp.drawText(270, 300, IMPORTANT_DATA.text6)
-					qp.drawText(510, 300, str(IMPORTANT_DATA.ultrasound_transfer_rate))
+					qp.drawPixmap(QPoint(130, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
+					qp.drawText(170, 300, IMPORTANT_DATA.text6)
+					qp.drawText(410, 300, str(IMPORTANT_DATA.ultrasound_transfer_rate))
 
 					qp.drawPath(sinus(  # Drawing the sine of a radio wave
 						10,
@@ -234,13 +234,13 @@ class DrawFrame(QFrame):
 					))
 
 					# Button 1
-					qp.drawRect(150, 350, 200, 50)
-					qp.fillRect(150, 350, 200, 50, QColor(50, 50, 50, 40))
-					qp.drawText(180, 382, "Generate sound")
+					qp.drawRect(530, 120, 200, 50)
+					qp.fillRect(530, 120, 200, 50, QColor(50, 50, 50, 40))
+					qp.drawText(575, 152, "Generate sound")
 					# Button 2
-					qp.drawRect(450, 350, 200, 50)
-					qp.fillRect(450, 350, 200, 50, QColor(50, 50, 50, 40))
-					qp.drawText(505, 382, "Play sound")
+					qp.drawRect(530, 220, 200, 50)
+					qp.fillRect(530, 220, 200, 50, QColor(50, 50, 50, 40))
+					qp.drawText(590, 252, "Play sound")
 				case 4:
 					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(270, 100, IMPORTANT_DATA.text1)
@@ -333,7 +333,7 @@ class DrawFrame(QFrame):
 
 	def mousePressEvent(self, event: QMouseEvent):
 		if IMPORTANT_DATA.tab == 3:
-			if 150 <= event.pos().x() <= 350 and 350 <= event.pos().y() <= 400:
+			if 530 <= event.pos().x() <= 730 and 120 <= event.pos().y() <= 170:
 				self.gen_sound.emit()
-			elif 450 <= event.pos().x() <= 650 and 350 <= event.pos().y() <= 400:
+			elif 530 <= event.pos().x() <= 730 and 220 <= event.pos().y() <= 270:
 				self.play_sound.emit()
