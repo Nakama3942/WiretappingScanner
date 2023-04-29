@@ -18,7 +18,7 @@ This program is a keylogger. Its main functionality:
 -->
 
 
-![Scheme](./schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.svg)
+![Scheme](./schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.png)
 
 
 
