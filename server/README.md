@@ -17,11 +17,6 @@ This program is a keylogger. Its main functionality:
 - And many other important things.
 -->
 
-
-![Scheme](./schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.svg)
-
-
-
 ## ATTEMPTION!!!
 
 1. For the program to work, you need to install Nmap!!! We recommend [the official source of the developer](https://nmap.org/download.html). ТAlso install the library in Python: ```pip install python-nmap```.
