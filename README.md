@@ -105,6 +105,12 @@ The full text of the license can be found at the following [link](https://github
 
 
 ## Схемы работы программы
+### Репозиторий
+<img src="schemes/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
+
+### Файловая связь
+<img src="schemes/Wiretapping Scanner-Software file tree.drawio.svg">
+
 ### Подключение
 <img src="schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.svg">
 
@@ -116,9 +122,6 @@ The full text of the license can be found at the following [link](https://github
 
 ### Алгоритм прошивки
 <img src="schemes/Wiretapping Scanner-Firmware algorithm.drawio.svg">
-
-### Репозиторий
-<img src="schemes/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
 
 ## Troubleshooting
 All functionality has been tested by Author, but if you have problems using it, the code does not work, have suggestions for optimization or advice for improving the style of the code and the name - I invite you [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CONTRIBUTING.md) and [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CODE_OF_CONDUCT.md).
