@@ -1,38 +1,45 @@
+<div align="center">
+
+[![template](https://img.shields.io/badge/Repository-template-darkred)](https://github.com/Nakama3942/template_rep)
+[![GitHub license](https://img.shields.io/github/license/Nakama3942/WiretappingScanner?color=gold&style=flat-square)](https://github.com/Nakama3942/WiretappingScanner/blob/master/LICENSE)
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Nakama3942/WiretappingScanner?label=latest%20release&logo=github&style=flat-square)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/Nakama3942/WiretappingScanner?style=flat-square)
+![GitHub Release Date](https://img.shields.io/github/release-date/Nakama3942/WiretappingScanner?style=flat-square)
+
+![GitHub repo size](https://img.shields.io/github/repo-size/Nakama3942/WiretappingScanner?color=darkgreen&style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Nakama3942/WiretappingScanner?color=darkgreen&style=flat-square)
+
 <!--
-# ScanPort
-
-The program is a solution to the task from the fourth laboratory on the subject "Network Information Technologies".
-
-## Overview
-
-This program is a keylogger. Its main functionality:
-
-- Ability to hide in tray;
-- Registers keyboard keystrokes;
-- Registers mouse clicks and releases (it is possible to turn on the display of coordinates);
-- Registers mouse scrolling with coordinates;
-- Registers mouse movements with coordinates;
-- Ability to save a log file;
-- All reference information and documentation are described in script files;
-- And many other important things.
+[![CHANGELOG](https://img.shields.io/badge/here-CHANGELOG-yellow)](https://github.com/Nakama3942/qt_colored_logger/blob/master/CHANGELOG.md)
+[![CONTRIBUTING](https://img.shields.io/badge/here-CONTRIBUTING-indigo)](https://github.com/Nakama3942/qt_colored_logger/blob/master/CONTRIBUTING.md)
+[![CODE_OF_CONDUCT](https://img.shields.io/badge/here-CODE_OF_CONDUCT-darkgreen)](https://github.com/Nakama3942/qt_colored_logger/blob/master/CODE_OF_CONDUCT.md)
+[![PULL_REQUEST_TEMPLATE](https://img.shields.io/badge/here-PULL_REQUEST_TEMPLATE-orange)](https://github.com/Nakama3942/qt_colored_logger/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 -->
 
+</div>
 
-![Scheme](./schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.png)
+# Wiretapping Scanner
+### Content
+- [Wiretapping Scanner](#wiretapping-scanner)
+	- [Content](#content)
+	- [Overview](#overview)
+	- [LICENSE](#license)
+	- [Installation](#installation)
+	- [Troubleshooting](#troubleshooting)
+	- [Authors](#authors)
 
+## Overview
+A project that allows you to track surveillance. It has radio, ultrasonic, ~~infrared~~ wave sensors, a ~~stethoscope~~, compass and can determine the quality of the communication signal.
 
-
-## ATTEMPTION!!!
-
-1. For the program to work, you need to install Nmap!!! We recommend [the official source of the developer](https://nmap.org/download.html). ТAlso install the library in Python: ```pip install python-nmap```.
-2. After installing the program, add Nmap to your system PATH variables. Now WiretappingScanner will scan all devices on the local network with a static(!) IP address.
-3. To make the device visible on the network: connect it to your Wi-Fi and set the device's IP address to static in the local network settings. Now Nmap will be able to detect your device on the local network, and you can connect it to the program.
+- [Content](#content)
 
 ## LICENSE
 
 The full text of the license can be found at the following [link](https://github.com/Nakama3942/WiretappingScanner/blob/master/LICENSE).
 
-> Copyright © 2023 Kalynovsky Valentin. All rights reserved.
+> Copyright © 2023 Kalynovsky Valentin, Babii Eduard. All rights reserved.
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.
@@ -46,42 +53,95 @@ The full text of the license can be found at the following [link](https://github
 > See the License for the specific language governing permissions and
 > limitations under the License.
 
+## Installation
+Проект находится в архиве в релизе. Он содержит три репозитория: ПО, прошивку, схему пайки устройства.
+ПО не требует инсталляции. Устройство нужно собирать по предоставленной схеме. После сборки устройство нужно прошить предоставленной прошивкой. Перед прошивкой esp32 нужно указать название сети и пароль, к которой будет производиться подключение.
+
+## Анализируемые данные
+- Radio wiretapping data
+	- radio impulse : seconds (s)
+	- noise : decibel (dB)
+	- signal spectrum width : hertz (Hz)
+	- signal duration : seconds (s)
+	- transfer rate : bits per second (bps)
+	- antenna impedance : ohm (Ω)
+	- antenna directivity : decibel (dBi)
+	- signal strength : decibel (dB)
+
+- Compass wiretapping data
+	- magnetic field : microtesla (μT)
+	- tilt angle : degrees (°)
+	- north direction : degrees (°)
+	- field strength : ampere-vits per meter (A/m)
+	- temperature : degree Celsius (°C)
+
+- Infrared wiretapping data
+	- frequency of wavefront : hertz (Hz)
+	- wavelength : micrometers (μm)
+	- signal strength : decibel (dB)
+	- signal power : decibel milliwatt (dBm)
+	- reception angle : degrees (°)
+	- transfer rate : bits per second (bps)
+
+- Ultrasound wiretapping data
+	- frequency of wavefront : hertz (Hz)
+	- wavelength : millimeters (mm)
+	- signal strength : decibel (dB)
+	- signal power : decibel milliwatt (dBm)
+	- resolution : millimeters (mm)
+	- transfer rate : bits per second (bps)
+
+- Link quality wiretapping data
+	- transfer rate : bits per second (bps)
+	- frequency range : hertz (Hz)
+	- signal strength : decibel (dB)
+	- signal power : decibel milliwatt (dBm)
+	- noise : decibel milliwatt (dBm)
+	- signal spectrum width : hertz (Hz)
+	- interference level : decibel (dB)
+	- bit error rate : proportion of erroneously transmitted bits (-)
+	- transmission power : decibel milliwatt (dBm)
+
+- Stethoscope wiretapping data
+	- sound amplitude : decibel (dB)
+	- sound frequency : hertz (Hz)
+	- sound pressure : pascal (Pa)
+	- sound direction : degrees (°)
+	- transfer rate : bits per second (bps)
+
+
+## Схемы работы программы
+### Подключение
+<img src="schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.svg">
+
+### Передача данных
+<img src="schemes/Wiretapping Scanner-Data establishment algorithm.drawio.svg">
+
+### Отключение
+<img src="schemes/Wiretapping Scanner-Disconnection establishment algorithm.drawio.svg">
+
+### Алгоритм прошивки
+<img src="schemes/Wiretapping Scanner-Firmware algorithm.drawio.svg">
+
+### Репозиторий
+<img src="schemes/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
+
+### HTML
+<img src="schemes/Wiretapping Scanner.drawio.html">
+
+## Troubleshooting
 <!--
-## Usage
-
-### With Python
-
-To start the program, just run *main.pyw*.
-
-But it is also possible to run the program through the console:
-
-```shell
-python main.pyw
-```
-
-If the program gives a missing modules' error at startup, install *Qt* and *pynput*:
-
-```shell
-pip install pyqt6
-pip install pynput
-```
-
-If you finalize the interface, you will need an interface converter from the library *pyqt-tools*:
-
-```shell
-pip install pyqt-tools
-```
-
-### Without Python
-
-There is a compiled version of the program. To use it, simply download the archive in the binaries' section under the latest version release. Unzip the archive and then use it as a regular program.
+All functionality has been tested by Author, but if you have problems using it, the code does not work, have suggestions for optimization or advice for improving the style of the code and the name - I invite you [here](https://github.com/Nakama3942/qt_colored_logger/blob/master/CONTRIBUTING.md) and [here](https://github.com/Nakama3942/qt_colored_logger/blob/master/CODE_OF_CONDUCT.md).
 -->
+
+- [Content](#content)
 
 ## Authors
 
 <table align="center" style="border-width: 10; border-style: ridge">
 	<tr>
  		<td align="center"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author"</sub></td>
+		<td align="center"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />Management, soldering, data</sub></td>
 	    <!--<td></td>-->
  	</tr>
 <!--
