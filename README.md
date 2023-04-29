@@ -1,22 +1,16 @@
 <div align="center">
 
-[![template](https://img.shields.io/badge/Repository-template-darkred)](https://github.com/Nakama3942/template_rep)
-[![GitHub license](https://img.shields.io/github/license/Nakama3942/WiretappingScanner?color=gold&style=flat-square)](https://github.com/Nakama3942/WiretappingScanner/blob/master/LICENSE)
+[![template](https://img.shields.io/badge/Repository-template-darkred?style=for-the-badge)](https://github.com/Nakama3942/template_rep)
+[![GitHub license](https://img.shields.io/github/license/Nakama3942/WiretappingScanner?color=gold&style=for-the-badge)](https://github.com/Nakama3942/WiretappingScanner/blob/master/LICENSE)
+[![CHANGELOG](https://img.shields.io/badge/here-CHANGELOG-yellow?style=for-the-badge)](https://github.com/Nakama3942/WiretappingScanner/blob/master/CHANGELOG.md)
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/Nakama3942/WiretappingScanner?label=latest%20release&logo=github&style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Nakama3942/WiretappingScanner?label=latest%20release&logo=github&style=for-the-badge)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/Nakama3942/WiretappingScanner?style=flat-square)
-![GitHub Release Date](https://img.shields.io/github/release-date/Nakama3942/WiretappingScanner?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/Nakama3942/WiretappingScanner?style=for-the-badge)
+![GitHub Release Date](https://img.shields.io/github/release-date/Nakama3942/WiretappingScanner?style=for-the-badge)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Nakama3942/WiretappingScanner?color=darkgreen&style=flat-square)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Nakama3942/WiretappingScanner?color=darkgreen&style=flat-square)
-
-<!--
-[![CHANGELOG](https://img.shields.io/badge/here-CHANGELOG-yellow)](https://github.com/Nakama3942/qt_colored_logger/blob/master/CHANGELOG.md)
-[![CONTRIBUTING](https://img.shields.io/badge/here-CONTRIBUTING-indigo)](https://github.com/Nakama3942/qt_colored_logger/blob/master/CONTRIBUTING.md)
-[![CODE_OF_CONDUCT](https://img.shields.io/badge/here-CODE_OF_CONDUCT-darkgreen)](https://github.com/Nakama3942/qt_colored_logger/blob/master/CODE_OF_CONDUCT.md)
-[![PULL_REQUEST_TEMPLATE](https://img.shields.io/badge/here-PULL_REQUEST_TEMPLATE-orange)](https://github.com/Nakama3942/qt_colored_logger/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
--->
+![GitHub repo size](https://img.shields.io/github/repo-size/Nakama3942/WiretappingScanner?color=darkgreen&style=for-the-badge)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Nakama3942/WiretappingScanner?color=darkgreen&style=for-the-badge)
 
 </div>
 
@@ -126,13 +120,8 @@ The full text of the license can be found at the following [link](https://github
 ### Репозиторий
 <img src="schemes/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
 
-### HTML
-<img src="schemes/Wiretapping Scanner.drawio.html">
-
 ## Troubleshooting
-<!--
-All functionality has been tested by Author, but if you have problems using it, the code does not work, have suggestions for optimization or advice for improving the style of the code and the name - I invite you [here](https://github.com/Nakama3942/qt_colored_logger/blob/master/CONTRIBUTING.md) and [here](https://github.com/Nakama3942/qt_colored_logger/blob/master/CODE_OF_CONDUCT.md).
--->
+All functionality has been tested by Author, but if you have problems using it, the code does not work, have suggestions for optimization or advice for improving the style of the code and the name - I invite you [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CONTRIBUTING.md) and [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CODE_OF_CONDUCT.md).
 
 - [Content](#content)
 
@@ -140,8 +129,8 @@ All functionality has been tested by Author, but if you have problems using it, 
 
 <table align="center" style="border-width: 10; border-style: ridge">
 	<tr>
- 		<td align="center"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author"</sub></td>
-		<td align="center"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />Management, soldering, data</sub></td>
+ 		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", software, connector</sub></td>
+		<td align="center" width="200"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />Management, soldering, data</sub></td>
 	    <!--<td></td>-->
  	</tr>
 <!--
