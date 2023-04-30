@@ -1,8 +1,37 @@
+/*
+...
+\n
+Copyright © 2023 Kalynovsky Valentin, Babii Eduard. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// ========================================================================
+//                                 INCLUDES
+// ========================================================================
+
 #include <WiFi.h>
 
-const char* ssid = "F*ck you, not ssid";
-const char* password = "F*ck you, not password";
-//192.168.0.105
+// ========================================================================
+//                                   WIFI
+// ========================================================================
+
+const char* ssid = "Enter your ssid";
+const char* password = "Enter your password";
+
+// ========================================================================
+//                                   TEMP
+// ========================================================================
 
 int temp = 0; // Временное решение
 
@@ -11,58 +40,58 @@ int temp = 0; // Временное решение
 // ========================================================================
 
 // Radio wiretapping data
-int radio_impulse = 0;  // seconds (s)
-float radio_noise = 0.0;  // decibel (dB)
-float radio_signal_spectrum_width = 0.0;  // hertz (Hz)
-int radio_signal_duration = 0;  // seconds (s)
-int radio_transfer_rate = 0;  // bits per second (bps)
-int radio_antenna_impedance = 0;  // ohm (Ω)
-float radio_antenna_directivity = 0.0;  // decibel (dBi)
-float radio_signal_strength = 0.0;  // decibel (dB)
+int radio_impulse = 0;							// seconds (s)
+float radio_noise = 0.0;						// decibel (dB)
+float radio_signal_spectrum_width = 0.0;		// hertz (Hz)
+int radio_signal_duration = 0;					// seconds (s)
+int radio_transfer_rate = 0;					// bits per second (bps)
+int radio_antenna_impedance = 0;				// ohm (Ω)
+float radio_antenna_directivity = 0.0;			// decibel (dBi)
+float radio_signal_strength = 0.0;				// decibel (dB)
 
 // Compass wiretapping data
-int compass_magnetic_field = 0;  // microtesla (μT)
-int compass_tilt_angle = 0;  // degrees (°)
-int compass_north_direction = 0;  // degrees (°)
-float compass_field_strength = 0.0;  // ampere-vits per meter (A/m)
-int compass_temperature = 0;  // degree Celsius (°C)
+int compass_magnetic_field = 0;					// microtesla (μT)
+int compass_tilt_angle = 0;						// degrees (°)
+int compass_north_direction = 0;				// degrees (°)
+float compass_field_strength = 0.0;				// ampere-vits per meter (A/m)
+int compass_temperature = 0;					// degree Celsius (°C)
 
 // Infrared wiretapping data
-float infrared_frequency_of_wavefront = 0.0;  // hertz (Hz)
-float infrared_wavelength = 0.0;  // micrometers (μm)
-float infrared_signal_strength = 0.0;  // decibel (dB)
-float infrared_signal_power = 0.0;  // decibel milliwatt (dBm)
-int infrared_reception_angle = 0;  // degrees (°)
-int infrared_transfer_rate = 0;  // bits per second (bps)
+float infrared_frequency_of_wavefront = 0.0;	// hertz (Hz)
+float infrared_wavelength = 0.0;				// micrometers (μm)
+float infrared_signal_strength = 0.0;			// decibel (dB)
+float infrared_signal_power = 0.0;				// decibel milliwatt (dBm)
+int infrared_reception_angle = 0;				// degrees (°)
+int infrared_transfer_rate = 0;					// bits per second (bps)
 
 // Ultrasound wiretapping data
-float ultrasound_frequency_of_wavefront = 0.0;  // hertz (Hz)
-float ultrasound_wavelength = 0.0;  // millimeters (mm)
-float ultrasound_signal_strength = 0.0;  // decibel (dB)
-float ultrasound_signal_power = 0.0;  // decibel milliwatt (dBm)
-float ultrasound_resolution = 0.0;  // millimeters (mm)
-int ultrasound_transfer_rate = 0;  // bits per second (bps)
+float ultrasound_frequency_of_wavefront = 0.0;	// hertz (Hz)
+float ultrasound_wavelength = 0.0;				// millimeters (mm)
+float ultrasound_signal_strength = 0.0;			// decibel (dB)
+float ultrasound_signal_power = 0.0;			// decibel milliwatt (dBm)
+float ultrasound_resolution = 0.0;				// millimeters (mm)
+int ultrasound_transfer_rate = 0;				// bits per second (bps)
 
 // Link quality wiretapping data
-int link_transfer_rate = 0;  // bits per second (bps)
-int link_frequency_range = 0;  // hertz (Hz)
-float link_signal_strength = 0.0;  // decibel (dB)
-float link_signal_power = 0.0;  // decibel milliwatt (dBm)
-float link_noise = 0.0;  // decibel milliwatt (dBm)
-float link_signal_spectrum_width = 0.0;  // hertz (Hz)
-float link_interference_level = 0.0;  // decibel (dB)
-int link_bit_error_rate = 0;  // proportion of erroneously transmitted bits (-)
-float link_transmission_power = 0.0;  // decibel milliwatt (dBm)
+int link_transfer_rate = 0;						// bits per second (bps)
+int link_frequency_range = 0;					// hertz (Hz)
+float link_signal_strength = 0.0;				// decibel (dB)
+float link_signal_power = 0.0;					// decibel milliwatt (dBm)
+float link_noise = 0.0;							// decibel milliwatt (dBm)
+float link_signal_spectrum_width = 0.0;			// hertz (Hz)
+float link_interference_level = 0.0;			// decibel (dB)
+int link_bit_error_rate = 0;					// proportion of erroneously transmitted bits (-)
+float link_transmission_power = 0.0;			// decibel milliwatt (dBm)
 
 // Stethoscope wiretapping data
-float stethoscope_sound_amplitude = 0.0;  // decibel (dB)
-float stethoscope_sound_frequency = 0.0;  // hertz (Hz)
-int stethoscope_sound_pressure = 0;  // pascal (Pa)
-int stethoscope_sound_direction = 0;  // degrees (°)
-int stethoscope_transfer_rate = 0;  // bits per second (bps)
+float stethoscope_sound_amplitude = 0.0;		// decibel (dB)
+float stethoscope_sound_frequency = 0.0;		// hertz (Hz)
+int stethoscope_sound_pressure = 0;				// pascal (Pa)
+int stethoscope_sound_direction = 0;			// degrees (°)
+int stethoscope_transfer_rate = 0;				// bits per second (bps)
 
 // ========================================================================
-//                                 FUNCTION
+//                               DATA GETTING
 // ========================================================================
 
 void radio()
@@ -271,7 +300,7 @@ uint8_t* disconnection_packet()
 //                                 FIRMWARE
 // ========================================================================
 
-WiFiServer server(12556); //Порт для подключения
+WiFiServer server(12556); //Connection port
 
 void setup()
 {
@@ -280,8 +309,7 @@ void setup()
 
 	Serial.println();
 	Serial.println();
-	Serial.print("Подключение к ");
-	Serial.println(ssid);
+	Serial.print("Connection to " + String(ssid));
 
 	WiFi.begin(ssid, password);
 
@@ -291,18 +319,18 @@ void setup()
 	}
 
 	Serial.println("");
-	Serial.println("WiFi подключен");
+	Serial.println("WiFi connected");
 	Serial.print("ESP32 Server: ");
 	Serial.println(WiFi.localIP());
-	Serial.println();
+	Serial.println("");
 
 	server.begin();
-	Serial.println("Сервер запущен");
+	Serial.println("Server started");
 }
 
 void loop()
 {
-	WiFiClient client = server.available(); //Проверить наличие клиентского соединения
+	WiFiClient client = server.available(); //Checking for a client connection
 	if (client)
 	{
 		Serial.println("New client connected");
@@ -310,21 +338,15 @@ void loop()
 		{
 			if (client.available())
 			{
-				String command = client.readStringUntil('\n'); //Считывание команды
-				// command.trim(); //Удалить пробелы
-				Serial.print("Received command: ");
-				Serial.println(command);
+				String command = client.readStringUntil('\n'); //Read command
+				Serial.println("Received command: " + command);
 
 				Serial.print("Client IP: ");
 				Serial.println(WiFi.localIP());
-				Serial.print("Router IP: ");
+				Serial.print("Router IP: " + );
 				Serial.println(WiFi.gatewayIP());
-				// Serial.print("Subnet: ");
-				// Serial.println(WiFi.gatewayIP());
-				// Serial.print("DNS: ");
-				// Serial.println(WiFi.gatewayIP());
 
-				if (command == "CON_ON") // CONECTION ON
+				if (command == "CON_ON") // CONNECTION ON
 				{
 					client.write(connection_packet(), 53);
 				}
@@ -337,11 +359,10 @@ void loop()
 					link_quality();
 					stethoscope();
 					int *size = new int;
-					uint8_t *data = data_packet(size);
-					client.write(data, *size);
+					client.write(data_packet(size), *size);
 					temp == 0 ? temp++ : temp--; // Временное решение
 				}
-				else if (command == "CON_OFF") // CONECTION OFF
+				else if (command == "CON_OFF") // CONNECTION OFF
 				{
 					client.write(disconnection_packet(), 13);
 				}
