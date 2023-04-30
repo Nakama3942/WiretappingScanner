@@ -1,5 +1,5 @@
 /*
-...
+Firmware with the implementation of data collection and transmission.
 \n
 Copyright © 2023 Kalynovsky Valentin, Babii Eduard. All rights reserved.
 
@@ -313,7 +313,8 @@ void setup()
 
 	WiFi.begin(ssid, password);
 
-	while (WiFi.status() != WL_CONNECTED) {
+	while (WiFi.status() != WL_CONNECTED)
+	{
 		delay(500);
 		Serial.print(".");
 	}

@@ -105,6 +105,9 @@ The full text of the license can be found at the following [link](https://github
 
 
 ## Схемы работы программы
+### Пайка
+<img src="schemes/Wiretapping Scanner Schematic.svg">
+
 ### Репозиторий
 <img src="schemes/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
 
@@ -132,14 +135,14 @@ All functionality has been tested by Author, but if you have problems using it, 
 
 <table align="center" style="border-width: 10; border-style: ridge">
 	<tr>
- 		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", software, connector</sub></td>
+		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", software, connector</sub></td>
 		<td align="center" width="200"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />Management, soldering, data</sub></td>
 	    <!--<td></td>-->
- 	</tr>
+	</tr>
 <!--
- 	<tr>
- 		<td></td>
- 		<td></td>
- 	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
 -->
 </table>

@@ -20,7 +20,7 @@ Device firmware that allows you to read data from sensors and allows esp32 to ac
 
 The full text of the license can be found at the following [link](https://github.com/Nakama3942/WiretappingScanner/blob/master/LICENSE).
 
-> Copyright © 2023 Kalynovsky Valentin. All rights reserved.
+> Copyright © 2023 Kalynovsky Valentin, Babii Eduard. All rights reserved.
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ The device does not provide for connecting and using a keyboard to enter a passw
 
 <table align="center" style="border-width: 10; border-style: ridge">
 	<tr>
-		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", software, connector</sub></td>
-		<td align="center" width="200"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />Management, soldering, data</sub></td>
+		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", connector</sub></td>
+		<td align="center" width="200"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />data</sub></td>
 	    <!--<td></td>-->
 	</tr>
 <!--
