@@ -16,38 +16,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-# todo решить проблему первого подключения к КОМ порту
-
-from serial import Serial
-from serial.tools.list_ports import comports
+from platform import system
 
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, QTextEdit
-from PyQt6.QtCore import Qt, QThread
-from PyQt6.QtGui import QIcon
-
-class _SerialWriter(QThread):
-	def __init__(self, field: QTextEdit):
-		super(_SerialWriter, self).__init__()
-		self.com = None
-		self._field = field
-
-	def run(self) -> None:
-		while True:
-			line = self.com.readline().decode('ascii', 'ignore').rstrip()  # читаем строку из порта
-			if line:  # если строка не пустая
-				# print(line)  # выводим её на экран
-				self._field.append(line)
-
-	def terminate(self) -> None:
-		super().terminate()
-		self.com.close()
+from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
+from PyQt6.QtCore import Qt, QIODevice
+from PyQt6.QtGui import QIcon, QFont
 
 class SerialDialog(QDialog):
 	def __init__(self):
 		super(SerialDialog, self).__init__()
-		# self.logger.notice(message_text="Unimplemented")
-		# self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-		# window = QDialog(self)
+
 		layout = QVBoxLayout()
 		h_layout = QHBoxLayout()
 
@@ -55,19 +34,20 @@ class SerialDialog(QDialog):
 		h_layout.addWidget(label)
 
 		self.combo = QComboBox(self)
-		ports = list(comports())
+		ports = QSerialPortInfo().availablePorts()
 		for port in ports:
-			# print(port.device)
-			self.combo.addItem(str(port))
+			self.combo.addItem(f"{str(port.portName())} - {str(port.description())}")
 		h_layout.addWidget(self.combo)
 
 		layout.addLayout(h_layout)
 
-		monitoring_butt = QPushButton('Monitoring', self)
-		layout.addWidget(monitoring_butt)
-		monitoring_butt.clicked.connect(self.monitoring_butt_clicked)
+		self.monitoring_butt = QPushButton('Monitoring', self)
+		self.monitoring_butt.setCheckable(True)
+		layout.addWidget(self.monitoring_butt)
+		self.monitoring_butt.clicked.connect(self.monitoring_butt_clicked)
 
 		self.text = QTextEdit(self)
+		self.text.setFont(QFont("Monospace")) if system() == "Linux" else self.text.setFont(QFont("Courier New"))
 		self.text.setReadOnly(True)
 		layout.addWidget(self.text)
 
@@ -77,24 +57,27 @@ class SerialDialog(QDialog):
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
 		self.setFixedSize(400, 250)
 		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
-		# window.show()
 
-		self.writer = _SerialWriter(self.text)
+		self.com = QSerialPort()
+		self.com.setBaudRate(9600)
+		self.com.readyRead.connect(self.serial_write)
+
+		self.string_data: bytes = b''
 
 	def monitoring_butt_clicked(self):
-		if self.writer.com is None:
-			self.writer.com = Serial(self.combo.currentText().split(" ")[0], 9600)  # указываем порт и скорость передачи
-		self.writer.start()
+		if self.monitoring_butt.isChecked():
+			self.com.setPortName(self.combo.currentText().split(" ")[0])
+			self.com.open(QIODevice.OpenModeFlag.ReadOnly)
+		else:
+			self.com.close()
+
+	def serial_write(self):
+		self.string_data += self.com.readLine().data()
+		if b'\n' in self.string_data:
+			self.text.append(self.string_data.decode().rstrip())
+			self.string_data = b''
 
 	def close(self):
-		if self.writer.com is not None:
-			self.writer.terminate()
+		if self.com.isOpen():
+			self.com.close()
 		super().close()
-
-	# 	self.offset = None
-	# def mousePressEvent(self, event):
-	# 	if event.button() == Qt.MouseButton.LeftButton:
-	# 		self.offset = event.globalPosition().toPoint() - self.pos()
-	# def mouseMoveEvent(self, event):
-	# 	if event.buttons() == Qt.MouseButton.LeftButton:
-	# 		self.move(event.globalPosition().toPoint() - self.offset)

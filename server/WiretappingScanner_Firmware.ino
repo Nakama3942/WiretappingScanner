@@ -344,14 +344,14 @@ void loop()
 
 				Serial.print("Client IP: ");
 				Serial.println(WiFi.localIP());
-				Serial.print("Router IP: " + );
+				Serial.print("Router IP: ");
 				Serial.println(WiFi.gatewayIP());
 
-				if (command == "CON_ON") // CONNECTION ON
+				if (command == "CON") // CONNECTION ON
 				{
 					client.write(connection_packet(), 53);
 				}
-				else if (command == "EXEC_REQ") // EXECUTION REQUEST
+				else if (command == "EXR") // EXECUTION REQUEST
 				{
 					radio();
 					compass();
@@ -363,7 +363,7 @@ void loop()
 					client.write(data_packet(size), *size);
 					temp == 0 ? temp++ : temp--; // Временное решение
 				}
-				else if (command == "CON_OFF") // CONNECTION OFF
+				else if (command == "COFF") // CONNECTION OFF
 				{
 					client.write(disconnection_packet(), 13);
 				}

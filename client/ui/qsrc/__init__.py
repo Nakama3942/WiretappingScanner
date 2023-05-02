@@ -19,3 +19,4 @@ limitations under the License.
 from ui.qsrc.detector import Detector
 from ui.qsrc.drawFrame import DrawFrame
 from ui.qsrc.serialDialog import SerialDialog
+from ui.qsrc.uploadDialog import UploadDialog
