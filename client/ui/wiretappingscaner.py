@@ -17,26 +17,21 @@ limitations under the License.
 """
 
 from markdown_it import MarkdownIt
+from mighty_logger import Logger
 
-from PyQt6 import QtWidgets, QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QFrame, QProgressDialog, QMessageBox
-from PyQt6.QtCore import QRegularExpression, Qt, QDir
-from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QKeyEvent, QCloseEvent, QFontDatabase, QPixmap
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QMessageBox, QDialogButtonBox
+from PyQt6.QtCore import QRegularExpression, Qt
+from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QCloseEvent, QFontDatabase
 
 from ui.raw import Ui_WindowWiretappingScaner
-from ui import UltrasoundDialog
-from ui.qsrc import Detector
+from ui.qsrc import Detector, SerialDialog, UploadDialog, UltrasoundDialog
 
-from mighty_logger import Logger
 from src import IMPORTANT_DATA, getHost, lastIndex
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	def __init__(self):
 		super(WiretappingScaner, self).__init__()
 		self.setupUi(self)
-
-		# Constant
-		self.shift_bool = False
 
 		# Set window to center
 		qr = self.frameGeometry()
@@ -46,13 +41,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		IMPORTANT_DATA.window_height = self.height()
 		IMPORTANT_DATA.window_width = self.width()
 
-		# Icon initialization
-		QDir.addSearchPath('icons', 'icon/')
-		self.setWindowIcon(QIcon('icons:wiretapping_scaner.png'))
-
+		# Icons setting
+		self.setWindowIcon(QIcon('./icon/wiretapping_scaner.png'))
+		self.serialTool.setIcon(QIcon("./icon/serial_monitor.png"))
+		self.uploadTool.setIcon(QIcon("./icon/upload.png"))
 		self.reloadTool.setIcon(QIcon("./icon/search.png"))
 		self.aboutTool.setIcon(QIcon("./icon/about.png"))
-
 		self.tabWidget.setTabIcon(0, QIcon("./icon/radio.png"))
 		self.tabWidget.setTabIcon(1, QIcon("./icon/compass.png"))
 		self.tabWidget.setTabIcon(2, QIcon("./icon/infrared.png"))
@@ -82,6 +76,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
 		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
 		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
+		self.serialTool.clicked.connect(self.serialTool_clicked)
+		self.uploadTool.clicked.connect(self.uploadTool_clicked)
 
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
@@ -89,34 +85,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		show_action = QAction("Show", self)
 		show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
 		show_action.triggered.connect(self.tray_Hide)
-		radio_action = QAction("Radio", self)
-		radio_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		radio_action.triggered.connect(lambda: self.openTab(0))
-		compass_action = QAction("Compass", self)
-		compass_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		compass_action.triggered.connect(lambda: self.openTab(1))
-		ir_action = QAction("InfraRed radiation", self)
-		ir_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		ir_action.triggered.connect(lambda: self.openTab(2))
-		us_action = QAction("Ultrasound", self)
-		us_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		us_action.triggered.connect(lambda: self.openTab(3))
-		channel_action = QAction("Link quality", self)
-		channel_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogInfoView))
-		channel_action.triggered.connect(lambda: self.openTab(4))
-		close_action = QAction("Quit", self)
-		close_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton))
-		close_action.triggered.connect(self.close)
 		tray_menu = QMenu()
 		tray_menu.addAction(show_action)
-		tray_menu.addAction(radio_action)
-		tray_menu.addAction(compass_action)
-		tray_menu.addAction(ir_action)
-		tray_menu.addAction(us_action)
-		tray_menu.addAction(channel_action)
-		tray_menu.addAction(close_action)
 		self.tray_icon.setContextMenu(tray_menu)
 
+		# Initialization of Logger
 		self.logger = Logger(program_name="WiretappingScaner", status_message_global_entry=False, log_environment="html")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
@@ -128,6 +101,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.detector.update_data_error_signal.connect(self.detect_update_data_error_signal)
 		self.detector.stopping_signal.connect(self.detect_stopping_signal)
 		self.detector.stopping_error_signal.connect(self.detect_stopping_error_signal)
+
+		# Initialization of dialog windows
+		self.serial_dialog = SerialDialog()
+		self.upload_dialog = UploadDialog()
+		self.us_dialog = UltrasoundDialog()
 
 		# Tab selection simulation - start renderer
 		# (without this, the program refuses to work after the connection)
@@ -148,10 +126,44 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.user(message_text="Program opened from tray")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def openTab(self, index):
-		self.tray_Hide()
-		self.tabWidget.setCurrentIndex(index)
-		self.tabWidget_Clicked(index)
+	def serialTool_clicked(self):
+		if self.serialTool.isChecked():
+			self.serial_dialog.show()
+		else:
+			self.serial_dialog.hide()
+
+	def uploadTool_clicked(self):
+		if self.uploadTool.isChecked():
+			# self.upload_dialog.show()
+			warn = QMessageBox()
+			warn.setWindowTitle("Problem tools")
+			warn.setWindowIcon(QIcon("./icon/upload.png"))
+			warn.setIcon(QMessageBox.Icon.Critical)
+			warn.setText("<font size=14 color='red'>Error...</font>")
+			warn.setInformativeText(
+				"<font color='darkred'>The esptools library requires the Visual Studio development tools, which developers do not have - development stopped...</font>")
+			warn.setStandardButtons(QMessageBox.StandardButton.Cancel)
+			ret: int = warn.exec()
+			match ret:
+				case QMessageBox.StandardButton.Cancel:
+					return
+		else:
+			# self.upload_dialog.close()
+			pass
+
+	def aboutTool_clicked(self):
+		with open('About.md', 'r') as f:
+			text = f.read()
+			md = MarkdownIt()
+			html = md.render(text)
+
+		about_program_container = QMessageBox()
+		about_program_container.setWindowIcon(QIcon("./icon/about.png"))
+		about_program = QMessageBox()
+		about_program.about(about_program_container, "About program", html)
+
+		self.logger.user(message_text="Viewed information about the program")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def reloadTool_clicked(self):
 		if IMPORTANT_DATA.connect:
@@ -190,20 +202,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		wait.close()
 
-	def aboutTool_clicked(self):
-		with open('About.md', 'r') as f:
-			text = f.read()
-			md = MarkdownIt()
-			html = md.render(text)
-
-		about_program_container = QMessageBox()
-		about_program_container.setWindowIcon(QIcon("./icon/about.png"))
-		about_program = QMessageBox()
-		about_program.about(about_program_container, "About program", html)
-
-		self.logger.user(message_text="Viewed information about the program")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
-
 	def buttConnect_clicked(self):
 		if not self.buttConnect.trouble:
 			if self.IPLine.text() == "":
@@ -225,6 +223,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 		self.labelPort.setText(IMPORTANT_DATA.Port)
 		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+		self.setWindowTitle(f"{IMPORTANT_DATA.IPAddr} Server : {self.windowTitle()}")
 		self.tabWidget.setEnabled(True)
 		self.groupSettings.setEnabled(True)
 		self.buttDisconnect.trouble = False
@@ -288,6 +287,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.labelIPaddr.setText(IMPORTANT_DATA.IPAddr)
 		self.labelPort.setText(IMPORTANT_DATA.Port)
 		self.labelSerialNum.setText(IMPORTANT_DATA.SerialNum)
+		self.setWindowTitle(f"{' '.join(self.windowTitle().split(' ')[-3:])}")
 		self.tabWidget.setEnabled(False)
 		self.groupSettings.setEnabled(False)
 		self.buttConnect.trouble = False
@@ -379,8 +379,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.CompassDrawFrame.customRepaint()
 			case 2:
 				IMPORTANT_DATA.tab = index
-				# IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
 				IMPORTANT_DATA.text1 = "The sensor is broken"
+				# IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
+				# IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
 				# IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
 				# IMPORTANT_DATA.text2 = "Wavelength (μm): "
 				# IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
@@ -444,56 +445,30 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def ultrasound_Gen(self):
 		# Unimplemented
-		# gen_dialog = UltrasoundDialog()
-		# gen_dialog.show()
-		# result: int = gen_dialog.exec()
-		# match result:
-		# 	case QtWidgets.QDialogButtonBox.StandardButton.Ok.value:
-		# 		# Unimplemented
-		# 		self.logger.error(message_text="1 (Unimplemented)")
-		# 	case QtWidgets.QDialogButtonBox.StandardButton.Cancel.value:
-		# 		# Unimplemented
-		# 		self.logger.error(message_text="2 (Unimplemented)")
-		# 	case _:
-		# 		# Unimplemented
-		# 		self.logger.error(message_text="3 (Unimplemented)")
+		self.us_dialog.show()
+		result: int = self.us_dialog.exec()
+		match result:
+			case QDialogButtonBox.StandardButton.Ok.value:
+				self.logger.error(message_text="Unimplemented 'OK'")
+			case QDialogButtonBox.StandardButton.Cancel.value:
+				self.logger.error(message_text="Unimplemented 'CANCEL'")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		self.logger.notice(message_text="No ultrasound generation module")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def ultrasound_Play(self):
 		# Unimplemented
-		# self.logger.debug(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.debug_performance(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.performance(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.event(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.audit(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.metrics(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.user(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.message(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.info(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.notice(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.warning(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.critical(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.success(message_text="Отсылочка на мою библиотеку журналирования")
-		# self.logger.fail(message_text="Отсылочка на мою библиотеку журналирования")
 		self.logger.notice(message_text="Unimplemented")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def keyPressEvent(self, event: QKeyEvent):
-		self.shift_bool = (event.key() == QtCore.Qt.Key.Key_Shift)
-
 	def closeEvent(self, event: QCloseEvent):
+		# todo изменить описание
 		# Program termination should occur in the tray, and not in the system menu
 		# If the program is hidden, then the tray is available, not the system menu
 		# Completion is allowed in the system menu if shift is pressed or not connected
 		if not IMPORTANT_DATA.connect:
-			QApplication.instance().exit(0)
-		elif self.isHidden() or self.shift_bool:
-			# So can end the program
-			self.buttDisconnect_clicked()
-			# event.accept()  # For some reason it doesn't work
+			self.serial_dialog.close()
 			QApplication.instance().exit(0)
 		else:
-			# Else - hide in tray
 			self.tray_Show()
 			event.ignore()

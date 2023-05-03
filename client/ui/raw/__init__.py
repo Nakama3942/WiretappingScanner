@@ -16,5 +16,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from ui.raw.ui_ultrasounddialog import Ui_UltrasoundDialog
 from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner

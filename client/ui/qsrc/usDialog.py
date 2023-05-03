@@ -36,7 +36,8 @@ class UltrasoundDialog(QDialog):
 		self.frequency_field.setPlaceholderText("Enter signal frequency")
 		self.frequency_field.setToolTip(
 			"The value must be between 20000 and 100000 Hertz\n"
-			"Value less than 20000 will be rounded up to 20000"
+			"If the field is left blank, the value will be set to 50000 Hertz\n"
+			"Value less than 20000 Hertz will be rounded up to 20000 Hertz"
 		)
 		layout.addWidget(self.frequency_field)
 
@@ -44,7 +45,10 @@ class UltrasoundDialog(QDialog):
 		self.duration_field.setFont(font)
 		self.duration_field.setValidator(QRegularExpressionValidator(QRegularExpression("[1-9]|10")))
 		self.duration_field.setPlaceholderText("Enter signal duration")
-		self.duration_field.setToolTip("The value must be between 1 and 10 seconds")
+		self.duration_field.setToolTip(
+			"The value must be between 1 and 10 seconds\n"
+			"If the field is left blank, the value will be set to 5 second"
+		)
 		layout.addWidget(self.duration_field)
 
 		self.butt_box = QDialogButtonBox()
@@ -63,6 +67,10 @@ class UltrasoundDialog(QDialog):
 		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
 
 	def butt_box_ok_clicked(self):
+		if self.frequency_field.text() == "":
+			self.frequency_field.setText("50000")
+		if self.duration_field.text() == "":
+			self.frequency_field.setText("5")
 		if int(self.frequency_field.text()) < 20000:
 			self.frequency_field.setText("20000")
 		self.done(QDialogButtonBox.StandardButton.Ok.value)
