@@ -1,5 +1,5 @@
 """
-A package with overridden graphics classes.
+A package with inherited graphics classes (almost).
 \n
 Copyright © 2023 Kalynovsky Valentin. All rights reserved.
 
@@ -18,6 +18,8 @@ limitations under the License.
 
 from ui.qsrc.detector import Detector
 from ui.qsrc.drawFrame import DrawFrame
+from ui.qsrc.inactiveButton import InactiveButton
+from ui.qsrc.painter_program_functions import sinus, rotatePath
 from ui.qsrc.serialDialog import SerialDialog
 from ui.qsrc.uploadDialog import UploadDialog
 from ui.qsrc.usDialog import UltrasoundDialog

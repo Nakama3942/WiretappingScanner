@@ -18,11 +18,16 @@ limitations under the License.
 
 from time import sleep
 
-from PyQt6.QtCore import QThread, pyqtSignal, QDeadlineTimer
+from PyQt6.QtCore import QThread, pyqtSignal
 
-from src import Connector, IMPORTANT_DATA
+from src.connector import Connector
+from src.state import IMPORTANT_DATA
 
 class Detector(QThread):
+	"""
+	A wrapper class over a connector for launching a connection in a separate thread.
+	"""
+
 	starting_signal = pyqtSignal()
 	starting_error_signal = pyqtSignal(str)
 	update_data_signal = pyqtSignal()
@@ -35,25 +40,46 @@ class Detector(QThread):
 		self._connector = Connector()
 		self._interrupt = False
 
-	def set_ip(self, ip: str):
+	def set_ip(self, ip: str) -> None:
+		"""
+		Sets the IP address of the esp32.
+
+		:param ip: IP address of the esp32 in the local network
+		"""
 		self._connector.set_ip(ip)
 
 	def get_status(self) -> bool:
+		"""
+		Reports the current state of the connection to the device.
+
+		:return: connection status
+		"""
 		return self._connector.isConnected
 
 	def start(self, priority: QThread.Priority = QThread.Priority.NormalPriority) -> None:
+		"""
+		Establishes a connection and, if it is successfully established, starts the data receiving flow.
+
+		:param priority: See the Qt documentation
+		"""
 		try:
 			IMPORTANT_DATA.SerialNum = self._connector.connect()
 			IMPORTANT_DATA.connect = True
 			super().start(priority)
 			self.starting_signal.emit()
-		except ValueError as err:  # Если не пройдена верификация подключения
+		except ValueError as err:  # If connection verification failed
 			self.starting_error_signal.emit(str(err))
 
-	def stop(self):
+	def stop(self) -> None:
+		"""
+		Sets a flag to send a request to close the connection.
+		"""
 		self._interrupt = True
 
-	def run(self):
+	def run(self) -> None:
+		"""
+		Data request thread.
+		"""
 		while True:
 			if self._interrupt:
 				self._interrupt = False
@@ -62,7 +88,7 @@ class Detector(QThread):
 					IMPORTANT_DATA.SerialNum = "AAAAA-AAA-AAA-AAAA"
 					IMPORTANT_DATA.connect = False
 					self.stopping_signal.emit()
-				except ValueError as err:  # Если не пройдена верификация отключения
+				except ValueError as err:  # If disconnection verification failed
 					self.stopping_error_signal.emit(str(err))
 			else:
 				try:
@@ -107,6 +133,6 @@ class Detector(QThread):
 					IMPORTANT_DATA.stethoscope_sound_direction = int(data_list[37].decode("utf-8"))
 					IMPORTANT_DATA.stethoscope_transfer_rate = int(data_list[38].decode("utf-8"))
 					self.update_data_signal.emit()
-				except ValueError as err:  # Если не пройдена верификация получения данных
+				except ValueError as err:  # If verification failed of data receipt
 					self.update_data_error_signal.emit(str(err))
 			sleep(0.1)

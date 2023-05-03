@@ -20,21 +20,16 @@ from subprocess import run, PIPE, TimeoutExpired
 from nmap import PortScanner, PortScannerError
 from glob import glob
 
-# def gotNmap() -> bool:
-# 	try:
-# 		result = run(['nmap', '--version'], stdout=PIPE, stderr=PIPE)
-# 		if result.returncode == 0:
-# 			return True
-# 		else:
-# 			return False
-# 	except FileNotFoundError:
-# 		return False
+def getHost(_timeout: int) -> [bool, list, str]:
+	"""
+	Specifies static IP addresses of the local network.
 
-def getHost(_timeout: int):
+	:param _timeout: The maximum time of determining IP addresses
+	:return: the success of the lookup and or either a list of IP addresses or a string with an error message
+	"""
 	hosts = []
 	scanner = PortScanner()
 	try:
-		# scanner.scan(hosts=f'192.168.{glob("*.ip")[0].split(".")[0]}.0/24', arguments='-sn -T5 -v', timeout=_timeout)
 		cmd = f'nmap 192.168.{glob("*.ip")[0].split(".")[0]}.0/24 -sn -T5 -v -oX -'
 		result = run(cmd.split(), stdout=PIPE, stderr=PIPE, timeout=_timeout, shell=True)
 		if not result.returncode:

@@ -16,31 +16,54 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from math import pi, sin, cos
-
-from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QFrame
-from PyQt6.QtCore import QPoint, QPointF, pyqtSignal, Qt
-from PyQt6.QtGui import QPainter, QPainterPath, QPixmap, QColor, QFont, QMouseEvent, QTransform, QPolygonF, QBrush
+from PyQt6.QtCore import QPoint, QPointF, pyqtSignal
+from PyQt6.QtGui import QPaintEvent, QMouseEvent, QPainter, QPainterPath, QPixmap, QColor, QPolygonF
 
-from src import IMPORTANT_DATA, sinus, rotatePath
+from ui.qsrc.painter_program_functions import sinus, rotatePath
+from src.state import IMPORTANT_DATA
 
 class DrawFrame(QFrame):
+	"""
+	The class of the frame being drawn.
+	"""
 	gen_sound = pyqtSignal()
 	play_sound = pyqtSignal()
 	draw = False
 
-	def paintEvent(self, event):
+	def customRepaint(self) -> None:
+		"""
+		To prevent premature painting, the painter uses a flag. And this wrapper method interacts with the flag.
+		"""
+		self.draw = True
+		super().repaint()
+		self.draw = False
+
+	def customUpdate(self) -> None:
+		"""
+		To prevent premature painting, the painter uses a flag. And this wrapper method interacts with the flag.
+		"""
+		self.draw = True
+		super().update()
+		self.draw = False
+
+	def paintEvent(self, event: QPaintEvent) -> None:
+		"""
+		Frame drawing event.
+
+		:param event: See the Qt documentation
+		"""
 		if IMPORTANT_DATA.connect and self.draw:
+			# Painter setup
 			qp = QPainter(self)
 			qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
 			qp.setFont(IMPORTANT_DATA.tfont)
-
 			qp.setRenderHint(QPainter.RenderHint.Antialiasing, True)
 			qp.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
 
 			match IMPORTANT_DATA.tab:
 				case 0:
+					# Drawing a radio data frame
 					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(270, 100, IMPORTANT_DATA.text1)
 					qp.drawText(510, 100, str(IMPORTANT_DATA.radio_impulse))
@@ -82,13 +105,14 @@ class DrawFrame(QFrame):
 					qp.drawText(270, 380, IMPORTANT_DATA.text8)
 					qp.drawText(510, 380, str(IMPORTANT_DATA.radio_signal_strength))
 
-					qp.drawPath(sinus(  # Drawing the sine of a radio wave
+					qp.drawPath(sinus(  # Drawing the sinus of a radio wave
 						10,
 						IMPORTANT_DATA.window_width,
 						IMPORTANT_DATA.radio_signal_spectrum_width,
 						IMPORTANT_DATA.radio_signal_strength
 					))
 				case 1:
+					# Drawing a compass data frame
 					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(270, 100, IMPORTANT_DATA.text1)
 					qp.drawText(510, 100, str(IMPORTANT_DATA.compass_magnetic_field))
@@ -118,8 +142,8 @@ class DrawFrame(QFrame):
 					qp.drawText(395, 495, "S")
 					qp.drawText(305, 405, "W")
 
-					# Создаем один объект QPainterPath для обоих полигонов
-					# треугольников с координатами относительно центра (400, 400)
+					# Create one QPainterPath object for both triangle polygons
+					# with coordinates relative to the center (400, 400)
 					triangle_path = QPainterPath()
 					triangle_path.addPolygon(QPolygonF([
 						QPointF(390, 400),
@@ -127,15 +151,15 @@ class DrawFrame(QFrame):
 						QPointF(410, 400),
 					]))
 
-					# Рисуем красный треугольник (стрелка на север)
+					# Draw a red triangle (arrow to the north)
 					qp.setBrush(QColor('red'))
-					qp.drawPath(rotatePath(triangle_path, IMPORTANT_DATA.compass_north_direction))
+					qp.drawPath(rotatePath(triangle_path, 400, 400, IMPORTANT_DATA.compass_north_direction))
 
-					# Рисуем синий треугольник (стрелка на юг)
+					# Draw a blue triangle (arrow to the south)
 					qp.setBrush(QColor('blue'))
-					qp.drawPath(rotatePath(triangle_path, IMPORTANT_DATA.compass_north_direction + 180))
+					qp.drawPath(rotatePath(triangle_path, 400, 400, IMPORTANT_DATA.compass_north_direction + 180))
 
-					# Забавно неработающий код
+					# Funny broken code
 					# triangle_polygon = QPolygonF([
 					# 	QPointF(390, 400),
 					# 	QPointF(400, 310),
@@ -157,6 +181,7 @@ class DrawFrame(QFrame):
 
 				case 2:
 					qp.drawText(320, 100, IMPORTANT_DATA.text1)
+					# Drawing an infrared data frame
 					# qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					# qp.drawText(270, 100, IMPORTANT_DATA.text1)
 					# qp.drawText(510, 100, str(IMPORTANT_DATA.infrared_frequency_of_wavefront))
@@ -190,13 +215,14 @@ class DrawFrame(QFrame):
 					# qp.drawText(270, 300, IMPORTANT_DATA.text6)
 					# qp.drawText(510, 300, str(IMPORTANT_DATA.infrared_transfer_rate))
 					#
-					# qp.drawPath(sinus(  # Drawing the sine of a radio wave
+					# qp.drawPath(sinus(  # Drawing the sinus of an infrared wave
 					# 	10,
 					# 	IMPORTANT_DATA.window_width,
 					# 	IMPORTANT_DATA.infrared_frequency_of_wavefront,
 					# 	IMPORTANT_DATA.infrared_signal_strength
 					# ))
 				case 3:
+					# Drawing an ultrasound data frame
 					qp.drawPixmap(QPoint(130, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(170, 100, IMPORTANT_DATA.text1)
 					qp.drawText(410, 100, str(IMPORTANT_DATA.ultrasound_frequency_of_wavefront))
@@ -230,7 +256,7 @@ class DrawFrame(QFrame):
 					qp.drawText(170, 300, IMPORTANT_DATA.text6)
 					qp.drawText(410, 300, str(IMPORTANT_DATA.ultrasound_transfer_rate))
 
-					qp.drawPath(sinus(  # Drawing the sine of a radio wave
+					qp.drawPath(sinus(  # Drawing the sinus of an ultrasound wave
 						10,
 						IMPORTANT_DATA.window_width,
 						IMPORTANT_DATA.ultrasound_frequency_of_wavefront,
@@ -246,6 +272,7 @@ class DrawFrame(QFrame):
 					qp.fillRect(530, 220, 200, 50, QColor(50, 50, 50, 40))
 					qp.drawText(590, 252, "Play sound")
 				case 4:
+					# Drawing a link quality data frame
 					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(270, 100, IMPORTANT_DATA.text1)
 					qp.drawText(510, 100, str(IMPORTANT_DATA.link_transfer_rate))
@@ -291,13 +318,14 @@ class DrawFrame(QFrame):
 					qp.drawText(270, 420, IMPORTANT_DATA.text9)
 					qp.drawText(510, 420, str(IMPORTANT_DATA.link_transmission_power))
 
-					qp.drawPath(sinus(  # Drawing the sine of a radio wave
+					qp.drawPath(sinus(  # Drawing the sinus of a link wave
 						10,
 						IMPORTANT_DATA.window_width,
 						IMPORTANT_DATA.link_signal_spectrum_width,
 						IMPORTANT_DATA.link_signal_strength
 					))
 				case 5:
+					# Drawing a stethoscope data frame
 					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
 					qp.drawText(270, 100, IMPORTANT_DATA.text1)
 					qp.drawText(510, 100, str(IMPORTANT_DATA.stethoscope_sound_amplitude))
@@ -318,24 +346,19 @@ class DrawFrame(QFrame):
 					qp.drawText(270, 260, IMPORTANT_DATA.text5)
 					qp.drawText(510, 260, str(IMPORTANT_DATA.stethoscope_transfer_rate))
 
-					qp.drawPath(sinus(  # Drawing the sine of a radio wave
+					qp.drawPath(sinus(  # Drawing the sinus of a sound wave
 						10,
 						IMPORTANT_DATA.window_width,
 						IMPORTANT_DATA.stethoscope_sound_frequency,
 						IMPORTANT_DATA.stethoscope_sound_amplitude
 					))
 
-	def customRepaint(self):
-		self.draw = True
-		super().repaint()
-		self.draw = False
+	def mousePressEvent(self, event: QMouseEvent) -> None:
+		"""
+		Tracking clicks on drawn buttons.
 
-	def customUpdate(self):
-		self.draw = True
-		super().update()
-		self.draw = False
-
-	def mousePressEvent(self, event: QMouseEvent):
+		:param event: See the Qt documentation
+		"""
 		if IMPORTANT_DATA.tab == 3:
 			if 530 <= event.pos().x() <= 730 and 120 <= event.pos().y() <= 170:
 				self.gen_sound.emit()

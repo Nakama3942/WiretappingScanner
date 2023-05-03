@@ -17,14 +17,27 @@ limitations under the License.
 """
 
 from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtGui import QMouseEvent
 
 class InactiveButton(QPushButton):
+    """
+    A class that slightly modifies how QPushButton works. If you set setCheckable() to True
+    for a standard button, then the button will be highlighted, but when you click on the highlighted
+    button again, the logic will still be re-executed, which should not be. This class corrects this defect.
+    """
+
     # Used in the connection button group in case there are no devices to connect, since this
     # property becomes True only in this case. This property is needed for the buttons in the
     # connection system to work correctly, on which the optimization of the program depends.
     trouble = False
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        """
+        Overrides the parent mousePressEvent, extending the logic:
+        If button is checked - pressing ignore.
+
+        :param event: See the Qt documentation
+        """
         if self.isChecked():
             event.ignore()
         else:

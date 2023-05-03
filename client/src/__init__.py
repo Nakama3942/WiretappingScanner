@@ -19,6 +19,5 @@ limitations under the License.
 from src.connector import Connector
 from src.get_hosts import getHost
 # from src.package import ...
-from src.painter_program_functions import sinus, rotatePath
 from src.search_algorithms import lastIndex
 from src.state import IMPORTANT_DATA
