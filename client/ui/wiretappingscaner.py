@@ -23,12 +23,20 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, 
 from PyQt6.QtCore import QRegularExpression, Qt
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QCloseEvent, QFontDatabase
 
-from ui.raw import Ui_WindowWiretappingScaner
-from ui.qsrc import Detector, SerialDialog, UploadDialog, UltrasoundDialog
-
-from src import IMPORTANT_DATA, getHost, lastIndex
+from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
+from ui.qsrc.detector import Detector
+from ui.qsrc.serialDialog import SerialDialog
+from ui.qsrc.uploadDialog import UploadDialog
+from ui.qsrc.usDialog import UltrasoundDialog
+from src.get_hosts import getHost
+from src.search_algorithms import lastIndex
+from src.state import IMPORTANT_DATA
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
+	"""
+	Class with the interface and logic of the main program window.
+	"""
+
 	def __init__(self):
 		super(WiretappingScaner, self).__init__()
 		self.setupUi(self)
@@ -55,9 +63,13 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget.setTabIcon(5, QIcon("./icon/stethoscope.png"))
 
 		# It's creating a validator for the input field of the list of ports
-		rx = QRegularExpression(r'^192\.168\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
-		validator = QRegularExpressionValidator(rx, self)
-		self.IPLine.setValidator(validator)
+		self.IPLine.setValidator(
+			QRegularExpressionValidator(
+				QRegularExpression(
+					r"^192\.168\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+				), self
+			)
+		)
 
 		# Setting service font
 		QFontDatabase.addApplicationFont("/font/fixedsys.ttf")
@@ -85,6 +97,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		show_action = QAction("Show", self)
 		show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
 		show_action.triggered.connect(self.tray_Hide)
+		# todo добавить кнопку с отображением данных
 		tray_menu = QMenu()
 		tray_menu.addAction(show_action)
 		self.tray_icon.setContextMenu(tray_menu)
@@ -114,25 +127,37 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Canceled again...
 		self.tabWidget.setTabVisible(5, False)
 
-	def tray_Show(self):
+	def tray_Show(self) -> None:
+		"""
+		The method minimizes the program to tray.
+		"""
 		self.tray_icon.show()
 		self.hide()
 		self.logger.user(message_text="Program closed to tray")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def tray_Hide(self):
+	def tray_Hide(self) -> None:
+		"""
+		The method maximizes the program from the tray.
+		"""
 		self.tray_icon.hide()
 		self.show()
 		self.logger.user(message_text="Program opened from tray")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def serialTool_clicked(self):
+	def serialTool_clicked(self) -> None:
+		"""
+		The method displays the COM port monitoring dialog box.
+		"""
 		if self.serialTool.isChecked():
 			self.serial_dialog.show()
 		else:
 			self.serial_dialog.hide()
 
-	def uploadTool_clicked(self):
+	def uploadTool_clicked(self) -> None:
+		"""
+		The method displays the flashing ESP32 dialog.
+		"""
 		if self.uploadTool.isChecked():
 			# self.upload_dialog.show()
 			warn = QMessageBox()
@@ -151,7 +176,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			# self.upload_dialog.close()
 			pass
 
-	def aboutTool_clicked(self):
+	def aboutTool_clicked(self) -> None:
+		"""
+		The method displays information about the program.
+		"""
 		with open('About.md', 'r') as f:
 			text = f.read()
 			md = MarkdownIt()
@@ -165,7 +193,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.user(message_text="Viewed information about the program")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def reloadTool_clicked(self):
+	def reloadTool_clicked(self) -> None:
+		"""
+		The method responsible for running and processing the results of Nmap.
+		"""
 		if IMPORTANT_DATA.connect:
 			self.logger.fail(message_text="Can't use Nmap while connected")
 			self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
@@ -202,7 +233,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		wait.close()
 
-	def buttConnect_clicked(self):
+	def buttConnect_clicked(self) -> None:
+		"""
+		The method that is executed after the Connect button is clicked.
+		"""
 		if not self.buttConnect.trouble:
 			if self.IPLine.text() == "":
 				if self.IPBox.count() == 0:
@@ -214,7 +248,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			self.detector.set_ip(self.IPLine.text())
 			self.detector.start()  # Starts the process of connecting to the Detector and receiving data
 
-	def detect_starting_signal(self):
+	def detect_starting_signal(self) -> None:
+		"""
+		The method that is triggered after a successful connection.
+		"""
 		self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
@@ -228,7 +265,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.groupSettings.setEnabled(True)
 		self.buttDisconnect.trouble = False
 
-	def detect_starting_error_signal(self, error: str):
+	def detect_starting_error_signal(self, error: str) -> None:
+		"""
+		The method that is triggered after a failed connection.
+
+		:param error: Error message
+		"""
 		err = QMessageBox()
 		err.setWindowTitle("Error")
 		err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
@@ -244,7 +286,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.buttDisconnect.trouble = True
 		self.buttDisconnect.click()
 
-	def detect_update_data_signal(self):
+	def detect_update_data_signal(self) -> None:
+		"""
+		The method that is triggered after the data has been successfully received.
+		"""
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.customRepaint()
@@ -266,15 +311,24 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.logger.metrics(message_text=f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def detect_update_data_error_signal(self, error: str):
+	def detect_update_data_error_signal(self, error: str) -> None:
+		"""
+		The method that is triggered after the data has been failed received.
+		"""
 		self.logger.fail(message_text=error)
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def buttDisconnect_clicked(self):
+	def buttDisconnect_clicked(self) -> None:
+		"""
+		The method that is executed after the Disconnect button is clicked.
+		"""
 		if not self.buttDisconnect.trouble:
 			self.detector.stop()
 
-	def detect_stopping_signal(self):
+	def detect_stopping_signal(self) -> None:
+		"""
+		The method that is triggered after a successful disconnection.
+		"""
 		self.detector.terminate()
 		self.clearWidget()
 		IMPORTANT_DATA.IPAddr = "000.000.000.000"
@@ -292,7 +346,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.groupSettings.setEnabled(False)
 		self.buttConnect.trouble = False
 
-	def detect_stopping_error_signal(self, error: str):
+	def detect_stopping_error_signal(self, error: str) -> None:
+		"""
+		The method that is triggered after a failed disconnection.
+
+		:param error: Error message
+		"""
 		err = QMessageBox()
 		err.setWindowTitle("Error")
 		err.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
@@ -308,7 +367,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.buttConnect.trouble = True
 		self.buttConnect.click()
 
-	def clearWidget(self):
+	def clearWidget(self) -> None:
+		"""
+		Frame clearing method.
+		"""
 		self.RadioDrawFrame.customUpdate()
 		self.CompassDrawFrame.customUpdate()
 		self.IRDrawFrame.customUpdate()
@@ -316,7 +378,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.FreeChannelDrawFrame.customUpdate()
 		self.StethoscopeDrawFrame.customUpdate()
 
-	def buttWidgetScreenshot_clicked(self):
+	def buttWidgetScreenshot_clicked(self) -> None:
+		"""
+		The method that is called after the Save Frameshot button is clicked.
+		"""
 		match IMPORTANT_DATA.tab:
 			case 0:
 				self.RadioDrawFrame.grab().save(lastIndex("RadioDrawFrameScreen.png", "{:07}"))
@@ -333,19 +398,31 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.event(message_text=f"Widget screenshot saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def buttProgramScreenshot_clicked(self):
+	def buttProgramScreenshot_clicked(self) -> None:
+		"""
+		The method that is called after the Save Programshot button is clicked.
+		"""
 		self.grab().save(lastIndex("ProgramScreen.png", "{:07}"))
 		self.logger.event(message_text=f"Program screenshot saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def buttSaveLog_clicked(self):
+	def buttSaveLog_clicked(self) -> None:
+		"""
+		The method that is called after the Save Log button is clicked.
+		"""
 		self.logger.buffer().save("log.html")
 		self.logger.event(message_text=f"Log saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def tabWidget_Clicked(self, index):
+	def tabWidget_Clicked(self, index: int) -> None:
+		"""
+		The method that is called when one of the tabs is clicked.
+
+		:param index: Tab number
+		"""
 		match index:
 			case 0:
+				# Setting texts for the first tab
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tpixmap1 = "./icon/pulse.png"
 				IMPORTANT_DATA.text1 = "Radio impulse (s): "
@@ -365,6 +442,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text8 = "Signal strength (dB): "
 				self.RadioDrawFrame.customRepaint()
 			case 1:
+				# Setting texts for the second tab
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tpixmap1 = "./icon/magnet.png"
 				IMPORTANT_DATA.text1 = "A magnetic field (μT): "
@@ -378,6 +456,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text5 = "Temperature (°C): "
 				self.CompassDrawFrame.customRepaint()
 			case 2:
+				# Setting texts for the third tab
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.text1 = "The sensor is broken"
 				# IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
@@ -394,6 +473,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				# IMPORTANT_DATA.text6 = "Transfer rate (bps): "
 				self.IRDrawFrame.customRepaint()
 			case 3:
+				# Setting texts for the fourth tab
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
 				IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
@@ -409,6 +489,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
 				self.UltrasoundDrawFrame.customRepaint()
 			case 4:
+				# Setting texts for the fifth tab
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tpixmap1 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text1 = "Transfer rate (bps): "
@@ -430,6 +511,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text9 = "Transmission power (dBm): "
 				self.FreeChannelDrawFrame.customRepaint()
 			case 5:
+				# Setting texts for the sixth tab
 				IMPORTANT_DATA.tab = index
 				IMPORTANT_DATA.tpixmap1 = "./icon/amplitude.png"
 				IMPORTANT_DATA.text1 = "Sound amplitude (dB): "
@@ -443,7 +525,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
 				self.StethoscopeDrawFrame.customRepaint()
 
-	def ultrasound_Gen(self):
+	def ultrasound_Gen(self) -> None:
+		"""
+		A method that displays the ultrasound generation window.
+		"""
 		# Unimplemented
 		self.us_dialog.show()
 		result: int = self.us_dialog.exec()
@@ -456,16 +541,23 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.notice(message_text="No ultrasound generation module")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def ultrasound_Play(self):
+	def ultrasound_Play(self) -> None:
+		"""
+		A method that reproduces the intercepted ultrasound.
+		"""
 		# Unimplemented
 		self.logger.notice(message_text="Unimplemented")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def closeEvent(self, event: QCloseEvent):
-		# todo изменить описание
-		# Program termination should occur in the tray, and not in the system menu
-		# If the program is hidden, then the tray is available, not the system menu
-		# Completion is allowed in the system menu if shift is pressed or not connected
+	def closeEvent(self, event: QCloseEvent) -> None:
+		"""
+		The program termination logic has been slightly redefined.
+
+		:param event: See the Qt documentation
+		"""
+		# When the connection is established, the program cannot be terminated!
+		# You need to close the connection yourself before terminating the program.
+		# Instead of finishing (when the connection is established), the program is minimized to tray.
 		if not IMPORTANT_DATA.connect:
 			self.serial_dialog.close()
 			QApplication.instance().exit(0)
