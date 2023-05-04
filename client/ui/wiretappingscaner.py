@@ -82,9 +82,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.aboutTool.clicked.connect(self.aboutTool_clicked)
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
 		self.buttDisconnect.clicked.connect(self.buttDisconnect_clicked)
-		self.buttWidgetScreenshot.clicked.connect(self.buttWidgetScreenshot_clicked)
-		self.buttProgramScreenshot.clicked.connect(self.buttProgramScreenshot_clicked)
-		self.buttSaveLog.clicked.connect(self.buttSaveLog_clicked)
+		self.frameshotButt.clicked.connect(self.frameshotButt_clicked)
+		self.programshotButt.clicked.connect(self.programshotButt_clicked)
+		self.logshotButt.clicked.connect(self.logshotButt_clicked)
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
 		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
 		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
@@ -378,7 +378,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.FreeChannelDrawFrame.customUpdate()
 		self.StethoscopeDrawFrame.customUpdate()
 
-	def buttWidgetScreenshot_clicked(self) -> None:
+	def frameshotButt_clicked(self) -> None:
 		"""
 		The method that is called after the Save Frameshot button is clicked.
 		"""
@@ -398,7 +398,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.event(message_text=f"Widget screenshot saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def buttProgramScreenshot_clicked(self) -> None:
+	def programshotButt_clicked(self) -> None:
 		"""
 		The method that is called after the Save Programshot button is clicked.
 		"""
@@ -406,7 +406,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.event(message_text=f"Program screenshot saved")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
-	def buttSaveLog_clicked(self) -> None:
+	def logshotButt_clicked(self) -> None:
 		"""
 		The method that is called after the Save Log button is clicked.
 		"""
