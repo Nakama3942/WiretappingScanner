@@ -18,7 +18,7 @@ limitations under the License.
 
 from platform import system
 
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, QTextEdit
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QComboBox, QPushButton, QTextEdit
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PyQt6.QtCore import Qt, QIODevice
 from PyQt6.QtGui import QIcon, QFont
@@ -36,16 +36,18 @@ class SerialDialog(QDialog):
 		self.h_layout = QHBoxLayout()
 
 		# Adding a ComboBox
-		self.label = QLabel('Select COM Port:', self)
+		self.label = QLabel("Select COM Port:", self)
 		self.combo = QComboBox(self)
-		for port in QSerialPortInfo().availablePorts():
-			self.combo.addItem(f"{str(port.portName())} - {str(port.description())}")
+		self.update_list = QPushButton("Update list", self)
+		self.update_list.setSizePolicy(self.update_list.sizePolicy().verticalPolicy(), QSizePolicy.Policy.Minimum)
+		self.update_list.clicked.connect(self.update_list_clicked)
 		self.h_layout.addWidget(self.label)
 		self.h_layout.addWidget(self.combo)
+		self.h_layout.addWidget(self.update_list)
 		self.layout.addLayout(self.h_layout)
 
 		# Adding a monitoring on/off button
-		self.monitoring_butt = QPushButton('Monitoring', self)
+		self.monitoring_butt = QPushButton("Monitoring", self)
 		self.monitoring_butt.setCheckable(True)
 		self.monitoring_butt.clicked.connect(self.monitoring_butt_clicked)
 		self.layout.addWidget(self.monitoring_butt)
@@ -59,7 +61,7 @@ class SerialDialog(QDialog):
 		# Dialog window customization
 		self.setLayout(self.layout)
 		self.setWindowIcon(QIcon("./icon/serial_monitor.png"))
-		self.setWindowTitle('Serial Monitor')
+		self.setWindowTitle("Serial Monitor")
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
 		self.setFixedSize(400, 250)
 		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
@@ -70,14 +72,24 @@ class SerialDialog(QDialog):
 		self.com.readyRead.connect(self.serial_write)
 		self.string_data: bytes = b''
 
+	def update_list_clicked(self) -> None:
+		"""
+		Button for updating the list of available COM ports.
+		"""
+		self.combo.clear()
+		for port in QSerialPortInfo().availablePorts():
+			self.combo.addItem(f"{str(port.portName())} - {str(port.description())}")
+
 	def monitoring_butt_clicked(self) -> None:
 		"""
 		If the monitoring button is pressed - turns monitoring on/off.
 		"""
 		if self.monitoring_butt.isChecked():
+			self.monitoring_butt.setText(f"Monitoring of {self.combo.currentText().split(' - ')[1]}")
 			self.com.setPortName(self.combo.currentText().split(" ")[0])
 			self.com.open(QIODevice.OpenModeFlag.ReadOnly)
 		else:
+			self.monitoring_butt.setText(f"Monitoring")
 			self.com.close()
 
 	def serial_write(self) -> None:

@@ -38,7 +38,7 @@ class UltrasoundDialog(QDialog):
 		# Adding an input field for generating ultrasound frequency
 		self.frequency_field = QLineEdit(self)
 		self.frequency_field.setFont(self.font)
-		self.frequency_field.setValidator(QRegularExpressionValidator(QRegularExpression(r"[1-9]\\d{0,4}|100000")))
+		self.frequency_field.setValidator(QRegularExpressionValidator(QRegularExpression(r"[1-9]\d{0,4}|100000")))
 		self.frequency_field.setPlaceholderText("Enter signal frequency")
 		self.frequency_field.setToolTip(
 			"The value must be between 20000 and 100000 Hertz\n"

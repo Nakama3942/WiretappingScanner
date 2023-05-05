@@ -50,7 +50,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		IMPORTANT_DATA.window_width = self.width()
 
 		# Icons setting
-		self.setWindowIcon(QIcon('./icon/wiretapping_scaner.png'))
+		self.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
 		self.serialTool.setIcon(QIcon("./icon/serial_monitor.png"))
 		self.uploadTool.setIcon(QIcon("./icon/upload.png"))
 		self.reloadTool.setIcon(QIcon("./icon/search.png"))
@@ -93,14 +93,52 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
-		self.tray_icon.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon))
-		show_action = QAction("Show", self)
-		show_action.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-		show_action.triggered.connect(self.tray_Hide)
-		# todo добавить кнопку с отображением данных
-		tray_menu = QMenu()
-		tray_menu.addAction(show_action)
-		self.tray_icon.setContextMenu(tray_menu)
+		self.tray_icon.setIcon(QIcon("./icon/wiretapping_scaner.png"))
+		self.show_action = QAction("Show", self)
+		self.show_action.setIcon(QIcon("./icon/open.png"))
+		self.show_action.triggered.connect(self.tray_Hide)
+		self.data_action = QAction("Data", self)
+		self.data_action.setIcon(QIcon("./icon/fork.png"))
+		self.data_action.triggered.connect(self.tray_Hide)
+		self.radio_action = QAction("Switch to Radio tab", self)
+		self.radio_action.setIcon(QIcon("./icon/radio.png"))
+		self.radio_action.triggered.connect(lambda: self.switch_tab(0))
+		self.compass_action = QAction("Switch to Compass tab", self)
+		self.compass_action.setIcon(QIcon("./icon/compass.png"))
+		self.compass_action.triggered.connect(lambda: self.switch_tab(1))
+		self.ir_action = QAction("Switch to Infrared tab", self)
+		self.ir_action.setIcon(QIcon("./icon/infrared.png"))
+		self.ir_action.triggered.connect(lambda: self.switch_tab(2))
+		self.us_action = QAction("Switch to Ultrasound tab", self)
+		self.us_action.setIcon(QIcon("./icon/ultrasound.png"))
+		self.us_action.triggered.connect(lambda: self.switch_tab(3))
+		self.channel_action = QAction("Switch to Link quality tab", self)
+		self.channel_action.setIcon(QIcon("./icon/wifi.png"))
+		self.channel_action.triggered.connect(lambda: self.switch_tab(4))
+		# self.stethoscope_action = QAction("Switch to Stethoscope tab", self)
+		# self.stethoscope_action.setIcon(QIcon("./icon/stethoscope.png"))
+		# self.stethoscope_action.triggered.connect(lambda: self.switch_tab(5))
+		self.connect_action = QAction("Connect to last connection", self)
+		self.connect_action.setIcon(QIcon("./icon/link.png"))
+		self.connect_action.triggered.connect(lambda: self.buttConnect.click())
+		self.disconnect_action = QAction("Disconnect from this connection", self)
+		self.disconnect_action.setIcon(QIcon("./icon/remove_link.png"))
+		self.disconnect_action.triggered.connect(lambda: self.buttDisconnect.click())
+		self.tray_menu = QMenu()
+		self.tray_menu.setTitle("Wiretapping Scanner")
+		self.tray_menu.addAction(self.show_action)
+		self.tray_menu.addSeparator()
+		self.tray_menu.addAction(self.data_action)
+		self.tray_menu.addSeparator()
+		self.tray_menu.addAction(self.radio_action)
+		self.tray_menu.addAction(self.compass_action)
+		self.tray_menu.addAction(self.ir_action)
+		self.tray_menu.addAction(self.us_action)
+		self.tray_menu.addAction(self.channel_action)
+		# self.tray_menu.addAction(self.stethoscope_action)
+		self.tray_menu.addSeparator()
+		self.tray_menu.addAction(self.disconnect_action)
+		self.tray_icon.setContextMenu(self.tray_menu)
 
 		# Initialization of Logger
 		self.logger = Logger(program_name="WiretappingScaner", status_message_global_entry=False, log_environment="html")
@@ -144,6 +182,15 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.show()
 		self.logger.user(message_text="Program opened from tray")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
+	def switch_tab(self, index: int) -> None:
+		"""
+		Method for switching tabs from tray.
+
+		:param index: Tab number to active
+		"""
+		self.tabWidget.setCurrentIndex(index)
+		self.tabWidget.tabBarClicked.emit(index)
 
 	def serialTool_clicked(self) -> None:
 		"""
@@ -252,6 +299,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		"""
 		The method that is triggered after a successful connection.
 		"""
+		self.tray_menu.removeAction(self.connect_action)
+		self.tray_menu.addAction(self.disconnect_action)
 		self.logger.success(message_text=f"CONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 		self.statusbar.showMessage(f"STATUS:\tCONNECT to {IMPORTANT_DATA.IPAddr}:{IMPORTANT_DATA.Port}")
@@ -292,23 +341,35 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		"""
 		match IMPORTANT_DATA.tab:
 			case 0:
+				text = f"{IMPORTANT_DATA.radio_signal_spectrum_width} MHz radio signal spectrum width detected"
 				self.RadioDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.radio_signal_spectrum_width} MHz radio signal spectrum width detected")
+				self.data_action.setText(text)
+				self.logger.metrics(message_text=text)
 			case 1:
+				text = f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees"
 				self.CompassDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees")
+				self.data_action.setText(text)
+				self.logger.metrics(message_text=text)
 			case 2:
+				text = f"The sensor is broken"
 				self.IRDrawFrame.customRepaint()
-				self.logger.fail(message_text=f"The sensor is broken")
+				self.data_action.setText(text)
+				self.logger.fail(message_text=text)
 			case 3:
+				text = f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected"
 				self.UltrasoundDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected")
+				self.data_action.setText(text)
+				self.logger.metrics(message_text=text)
 			case 4:
+				text = f"{IMPORTANT_DATA.link_signal_strength} Hz link quality detected"
 				self.FreeChannelDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.link_signal_strength} Hz link quality detected")
+				self.data_action.setText(text)
+				self.logger.metrics(message_text=text)
 			case 5:
+				text = f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected"
 				self.StethoscopeDrawFrame.customRepaint()
-				self.logger.metrics(message_text=f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected")
+				self.data_action.setText(text)
+				self.logger.metrics(message_text=text)
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def detect_update_data_error_signal(self, error: str) -> None:
@@ -331,6 +392,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		"""
 		self.detector.terminate()
 		self.clearWidget()
+		self.tray_menu.removeAction(self.disconnect_action)
+		self.tray_menu.addAction(self.connect_action)
 		IMPORTANT_DATA.IPAddr = "000.000.000.000"
 		IMPORTANT_DATA.Port = "00000"
 		self.logger.success(message_text=f"DISCONNECT")
