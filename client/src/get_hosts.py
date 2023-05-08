@@ -18,19 +18,19 @@ limitations under the License.
 
 from subprocess import run, PIPE, TimeoutExpired
 from nmap import PortScanner, PortScannerError
-from glob import glob
 
-def getHost(_timeout: int) -> [bool, list, str]:
+def getHost(ip_correct: int, _timeout: int) -> [bool, list, str]:
 	"""
 	Specifies static IP addresses of the local network.
 
+	:param ip_correct: Correcting of IP host
 	:param _timeout: The maximum time of determining IP addresses
 	:return: the success of the lookup and or either a list of IP addresses or a string with an error message
 	"""
 	hosts = []
 	scanner = PortScanner()
 	try:
-		cmd = f'nmap 192.168.{glob("*.ip")[0].split(".")[0]}.0/24 -sn -T5 -v -oX -'
+		cmd = f'nmap 192.168.{ip_correct}.0/24 -sn -T5 -v -oX -'
 		result = run(cmd.split(), stdout=PIPE, stderr=PIPE, timeout=_timeout, shell=True)
 		if not result.returncode:
 			scanner.analyse_nmap_xml_scan(result.stdout.decode('utf-8'))

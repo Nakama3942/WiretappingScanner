@@ -260,7 +260,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		wait.show()
 		QApplication.processEvents()
 
-		result, hosts_list, error = getHost(self.timeoutSpin.value())
+		result, hosts_list, error = getHost(self.hostLine.text(), self.timeoutSpin.value())
 		if result:
 			for i in hosts_list:
 				self.IPBox.addItem(f"IP {i[0]} (MAC {i[1]})")
@@ -278,6 +278,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				case QMessageBox.StandardButton.Cancel:
 					self.logger.error(message_text=error)
 					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
 		wait.close()
 
 	def buttConnect_clicked(self) -> None:

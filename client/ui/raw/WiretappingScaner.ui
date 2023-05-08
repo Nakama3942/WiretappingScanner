@@ -10,29 +10,17 @@
     <height>600</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <property name="minimumSize">
    <size>
     <width>800</width>
     <height>600</height>
    </size>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>16777215</width>
-    <height>16777215</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>Wiretapping Scaner Client</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="enabled">
@@ -55,39 +43,15 @@
         <pointsize>12</pointsize>
        </font>
       </property>
-      <property name="tabPosition">
-       <enum>QTabWidget::North</enum>
-      </property>
-      <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
       <property name="iconSize">
        <size>
         <width>30</width>
         <height>30</height>
        </size>
       </property>
-      <property name="documentMode">
-       <bool>false</bool>
-      </property>
-      <property name="tabsClosable">
-       <bool>false</bool>
-      </property>
-      <property name="movable">
-       <bool>false</bool>
-      </property>
-      <property name="tabBarAutoHide">
-       <bool>false</bool>
-      </property>
       <widget class="QWidget" name="tabRadio">
        <property name="toolTip">
         <string>Radio tab</string>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
        </property>
        <attribute name="title">
         <string>Radio</string>
@@ -130,12 +94,6 @@
               </property>
               <property name="toolTip">
                <string>Drawing zone</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="lineWidth">
-               <number>1</number>
               </property>
              </widget>
             </item>
@@ -191,12 +149,6 @@
               <property name="toolTip">
                <string>Drawing zone</string>
               </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Plain</enum>
-              </property>
              </widget>
             </item>
            </layout>
@@ -250,9 +202,6 @@
               </property>
               <property name="toolTip">
                <string>Drawing zone</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
               </property>
              </widget>
             </item>
@@ -308,9 +257,6 @@
               <property name="toolTip">
                <string>Drawing zone</string>
               </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
              </widget>
             </item>
            </layout>
@@ -329,9 +275,6 @@
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
          <widget class="QScrollArea" name="scrollArea5">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -365,16 +308,8 @@
                 <height>600</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
               <property name="toolTip">
                <string>Drawing zone</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
               </property>
              </widget>
             </item>
@@ -394,9 +329,6 @@
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
          <widget class="QScrollArea" name="scrollArea6">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -430,16 +362,8 @@
                 <height>600</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
               <property name="toolTip">
                <string>Drawing zone</string>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
               </property>
              </widget>
             </item>
@@ -487,6 +411,34 @@
           <number>0</number>
          </property>
          <item>
+          <widget class="QToolButton" name="aboutTool">
+           <property name="minimumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>About program</string>
+           </property>
+           <property name="text">
+            <string>About</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -521,13 +473,6 @@
              <width>32</width>
              <height>32</height>
             </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
            </property>
            <property name="toolTip">
             <string>Serial monitor</string>
@@ -566,11 +511,6 @@
              <height>32</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
            <property name="toolTip">
             <string>Upload</string>
            </property>
@@ -601,7 +541,7 @@
       <item>
        <widget class="QGroupBox" name="connectionGroupBox">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -626,9 +566,6 @@
         <property name="title">
          <string>Connection</string>
         </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
         <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
           <widget class="QScrollArea" name="scrollArea">
@@ -636,14 +573,6 @@
             <bool>true</bool>
            </property>
            <widget class="QWidget" name="scrollAreaWidgetContents">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>301</width>
-              <height>558</height>
-             </rect>
-            </property>
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
               <widget class="QComboBox" name="IPBox">
@@ -654,34 +583,6 @@
              </item>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout1">
-               <item>
-                <widget class="QToolButton" name="aboutTool">
-                 <property name="minimumSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                 <property name="toolTip">
-                  <string>About program</string>
-                 </property>
-                 <property name="text">
-                  <string>About</string>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
                <item>
                 <spacer name="horizontalSpacer1">
                  <property name="orientation">
@@ -694,6 +595,54 @@
                   </size>
                  </property>
                 </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>192.168.</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="HostLineEdit" name="hostLine">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>25</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Host of local network</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: transparent;</string>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="maxLength">
+                  <number>3</number>
+                 </property>
+                 <property name="frame">
+                  <bool>false</bool>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>.1</string>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QToolButton" name="reloadTool">
@@ -767,6 +716,9 @@
              </item>
              <item>
               <widget class="QLineEdit" name="IPLine">
+               <property name="toolTip">
+                <string>WIretapping Scanner Server IP</string>
+               </property>
                <property name="styleSheet">
                 <string notr="true">font-size: 16px;</string>
                </property>
@@ -792,71 +744,67 @@
               </widget>
              </item>
              <item>
-              <widget class="InactiveButton" name="buttConnect">
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>75</weight>
-                 <italic>false</italic>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Connect to device</string>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">color: rgb(0, 150, 0);
+              <layout class="QVBoxLayout" name="verticalLayout_12">
+               <item>
+                <widget class="InactiveButton" name="buttConnect">
+                 <property name="toolTip">
+                  <string>Connect to device</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 150, 0);
 font: bold;
 font-size: 20px;</string>
-               </property>
-               <property name="text">
-                <string>Connect</string>
-               </property>
-               <property name="shortcut">
-                <string>Return</string>
-               </property>
-               <property name="checkable">
-                <bool>true</bool>
-               </property>
-               <property name="autoExclusive">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="InactiveButton" name="buttDisconnect">
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>75</weight>
-                 <italic>false</italic>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Disconnect from device</string>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">color: rgb(200, 0, 0);
+                 </property>
+                 <property name="text">
+                  <string>Connect</string>
+                 </property>
+                 <property name="shortcut">
+                  <string>Return</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="InactiveButton" name="buttDisconnect">
+                 <property name="font">
+                  <font>
+                   <pointsize>-1</pointsize>
+                   <weight>75</weight>
+                   <italic>false</italic>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Disconnect from device</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(200, 0, 0);
 font: bold;
 font-size: 20px;</string>
-               </property>
-               <property name="text">
-                <string>Disconnect</string>
-               </property>
-               <property name="shortcut">
-                <string>Esc</string>
-               </property>
-               <property name="checkable">
-                <bool>true</bool>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-               <property name="autoExclusive">
-                <bool>true</bool>
-               </property>
-              </widget>
+                 </property>
+                 <property name="text">
+                  <string>Disconnect</string>
+                 </property>
+                 <property name="shortcut">
+                  <string>Esc</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="Line" name="line2">
@@ -867,14 +815,6 @@ font-size: 20px;</string>
              </item>
              <item>
               <widget class="QLineEdit" name="statusLine">
-               <property name="font">
-                <font>
-                 <pointsize>-1</pointsize>
-                 <weight>50</weight>
-                 <italic>true</italic>
-                 <bold>false</bold>
-                </font>
-               </property>
                <property name="toolTip">
                 <string>Status</string>
                </property>
@@ -898,11 +838,6 @@ font-size: 18px;</string>
               <layout class="QHBoxLayout" name="horizontalLayout2">
                <item>
                 <widget class="QLabel" name="label1">
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
                  <property name="text">
                   <string>IP address:</string>
                  </property>
@@ -1004,12 +939,6 @@ font-size: 18px;</string>
              </item>
              <item>
               <widget class="QPushButton" name="frameshotButt">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="toolTip">
                 <string>Makes the frameshot</string>
                </property>
@@ -1020,12 +949,6 @@ font-size: 18px;</string>
              </item>
              <item>
               <widget class="QPushButton" name="programshotButt">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="toolTip">
                 <string>Makes the programshot</string>
                </property>
@@ -1036,12 +959,6 @@ font-size: 18px;</string>
              </item>
              <item>
               <widget class="QPushButton" name="logshotButt">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="toolTip">
                 <string>Saves the log</string>
                </property>
@@ -1073,12 +990,6 @@ font-size: 18px;</string>
                  <layout class="QVBoxLayout" name="verticalLayout3">
                   <item>
                    <widget class="QCheckBox" name="checkPlaySound">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
                     <property name="text">
                      <string>Play sound</string>
                     </property>
@@ -1086,12 +997,6 @@ font-size: 18px;</string>
                   </item>
                   <item>
                    <widget class="QCheckBox" name="checkRemoteMode">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
                     <property name="text">
                      <string>Remote mode</string>
                     </property>
@@ -1163,19 +1068,12 @@ font-size: 18px;</string>
                       <property name="value">
                        <number>80</number>
                       </property>
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
                      </widget>
                     </item>
                    </layout>
                   </item>
                   <item>
-                   <widget class="Line" name="line7">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                   </widget>
+                   <widget class="Line" name="line7"/>
                   </item>
                   <item>
                    <spacer name="verticalSpacer3">
@@ -1270,6 +1168,11 @@ color: rgb(255, 255, 255);</string>
    <class>InactiveButton</class>
    <extends>QPushButton</extends>
    <header>ui/qsrc/inactiveButton</header>
+  </customwidget>
+  <customwidget>
+   <class>HostLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>ui/qsrc/hostLineEdit</header>
   </customwidget>
  </customwidgets>
  <resources/>
