@@ -16,8 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from platform import system
-
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QPushButton
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon

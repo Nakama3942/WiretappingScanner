@@ -28,9 +28,13 @@ class HostLineEdit(QLineEdit):
         super(HostLineEdit, self).__init__(parent)
 
         # Create a validator to restrict user input
-        reg_exp = QRegularExpression(r"^25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d$")
-        validator = QRegularExpressionValidator(reg_exp)
-        self.setValidator(validator)
+        self.setValidator(
+            QRegularExpressionValidator(
+                QRegularExpression(
+                    r"^25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d$"
+                ), self
+            )
+        )
 
     # Initially, it was planned that the field would be filled with a full IP address
     # like 192.168.XXX.1, where the user could enter text only between the second and

@@ -16,8 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from PyQt6.QtGui import QPainterPath, QTransform
 from math import sin
+
+from PyQt6.QtGui import QPainterPath, QTransform
 
 def sinus(grid: int, window_width: int, spectrum_width: float, amplitude: float, init_phase: int = 0, y_offset: int = 500) -> QPainterPath:
 	"""

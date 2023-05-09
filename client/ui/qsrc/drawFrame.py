@@ -20,8 +20,8 @@ from PyQt6.QtWidgets import QFrame
 from PyQt6.QtCore import QPoint, QPointF, pyqtSignal
 from PyQt6.QtGui import QPaintEvent, QMouseEvent, QPainter, QPainterPath, QPixmap, QColor, QPolygonF
 
-from ui.qsrc.painter_program_functions import sinus, rotatePath
-from src.state import IMPORTANT_DATA
+from ui.qsrc.painterProgramFunctions import sinus, rotatePath
+from src import IMPORTANT_DATA
 
 class DrawFrame(QFrame):
 	"""

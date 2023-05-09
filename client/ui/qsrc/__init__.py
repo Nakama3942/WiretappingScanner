@@ -16,10 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from ui.qsrc.detector import Detector
-from ui.qsrc.drawFrame import DrawFrame
-from ui.qsrc.inactiveButton import InactiveButton
-from ui.qsrc.painter_program_functions import sinus, rotatePath
-from ui.qsrc.serialDialog import SerialDialog
-from ui.qsrc.uploadDialog import UploadDialog
-from ui.qsrc.usDialog import UltrasoundDialog
+# from ui.qsrc.detector import Detector
+# from ui.qsrc.drawFrame import DrawFrame
+# from ui.qsrc.inactiveButton import InactiveButton
+# from ui.qsrc.painterProgramFunctions import sinus, rotatePath
+# from ui.qsrc.serialDialog import SerialDialog
+# from ui.qsrc.uploadDialog import UploadDialog
+# from ui.qsrc.usDialog import UltrasoundDialog

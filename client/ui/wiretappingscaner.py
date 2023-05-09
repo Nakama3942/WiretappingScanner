@@ -28,9 +28,7 @@ from ui.qsrc.detector import Detector
 from ui.qsrc.serialDialog import SerialDialog
 from ui.qsrc.uploadDialog import UploadDialog
 from ui.qsrc.usDialog import UltrasoundDialog
-from src.get_hosts import getHost
-from src.search_algorithms import lastIndex
-from src.state import IMPORTANT_DATA
+from src import getHost, lastIndex, IMPORTANT_DATA
 
 class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 	"""
@@ -141,7 +139,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tray_icon.setContextMenu(self.tray_menu)
 
 		# Initialization of Logger
-		self.logger = Logger(program_name="WiretappingScaner", status_message_global_entry=False, log_environment="html")
+		self.logger = Logger(
+			program_name="WiretappingScaner",
+			status_message_global_entry=False,
+			log_environment="html"
+		)
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 		# Initialization of process of tracking
@@ -213,7 +215,9 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			warn.setIcon(QMessageBox.Icon.Critical)
 			warn.setText("<font size=14 color='red'>Error...</font>")
 			warn.setInformativeText(
-				"<font color='darkred'>The esptools library requires the Visual Studio development tools, which developers do not have - development stopped...</font>")
+				"<font color='darkred'>"
+				"The esptools library requires the Visual Studio development tools, which developers do not have - development stopped..."
+				"</font>")
 			warn.setStandardButtons(QMessageBox.StandardButton.Cancel)
 			ret: int = warn.exec()
 			match ret:

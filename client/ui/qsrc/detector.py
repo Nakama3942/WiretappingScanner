@@ -20,8 +20,7 @@ from time import sleep
 
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from src.connector import Connector
-from src.state import IMPORTANT_DATA
+from src import Connector, IMPORTANT_DATA
 
 class Detector(QThread):
 	"""
