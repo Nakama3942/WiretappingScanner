@@ -19,11 +19,15 @@ limitations under the License.
 import sys
 
 from PyQt6.QtWidgets import QApplication
+from qtvscodestyle import load_stylesheet
+from qdarktheme import setup_theme
 
 from ui import WiretappingScaner
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
+	# app.setStyleSheet(load_stylesheet("style/OneDark-Pro-flat.json"))
+	setup_theme(custom_colors={"primary": "#D0BCFF"})
 	ui = WiretappingScaner()
 	ui.show()
 	sys.exit(app.exec())

@@ -22,10 +22,12 @@ from mighty_logger import Logger
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QMessageBox, QDialogButtonBox
 from PyQt6.QtCore import QRegularExpression, Qt
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QCloseEvent, QFontDatabase
+# from qtvscodestyle import load_stylesheet
 
 from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
 from ui.qsrc.detector import Detector
 from ui.qsrc.serialDialog import SerialDialog
+from ui.qsrc.themeDialog import ThemeDialog
 from ui.qsrc.uploadDialog import UploadDialog
 from ui.qsrc.usDialog import UltrasoundDialog
 from src import getHost, lastIndex, IMPORTANT_DATA
@@ -39,6 +41,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		super(WiretappingScaner, self).__init__()
 		self.setupUi(self)
 
+		# self.setStyleSheet(load_stylesheet("style/OneDark-Pro.json"))
+
 		# Set window to center
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
@@ -49,10 +53,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Icons setting
 		self.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
+		self.aboutTool.setIcon(QIcon("./icon/about.png"))
+		self.themeTool.setIcon(QIcon("./icon/theme.png"))
 		self.serialTool.setIcon(QIcon("./icon/serial_monitor.png"))
 		self.uploadTool.setIcon(QIcon("./icon/upload.png"))
 		self.reloadTool.setIcon(QIcon("./icon/search.png"))
-		self.aboutTool.setIcon(QIcon("./icon/about.png"))
 		self.tabWidget.setTabIcon(0, QIcon("./icon/radio.png"))
 		self.tabWidget.setTabIcon(1, QIcon("./icon/compass.png"))
 		self.tabWidget.setTabIcon(2, QIcon("./icon/infrared.png"))
@@ -76,8 +81,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		IMPORTANT_DATA.tfont = self.font
 
 		# It's a tracking of button clicks in the window
-		self.reloadTool.clicked.connect(self.reloadTool_clicked)
 		self.aboutTool.clicked.connect(self.aboutTool_clicked)
+		self.themeTool.clicked.connect(self.themeTool_clicked)
+		self.serialTool.clicked.connect(self.serialTool_clicked)
+		self.uploadTool.clicked.connect(self.uploadTool_clicked)
+		self.reloadTool.clicked.connect(self.reloadTool_clicked)
 		self.buttConnect.clicked.connect(self.buttConnect_clicked)
 		self.buttDisconnect.clicked.connect(self.buttDisconnect_clicked)
 		self.frameshotButt.clicked.connect(self.frameshotButt_clicked)
@@ -86,8 +94,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget.tabBarClicked.connect(self.tabWidget_Clicked)
 		self.UltrasoundDrawFrame.gen_sound.connect(self.ultrasound_Gen)
 		self.UltrasoundDrawFrame.play_sound.connect(self.ultrasound_Play)
-		self.serialTool.clicked.connect(self.serialTool_clicked)
-		self.uploadTool.clicked.connect(self.uploadTool_clicked)
 
 		# Initialization of QSystemTrayIcon
 		self.tray_icon = QSystemTrayIcon(self)
@@ -157,6 +163,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# Initialization of dialog windows
 		self.serial_dialog = SerialDialog()
+		self.theme_dialog = ThemeDialog()
 		self.upload_dialog = UploadDialog()
 		self.us_dialog = UltrasoundDialog()
 
@@ -194,6 +201,32 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.tabWidget.setCurrentIndex(index)
 		self.tabWidget.tabBarClicked.emit(index)
 
+	def aboutTool_clicked(self) -> None:
+		"""
+		The method displays information about the program.
+		"""
+		with open('About.md', 'r') as f:
+			text = f.read()
+			md = MarkdownIt()
+			html = md.render(text)
+
+		about_program_container = QMessageBox()
+		about_program_container.setWindowIcon(QIcon("./icon/about.png"))
+		about_program = QMessageBox()
+		about_program.about(about_program_container, "About program", html)
+
+		self.logger.user(message_text="Viewed information about the program")
+		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
+	def themeTool_clicked(self) -> None:
+		"""
+		///
+		"""
+		if self.themeTool.isChecked():
+			self.theme_dialog.show()
+		else:
+			self.theme_dialog.close()
+
 	def serialTool_clicked(self) -> None:
 		"""
 		The method displays the COM port monitoring dialog box.
@@ -226,23 +259,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		else:
 			# self.upload_dialog.close()
 			pass
-
-	def aboutTool_clicked(self) -> None:
-		"""
-		The method displays information about the program.
-		"""
-		with open('About.md', 'r') as f:
-			text = f.read()
-			md = MarkdownIt()
-			html = md.render(text)
-
-		about_program_container = QMessageBox()
-		about_program_container.setWindowIcon(QIcon("./icon/about.png"))
-		about_program = QMessageBox()
-		about_program.about(about_program_container, "About program", html)
-
-		self.logger.user(message_text="Viewed information about the program")
-		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
 	def reloadTool_clicked(self) -> None:
 		"""
