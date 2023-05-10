@@ -18,11 +18,11 @@ limitations under the License.
 
 from markdown_it import MarkdownIt
 from mighty_logger import Logger
+from configparser import ConfigParser
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStyle, QSystemTrayIcon, QMenu, QMessageBox, QDialogButtonBox
 from PyQt6.QtCore import QRegularExpression, Qt
 from PyQt6.QtGui import QRegularExpressionValidator, QIcon, QFont, QAction, QCloseEvent, QFontDatabase
-# from qtvscodestyle import load_stylesheet
 
 from ui.raw.ui_wiretappingscaner import Ui_WindowWiretappingScaner
 from ui.qsrc.detector import Detector
@@ -643,6 +643,15 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# You need to close the connection yourself before terminating the program.
 		# Instead of finishing (when the connection is established), the program is minimized to tray.
 		if not IMPORTANT_DATA.connect:
+			config = ConfigParser()
+			config.add_section('Color')
+			config.set('Color', 'appearance', IMPORTANT_DATA.appearance)
+			config.set('Color', 'accent_color', IMPORTANT_DATA.accent_color)
+			config.set('Color', 'custom_color', IMPORTANT_DATA.custom_color)
+			config.set('Color', 'last_color', IMPORTANT_DATA.last_color)
+			with open('data/config.ini', 'w') as config_file:
+				config.write(config_file)
+
 			self.serial_dialog.close()
 			QApplication.instance().exit(0)
 		else:

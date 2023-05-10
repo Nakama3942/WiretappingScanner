@@ -16,13 +16,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from configparser import ConfigParser
+
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QColorDialog
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QColor
-
 import qdarktheme
 
+from src import IMPORTANT_DATA
+
 # todo завершить окошко, логику, документацию, сохранение цветов в .ini
+
+def set_button_color_stylesheet(color: str):
+	return f"""
+		background-color: '{color}';
+		border-radius: 12px;
+		padding: 8px 8px;
+	"""
 
 class ThemeDialog(QDialog):
 	"""
@@ -38,7 +48,8 @@ class ThemeDialog(QDialog):
 
 		self.combo_box = QComboBox()
 		self.combo_box.addItems(qdarktheme.get_themes())
-		self.combo_box.currentTextChanged.connect(qdarktheme.setup_theme)
+		self.combo_box.setCurrentText(IMPORTANT_DATA.appearance)
+		self.combo_box.currentTextChanged.connect(self.setAppearance)
 		self.layout.addWidget(self.combo_box)
 
 		self.color_button = QPushButton()
@@ -55,104 +66,52 @@ class ThemeDialog(QDialog):
 		self.color_button.clicked.connect(self.showColorDialog)
 		self.h_layout.addWidget(self.color_button)
 
+		self.custom_color_button = QPushButton()
+		self.custom_color_button.setStyleSheet(set_button_color_stylesheet(IMPORTANT_DATA.custom_color))
+		self.custom_color_button.clicked.connect(lambda: self.setColorDialog(IMPORTANT_DATA.custom_color))
+		self.h_layout.addWidget(self.custom_color_button)
+
 		self.button1 = QPushButton()
-		self.button1.setStyleSheet(
-			"""
-			background-color: '#007BFF';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button1.setStyleSheet(set_button_color_stylesheet("#007BFF"))
 		self.button1.clicked.connect(lambda: self.setColorDialog("#007BFF"))
 		self.h_layout.addWidget(self.button1)
 
 		self.button2 = QPushButton()
-		self.button2.setStyleSheet(
-			"""
-			background-color: '#5856D6';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button2.setStyleSheet(set_button_color_stylesheet("#5856D6"))
 		self.button2.clicked.connect(lambda: self.setColorDialog("#5856D6"))
 		self.h_layout.addWidget(self.button2)
 
 		self.button3 = QPushButton()
-		self.button3.setStyleSheet(
-			"""
-			background-color: '#FF2D55';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button3.setStyleSheet(set_button_color_stylesheet("#FF2D55"))
 		self.button3.clicked.connect(lambda: self.setColorDialog("#FF2D55"))
 		self.h_layout.addWidget(self.button3)
 
 		self.button4 = QPushButton()
-		self.button4.setStyleSheet(
-			"""
-			background-color: '#FF3B30';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button4.setStyleSheet(set_button_color_stylesheet("#FF3B30"))
 		self.button4.clicked.connect(lambda: self.setColorDialog("#FF3B30"))
 		self.h_layout.addWidget(self.button4)
 
 		self.button5 = QPushButton()
-		self.button5.setStyleSheet(
-			"""
-			background-color: '#FF9500';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button5.setStyleSheet(set_button_color_stylesheet("#FF9500"))
 		self.button5.clicked.connect(lambda: self.setColorDialog("#FF9500"))
 		self.h_layout.addWidget(self.button5)
 
 		self.button6 = QPushButton()
-		self.button6.setStyleSheet(
-			"""
-			background-color: '#FFCC00';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button6.setStyleSheet(set_button_color_stylesheet("#FFCC00"))
 		self.button6.clicked.connect(lambda: self.setColorDialog("#FFCC00"))
 		self.h_layout.addWidget(self.button6)
 
 		self.button7 = QPushButton()
-		self.button7.setStyleSheet(
-			"""
-			background-color: '#34C759';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
+		self.button7.setStyleSheet(set_button_color_stylesheet("#34C759"))
 		self.button7.clicked.connect(lambda: self.setColorDialog("#34C759"))
 		self.h_layout.addWidget(self.button7)
 
 		self.button8 = QPushButton()
-		self.button8.setStyleSheet(
-			"""
-			background-color: '#3A3A3C';
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
-		self.button8.clicked.connect(lambda: self.setColorDialog("#3A3A3C"))
+		self.button8.setStyleSheet(set_button_color_stylesheet("#808080"))
+		self.button8.clicked.connect(lambda: self.setColorDialog("#808080"))
 		self.h_layout.addWidget(self.button8)
 
-		# self.button9 = QPushButton()
-		# self.button9.setStyleSheet(
-		# 	"""
-		# 	background-color: '#808080';
-		# 	border-radius: 12px;
-		# 	padding: 8px 8px;
-		# 	"""
-		# )
-		# self.button9.clicked.connect(lambda: self.setColorDialog("#808080"))
-		# self.h_layout.addWidget(self.button9)
+
 		#
 		# self.button10 = QPushButton()
 		# self.button10.setStyleSheet(
@@ -169,19 +128,25 @@ class ThemeDialog(QDialog):
 
 		# Dialog window customization
 		self.setLayout(self.layout)
-		# self.setWindowIcon(QIcon("./icon/serial_monitor.png"))
+		self.setWindowIcon(QIcon("./icon/theme.png"))
 		self.setWindowTitle("Set theme")
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
-		self.setFixedSize(350, 80)
+		self.setFixedSize(320, 80)
 		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
 
+	def setAppearance(self, theme: str):
+		IMPORTANT_DATA.appearance = theme
+		qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.last_color})
+
 	def setColorDialog(self, color: str):
-		qdarktheme.setup_theme(theme=self.combo_box.currentText(), custom_colors={"primary": color})
+		IMPORTANT_DATA.accent_color = color
+		IMPORTANT_DATA.last_color = color
+		qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})
 
 	def showColorDialog(self):
 		color = QColorDialog.getColor()
 		if color.isValid():
-			qdarktheme.setup_theme(theme=self.combo_box.currentText(), custom_colors={"primary": color.name()})
-		# color = QColorDialog.getColor()
-		# if color.isValid():
-		# 	print("Selected color:", color.name())
+			IMPORTANT_DATA.custom_color = color.name()
+			IMPORTANT_DATA.last_color = color.name()
+			self.custom_color_button.setStyleSheet(set_button_color_stylesheet(IMPORTANT_DATA.custom_color))
+			qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.custom_color})

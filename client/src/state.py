@@ -25,6 +25,10 @@ class IMPORTANT_DATA:
 	IPAddr = "000.000.000.000"
 	Port = "00000"
 	SerialNum = "AAAAA-AAA-AAA-AAAA"
+	appearance = ""
+	accent_color =  ""
+	custom_color = ""
+	last_color =  ""
 
 	# Local settings
 	tfont = None

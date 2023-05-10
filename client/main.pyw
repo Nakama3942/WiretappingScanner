@@ -16,18 +16,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import sys
+import os, sys
+from configparser import ConfigParser
 
 from PyQt6.QtWidgets import QApplication
-from qtvscodestyle import load_stylesheet
 from qdarktheme import setup_theme
 
 from ui import WiretappingScaner
 
+from src import IMPORTANT_DATA
+
 if __name__ == '__main__':
+	if not os.path.exists('data'):
+		os.makedirs('data')
+
+	if not os.path.isfile("data/config.ini"):
+		IMPORTANT_DATA.appearance = "dark"
+		IMPORTANT_DATA.accent_color = "#34C759"
+		IMPORTANT_DATA.custom_color = "#34C759"
+		IMPORTANT_DATA.last_color = "#34C759"
+	else:
+		config = ConfigParser()
+		config.read("data/config.ini")
+		IMPORTANT_DATA.appearance = config.get("Color", "appearance")
+		IMPORTANT_DATA.accent_color = config.get("Color", "accent_color")
+		IMPORTANT_DATA.custom_color = config.get("Color", "custom_color")
+		IMPORTANT_DATA.last_color = config.get("Color", "last_color")
+
 	app = QApplication(sys.argv)
-	# app.setStyleSheet(load_stylesheet("style/OneDark-Pro-flat.json"))
-	setup_theme(custom_colors={"primary": "#D0BCFF"})
+	setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.last_color})
 	ui = WiretappingScaner()
 	ui.show()
 	sys.exit(app.exec())
