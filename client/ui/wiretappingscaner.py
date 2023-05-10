@@ -647,8 +647,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			config.add_section('Color')
 			config.set('Color', 'appearance', IMPORTANT_DATA.appearance)
 			config.set('Color', 'accent_color', IMPORTANT_DATA.accent_color)
-			config.set('Color', 'custom_color', IMPORTANT_DATA.custom_color)
-			config.set('Color', 'last_color', IMPORTANT_DATA.last_color)
 			with open('data/config.ini', 'w') as config_file:
 				config.write(config_file)
 

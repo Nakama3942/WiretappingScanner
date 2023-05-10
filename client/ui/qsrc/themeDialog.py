@@ -18,7 +18,7 @@ limitations under the License.
 
 from configparser import ConfigParser
 
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QColorDialog
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, QColorDialog
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QColor
 import qdarktheme
@@ -27,12 +27,36 @@ from src import IMPORTANT_DATA
 
 # todo завершить окошко, логику, документацию, сохранение цветов в .ini
 
+def set_button_color_rainbow_gradient_stylesheet():
+	return """
+		background: qlineargradient(
+			x1:0, y1:0, x2:1, y2:0, stop:0 #FF0000, stop:0.15 #FF7F00, stop:0.33 #FFFF00,
+			stop:0.49 #00FF00, stop:0.67 #0000FF, stop:0.84 #4B0082, stop:1 #8B00FF
+		);
+		border-radius: 12px;
+		padding: 8px 8px;
+	"""
+
 def set_button_color_stylesheet(color: str):
 	return f"""
 		background-color: '{color}';
 		border-radius: 12px;
 		padding: 8px 8px;
 	"""
+
+def setAppearance(theme: str):
+	IMPORTANT_DATA.appearance = theme
+	qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})
+
+def setCustomColor():
+	color = QColorDialog.getColor()
+	if color.isValid():
+		IMPORTANT_DATA.accent_color = color.name()
+		qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})
+
+def setAccentColor(color: str):
+	IMPORTANT_DATA.accent_color = color
+	qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})
 
 class ThemeDialog(QDialog):
 	"""
@@ -43,110 +67,75 @@ class ThemeDialog(QDialog):
 		super(ThemeDialog, self).__init__()
 
 		# Adding layouts
-		self.layout = QVBoxLayout()
-		self.h_layout = QHBoxLayout()
+		self.main_layout = QVBoxLayout()
+		self.appearance_layout = QHBoxLayout()
+		self.color_horizontal_layout = QHBoxLayout()
+
+		self.appearance_label = QLabel("Select appearance ", self)
+		self.appearance_layout.addWidget(self.appearance_label)
 
 		self.combo_box = QComboBox()
 		self.combo_box.addItems(qdarktheme.get_themes())
 		self.combo_box.setCurrentText(IMPORTANT_DATA.appearance)
-		self.combo_box.currentTextChanged.connect(self.setAppearance)
-		self.layout.addWidget(self.combo_box)
+		self.combo_box.currentTextChanged.connect(setAppearance)
+		self.appearance_layout.addWidget(self.combo_box)
+		self.main_layout.addLayout(self.appearance_layout)
 
-		self.color_button = QPushButton()
-		self.color_button.setStyleSheet(
-			"""
-			background: qlineargradient(
-				x1:0, y1:0, x2:1, y2:0, stop:0 #FF0000, stop:0.15 #FF7F00, stop:0.33 #FFFF00,
-				stop:0.49 #00FF00, stop:0.67 #0000FF, stop:0.84 #4B0082, stop:1 #8B00FF
-			);
-			border-radius: 12px;
-			padding: 8px 8px;
-			"""
-		)
-		self.color_button.clicked.connect(self.showColorDialog)
-		self.h_layout.addWidget(self.color_button)
+		self.accent_label = QLabel("Select accent color ", self)
+		self.color_horizontal_layout.addWidget(self.accent_label)
 
-		self.custom_color_button = QPushButton()
-		self.custom_color_button.setStyleSheet(set_button_color_stylesheet(IMPORTANT_DATA.custom_color))
-		self.custom_color_button.clicked.connect(lambda: self.setColorDialog(IMPORTANT_DATA.custom_color))
-		self.h_layout.addWidget(self.custom_color_button)
+		self.color_dialog_button = QPushButton()
+		self.color_dialog_button.setStyleSheet(set_button_color_rainbow_gradient_stylesheet())
+		self.color_dialog_button.clicked.connect(setCustomColor)
+		self.color_horizontal_layout.addWidget(self.color_dialog_button)
 
-		self.button1 = QPushButton()
-		self.button1.setStyleSheet(set_button_color_stylesheet("#007BFF"))
-		self.button1.clicked.connect(lambda: self.setColorDialog("#007BFF"))
-		self.h_layout.addWidget(self.button1)
+		self.blue_color_button = QPushButton()
+		self.blue_color_button.setStyleSheet(set_button_color_stylesheet("#007BFF"))
+		self.blue_color_button.clicked.connect(lambda: setAccentColor("#007BFF"))
+		self.color_horizontal_layout.addWidget(self.blue_color_button)
 
-		self.button2 = QPushButton()
-		self.button2.setStyleSheet(set_button_color_stylesheet("#5856D6"))
-		self.button2.clicked.connect(lambda: self.setColorDialog("#5856D6"))
-		self.h_layout.addWidget(self.button2)
+		self.purple_color_button = QPushButton()
+		self.purple_color_button.setStyleSheet(set_button_color_stylesheet("#5856D6"))
+		self.purple_color_button.clicked.connect(lambda: setAccentColor("#5856D6"))
+		self.color_horizontal_layout.addWidget(self.purple_color_button)
 
-		self.button3 = QPushButton()
-		self.button3.setStyleSheet(set_button_color_stylesheet("#FF2D55"))
-		self.button3.clicked.connect(lambda: self.setColorDialog("#FF2D55"))
-		self.h_layout.addWidget(self.button3)
+		self.pink_color_button = QPushButton()
+		self.pink_color_button.setStyleSheet(set_button_color_stylesheet("#FF2D55"))
+		self.pink_color_button.clicked.connect(lambda: setAccentColor("#FF2D55"))
+		self.color_horizontal_layout.addWidget(self.pink_color_button)
 
-		self.button4 = QPushButton()
-		self.button4.setStyleSheet(set_button_color_stylesheet("#FF3B30"))
-		self.button4.clicked.connect(lambda: self.setColorDialog("#FF3B30"))
-		self.h_layout.addWidget(self.button4)
+		self.red_color_button = QPushButton()
+		self.red_color_button.setStyleSheet(set_button_color_stylesheet("#FF3B30"))
+		self.red_color_button.clicked.connect(lambda: setAccentColor("#FF3B30"))
+		self.color_horizontal_layout.addWidget(self.red_color_button)
 
-		self.button5 = QPushButton()
-		self.button5.setStyleSheet(set_button_color_stylesheet("#FF9500"))
-		self.button5.clicked.connect(lambda: self.setColorDialog("#FF9500"))
-		self.h_layout.addWidget(self.button5)
+		self.orange_color_button = QPushButton()
+		self.orange_color_button.setStyleSheet(set_button_color_stylesheet("#FF9500"))
+		self.orange_color_button.clicked.connect(lambda: setAccentColor("#FF9500"))
+		self.color_horizontal_layout.addWidget(self.orange_color_button)
 
-		self.button6 = QPushButton()
-		self.button6.setStyleSheet(set_button_color_stylesheet("#FFCC00"))
-		self.button6.clicked.connect(lambda: self.setColorDialog("#FFCC00"))
-		self.h_layout.addWidget(self.button6)
+		self.yellow_color_button = QPushButton()
+		self.yellow_color_button.setStyleSheet(set_button_color_stylesheet("#FFCC00"))
+		self.yellow_color_button.clicked.connect(lambda: setAccentColor("#FFCC00"))
+		self.color_horizontal_layout.addWidget(self.yellow_color_button)
 
-		self.button7 = QPushButton()
-		self.button7.setStyleSheet(set_button_color_stylesheet("#34C759"))
-		self.button7.clicked.connect(lambda: self.setColorDialog("#34C759"))
-		self.h_layout.addWidget(self.button7)
+		self.green_color_button = QPushButton()
+		self.green_color_button.setStyleSheet(set_button_color_stylesheet("#34C759"))
+		self.green_color_button.clicked.connect(lambda: setAccentColor("#34C759"))
+		self.color_horizontal_layout.addWidget(self.green_color_button)
 
-		self.button8 = QPushButton()
-		self.button8.setStyleSheet(set_button_color_stylesheet("#808080"))
-		self.button8.clicked.connect(lambda: self.setColorDialog("#808080"))
-		self.h_layout.addWidget(self.button8)
+		self.graphite_color_button = QPushButton()
+		self.graphite_color_button.setStyleSheet(set_button_color_stylesheet("#808080"))
+		self.graphite_color_button.clicked.connect(lambda: setAccentColor("#808080"))
+		self.color_horizontal_layout.addWidget(self.graphite_color_button)
 
-
-		#
-		# self.button10 = QPushButton()
-		# self.button10.setStyleSheet(
-		# 	"""
-		# 	background-color: '#FFA500';
-		# 	border-radius: 12px;
-		# 	padding: 8px 8px;
-		# 	"""
-		# )
-		# self.button10.clicked.connect(lambda: self.setColorDialog("#FFA500"))
-		# self.h_layout.addWidget(self.button10)
-
-		self.layout.addLayout(self.h_layout)
+		self.main_layout.addLayout(self.appearance_layout)
+		self.main_layout.addLayout(self.color_horizontal_layout)
 
 		# Dialog window customization
-		self.setLayout(self.layout)
+		self.setLayout(self.main_layout)
 		self.setWindowIcon(QIcon("./icon/theme.png"))
 		self.setWindowTitle("Set theme")
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
-		self.setFixedSize(320, 80)
+		self.setFixedSize(800, 80)
 		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
-
-	def setAppearance(self, theme: str):
-		IMPORTANT_DATA.appearance = theme
-		qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.last_color})
-
-	def setColorDialog(self, color: str):
-		IMPORTANT_DATA.accent_color = color
-		IMPORTANT_DATA.last_color = color
-		qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})
-
-	def showColorDialog(self):
-		color = QColorDialog.getColor()
-		if color.isValid():
-			IMPORTANT_DATA.custom_color = color.name()
-			IMPORTANT_DATA.last_color = color.name()
-			self.custom_color_button.setStyleSheet(set_button_color_stylesheet(IMPORTANT_DATA.custom_color))
-			qdarktheme.setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.custom_color})

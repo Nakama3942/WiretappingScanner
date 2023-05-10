@@ -33,18 +33,14 @@ if __name__ == '__main__':
 	if not os.path.isfile("data/config.ini"):
 		IMPORTANT_DATA.appearance = "dark"
 		IMPORTANT_DATA.accent_color = "#34C759"
-		IMPORTANT_DATA.custom_color = "#34C759"
-		IMPORTANT_DATA.last_color = "#34C759"
 	else:
 		config = ConfigParser()
 		config.read("data/config.ini")
 		IMPORTANT_DATA.appearance = config.get("Color", "appearance")
 		IMPORTANT_DATA.accent_color = config.get("Color", "accent_color")
-		IMPORTANT_DATA.custom_color = config.get("Color", "custom_color")
-		IMPORTANT_DATA.last_color = config.get("Color", "last_color")
 
 	app = QApplication(sys.argv)
-	setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.last_color})
+	setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})
 	ui = WiretappingScaner()
 	ui.show()
 	sys.exit(app.exec())

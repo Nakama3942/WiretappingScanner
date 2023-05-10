@@ -27,8 +27,6 @@ class IMPORTANT_DATA:
 	SerialNum = "AAAAA-AAA-AAA-AAAA"
 	appearance = ""
 	accent_color =  ""
-	custom_color = ""
-	last_color =  ""
 
 	# Local settings
 	tfont = None
