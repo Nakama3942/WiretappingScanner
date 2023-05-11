@@ -1156,11 +1156,17 @@ font-size: 18px;</string>
      <height>150</height>
     </size>
    </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>225</height>
+    </size>
+   </property>
    <property name="floating">
     <bool>false</bool>
    </property>
    <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetFloatable</set>
    </property>
    <property name="windowTitle">
     <string>Log Console</string>
@@ -1175,6 +1181,12 @@ font-size: 18px;</string>
     <layout class="QVBoxLayout" name="verticalLayout_10">
      <item>
       <widget class="QTextBrowser" name="consoleBrowser">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 255, 255);</string>

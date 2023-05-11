@@ -73,7 +73,7 @@ class UltrasoundDialog(QDialog):
 		self.setWindowTitle('Ultrasound Dialog')
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
 		self.setFixedSize(270, 100)
-		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
+		self.setWindowModality(Qt.WindowModality.WindowModal)
 
 	def butt_box_ok_clicked(self) -> None:
 		"""

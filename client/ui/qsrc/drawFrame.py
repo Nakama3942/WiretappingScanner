@@ -180,47 +180,46 @@ class DrawFrame(QFrame):
 					# qp.drawPath(triangle_path)
 
 				case 2:
-					qp.drawText(320, 100, IMPORTANT_DATA.text1)
 					# Drawing an infrared data frame
-					# qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					# qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					# qp.drawText(510, 100, str(IMPORTANT_DATA.infrared_frequency_of_wavefront))
+					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(270, 100, IMPORTANT_DATA.text1)
+					qp.drawText(510, 100, str(IMPORTANT_DATA.infrared_frequency_of_wavefront))
 
-					# qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					# qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					# qp.drawText(510, 140, str(IMPORTANT_DATA.infrared_wavelength))
-					#
-					# if 5 < IMPORTANT_DATA.infrared_signal_strength <= 40:
-					# 	IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
-					# elif 40 < IMPORTANT_DATA.infrared_signal_strength <= 80:
-					# 	IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
-					# elif 80 < IMPORTANT_DATA.infrared_signal_strength:
-					# 	IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
-					# else:
-					# 	pass
-					#
-					# qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					# qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					# qp.drawText(510, 180, str(IMPORTANT_DATA.infrared_signal_strength))
-					#
-					# qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					# qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					# qp.drawText(510, 220, str(IMPORTANT_DATA.infrared_signal_power))
-					#
-					# qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					# qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					# qp.drawText(510, 260, str(IMPORTANT_DATA.infrared_reception_angle))
-					#
-					# qp.drawPixmap(QPoint(230, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
-					# qp.drawText(270, 300, IMPORTANT_DATA.text6)
-					# qp.drawText(510, 300, str(IMPORTANT_DATA.infrared_transfer_rate))
-					#
-					# qp.drawPath(sinus(  # Drawing the sinus of an infrared wave
-					# 	10,
-					# 	IMPORTANT_DATA.window_width,
-					# 	IMPORTANT_DATA.infrared_frequency_of_wavefront,
-					# 	IMPORTANT_DATA.infrared_signal_strength
-					# ))
+					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(270, 140, IMPORTANT_DATA.text2)
+					qp.drawText(510, 140, str(IMPORTANT_DATA.infrared_wavelength))
+
+					if 5 < IMPORTANT_DATA.infrared_signal_strength <= 40:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
+					elif 40 < IMPORTANT_DATA.infrared_signal_strength <= 80:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
+					elif 80 < IMPORTANT_DATA.infrared_signal_strength:
+						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
+					else:
+						pass
+
+					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(270, 180, IMPORTANT_DATA.text3)
+					qp.drawText(510, 180, str(IMPORTANT_DATA.infrared_signal_strength))
+
+					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(270, 220, IMPORTANT_DATA.text4)
+					qp.drawText(510, 220, str(IMPORTANT_DATA.infrared_signal_power))
+
+					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(270, 260, IMPORTANT_DATA.text5)
+					qp.drawText(510, 260, str(IMPORTANT_DATA.infrared_reception_angle))
+
+					qp.drawPixmap(QPoint(230, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
+					qp.drawText(270, 300, IMPORTANT_DATA.text6)
+					qp.drawText(510, 300, str(IMPORTANT_DATA.infrared_transfer_rate))
+
+					qp.drawPath(sinus(  # Drawing the sinus of an infrared wave
+						10,
+						IMPORTANT_DATA.window_width,
+						IMPORTANT_DATA.infrared_frequency_of_wavefront,
+						IMPORTANT_DATA.infrared_signal_strength
+					))
 				case 3:
 					# Drawing an ultrasound data frame
 					qp.drawPixmap(QPoint(130, 80), QPixmap(IMPORTANT_DATA.tpixmap1))

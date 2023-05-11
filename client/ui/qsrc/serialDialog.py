@@ -64,7 +64,7 @@ class SerialDialog(QDialog):
 		self.setWindowTitle("Serial Monitor")
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
 		self.setFixedSize(400, 250)
-		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
+		self.setWindowModality(Qt.WindowModality.WindowModal)
 
 		# Creating a COM port object
 		self.com = QSerialPort()

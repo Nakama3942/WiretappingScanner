@@ -51,7 +51,7 @@ class UploadDialog(QDialog):
 		self.setWindowTitle('Upload firmware')
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
 		self.setFixedSize(250, 120)
-		self.setWindowModality(Qt.WindowModality.WindowModal)  # make the window modal
+		self.setWindowModality(Qt.WindowModality.WindowModal)
 
 	def upload_butt_clicked(self) -> None:
 		"""

@@ -220,7 +220,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 	def themeTool_clicked(self) -> None:
 		"""
-		///
+		The method displays the dialog box of settings of program appearance and accent color.
 		"""
 		if self.themeTool.isChecked():
 			self.theme_dialog.show()
@@ -372,10 +372,10 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 			case 2:
-				text = f"The sensor is broken"
+				text = f"{IMPORTANT_DATA.infrared_frequency_of_wavefront} Hz infrared frequency of wavefront detected"
 				self.IRDrawFrame.customRepaint()
 				self.data_action.setText(text)
-				self.logger.fail(message_text=text)
+				self.logger.metrics(message_text=text)
 			case 3:
 				text = f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected"
 				self.UltrasoundDrawFrame.customRepaint()
@@ -542,19 +542,18 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			case 2:
 				# Setting texts for the third tab
 				IMPORTANT_DATA.tab = index
-				IMPORTANT_DATA.text1 = "The sensor is broken"
-				# IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
-				# IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
-				# IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
-				# IMPORTANT_DATA.text2 = "Wavelength (μm): "
-				# IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
-				# IMPORTANT_DATA.text3 = "Signal strength (dB): "
-				# IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
-				# IMPORTANT_DATA.text4 = "Signal power (dBm): "
-				# IMPORTANT_DATA.tpixmap5 = "./icon/angle.png"
-				# IMPORTANT_DATA.text5 = "Reception angle (°): "
-				# IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
-				# IMPORTANT_DATA.text6 = "Transfer rate (bps): "
+				IMPORTANT_DATA.tpixmap1 = "./icon/sinus.png"
+				IMPORTANT_DATA.text1 = "Frequency of wavefront (Hz): "
+				IMPORTANT_DATA.tpixmap2 = "./icon/wavelength.png"
+				IMPORTANT_DATA.text2 = "Wavelength (μm): "
+				IMPORTANT_DATA.tpixmap3 = "./icon/signal_strength_0.png"
+				IMPORTANT_DATA.text3 = "Signal strength (dB): "
+				IMPORTANT_DATA.tpixmap4 = "./icon/signal_power.png"
+				IMPORTANT_DATA.text4 = "Signal power (dBm): "
+				IMPORTANT_DATA.tpixmap5 = "./icon/angle.png"
+				IMPORTANT_DATA.text5 = "Reception angle (°): "
+				IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
+				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
 				self.IRDrawFrame.customRepaint()
 			case 3:
 				# Setting texts for the fourth tab
