@@ -52,6 +52,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Icons setting
 		self.setWindowIcon(QIcon("./icon/wiretapping_scaner.png"))
 		self.aboutTool.setIcon(QIcon("./icon/about.png"))
+		self.fullscreenTool.setIcon(QIcon("./icon/fullscreen.png"))
 		self.themeTool.setIcon(QIcon("./icon/theme.png"))
 		self.serialTool.setIcon(QIcon("./icon/serial_monitor.png"))
 		self.uploadTool.setIcon(QIcon("./icon/upload.png"))
@@ -80,6 +81,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		# It's a tracking of button clicks in the window
 		self.aboutTool.clicked.connect(self.aboutTool_clicked)
+		self.fullscreenTool.clicked.connect(self.fullscreenTool_clicked)
 		self.themeTool.clicked.connect(self.themeTool_clicked)
 		self.serialTool.clicked.connect(self.serialTool_clicked)
 		self.uploadTool.clicked.connect(self.uploadTool_clicked)
@@ -215,6 +217,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 
 		self.logger.user(message_text="Viewed information about the program")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
+
+	def fullscreenTool_clicked(self) -> None:
+		if self.fullscreenTool.isChecked():
+			self.showFullScreen()
+		else:
+			self.showNormal()
 
 	def themeTool_clicked(self) -> None:
 		"""
