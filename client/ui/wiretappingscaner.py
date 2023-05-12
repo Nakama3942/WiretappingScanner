@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from os import listdir
 from markdown_it import MarkdownIt
 from mighty_logger import Logger
 from configparser import ConfigParser
@@ -74,10 +75,11 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		)
 
 		# Setting service font
-		QFontDatabase.addApplicationFont("/font/fixedsys.ttf")
-		self.font = QFont("fixedsys", 13)
-		self.consoleBrowser.setFont(self.font)
-		IMPORTANT_DATA.tfont = self.font
+		font_list = listdir("font")
+		for font_file in font_list:
+			QFontDatabase.addApplicationFont(f"./font/{font_file}")
+			IMPORTANT_DATA.count_user_font += 1
+		self.theme_dialog_font_changed()
 
 		# It's a tracking of button clicks in the window
 		self.aboutTool.clicked.connect(self.aboutTool_clicked)
@@ -164,6 +166,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		# Initialization of dialog windows
 		self.serial_dialog = SerialDialog()
 		self.theme_dialog = ThemeDialog()
+		self.theme_dialog.font_changed.connect(self.theme_dialog_font_changed)
 		self.upload_dialog = UploadDialog()
 		self.us_dialog = UltrasoundDialog()
 
@@ -218,7 +221,18 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		self.logger.user(message_text="Viewed information about the program")
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
+	def theme_dialog_font_changed(self) -> None:
+		"""
+		Changes the service font in the program to the selected by the user.
+		"""
+		font = QFont(IMPORTANT_DATA.service_font, 13)
+		self.consoleBrowser.setFont(font)
+		IMPORTANT_DATA.tfont = font
+
 	def fullscreenTool_clicked(self) -> None:
+		"""
+		The method displays this window in full-screen mode.
+		"""
 		if self.fullscreenTool.isChecked():
 			self.showFullScreen()
 		else:
@@ -652,6 +666,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			config.add_section('Color')
 			config.set('Color', 'appearance', IMPORTANT_DATA.appearance)
 			config.set('Color', 'accent_color', IMPORTANT_DATA.accent_color)
+			config.add_section('Font')
+			config.set('Font', 'families', IMPORTANT_DATA.service_font)
 			with open('data/config.ini', 'w') as config_file:
 				config.write(config_file)
 

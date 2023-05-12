@@ -16,11 +16,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from os import listdir
 from configparser import ConfigParser
 
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QComboBox, QPushButton, QColorDialog
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QIcon, QColor
+from PyQt6.QtCore import pyqtSignal, Qt, QSize
+from PyQt6.QtGui import QIcon, QColor, QFontDatabase
 import qdarktheme
 
 from src import IMPORTANT_DATA
@@ -85,6 +86,8 @@ class ThemeDialog(QDialog):
 	A class that describes the dialog box for reading a COM port.
 	"""
 
+	font_changed = pyqtSignal()
+
 	def __init__(self):
 		super(ThemeDialog, self).__init__()
 
@@ -92,23 +95,25 @@ class ThemeDialog(QDialog):
 		self.main_layout = QVBoxLayout()
 		self.appearance_layout = QHBoxLayout()
 		self.color_horizontal_layout = QHBoxLayout()
+		self.font_layout = QHBoxLayout()
 
 		# Adding strings
-		self.appearance_label = QLabel("Select appearance ", self)
+		self.appearance_label = QLabel("Select appearance", self)
 		self.appearance_layout.addWidget(self.appearance_label)
-		self.accent_label = QLabel("Select accent color ", self)
+		self.accent_label = QLabel("Select accent color", self)
 		self.color_horizontal_layout.addWidget(self.accent_label)
+		self.font_label = QLabel("Select a service font", self)
+		self.font_layout.addWidget(self.font_label)
 
 		# Adding a Theme Picker ComboBox
 		self.appearance_combo_box = QComboBox()
-		self.appearance_combo_box.setMinimumSize(QSize(320, 30))
-		self.appearance_combo_box.setMaximumSize(QSize(320, 30))
+		self.appearance_combo_box.setMinimumSize(QSize(330, 30))
+		self.appearance_combo_box.setMaximumSize(QSize(330, 30))
 		self.appearance_combo_box.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 		self.appearance_combo_box.addItems(qdarktheme.get_themes())
 		self.appearance_combo_box.setCurrentText(IMPORTANT_DATA.appearance)
 		self.appearance_combo_box.currentTextChanged.connect(_setAppearance)
 		self.appearance_layout.addWidget(self.appearance_combo_box)
-		self.main_layout.addLayout(self.appearance_layout)
 
 		# A button to set a custom accent color
 		self.color_dialog_button = QPushButton()
@@ -191,14 +196,65 @@ class ThemeDialog(QDialog):
 		self.graphite_color_button.clicked.connect(lambda: _setAccentColor("#808080"))
 		self.color_horizontal_layout.addWidget(self.graphite_color_button)
 
+		# Adding a Services Font ComboBox
+		self.font_combo_box = QComboBox()
+		self.font_combo_box.setMinimumSize(QSize(200, 30))
+		self.font_combo_box.setMaximumSize(QSize(200, 30))
+		self.font_combo_box.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+		self.update_font_combo_box()
+		self.font_combo_box.currentTextChanged.connect(self.font_changed_emit)
+		self.font_layout.addWidget(self.font_combo_box)
+
+		# A button to update a font_combo_box
+		self.update_font_combo_box_button = QPushButton()
+		self.update_font_combo_box_button.setMinimumSize(QSize(120, 30))
+		self.update_font_combo_box_button.setMaximumSize(QSize(120, 30))
+		self.update_font_combo_box_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+		self.update_font_combo_box_button.setText("Update the font list")
+		self.update_font_combo_box_button.setToolTip("Update the custom user font list")
+		self.update_font_combo_box_button.clicked.connect(self.update_font_combo_box_button_clicked)
+		self.font_layout.addWidget(self.update_font_combo_box_button)
+
 		# Setting construction layouts to main layout
 		self.main_layout.addLayout(self.appearance_layout)
 		self.main_layout.addLayout(self.color_horizontal_layout)
+		self.main_layout.addLayout(self.font_layout)
 
 		# Dialog window customization
 		self.setLayout(self.main_layout)
 		self.setWindowIcon(QIcon("./icon/theme.png"))
 		self.setWindowTitle("Set theme")
 		self.setWindowFlags(Qt.WindowType.WindowTitleHint | Qt.WindowType.WindowStaysOnTopHint)
-		self.setFixedSize(470, 120)
+		self.setFixedSize(470, 150)
 		self.setWindowModality(Qt.WindowModality.WindowModal)
+
+	def font_changed_emit(self, font_name: str) -> None:
+		"""
+		Emit the signal which user of choose the font.
+
+		:param font_name: Name of the chose font
+		"""
+		IMPORTANT_DATA.service_font = font_name
+		self.font_changed.emit()
+
+	def update_font_combo_box(self) -> None:
+		"""
+		The method update the list custom users fonts.
+		"""
+		self.font_combo_box.clear()
+		font_list = []
+		for i in range(0, IMPORTANT_DATA.count_user_font):
+			font_list.append(QFontDatabase.applicationFontFamilies(i)[0])
+		self.font_combo_box.addItems(font_list)
+
+	def update_font_combo_box_button_clicked(self) -> None:
+		"""
+		The method update the program fonts database.
+		"""
+		font_list = listdir("font")
+		QFontDatabase.removeAllApplicationFonts()
+		IMPORTANT_DATA.count_user_font = 0
+		for font_file in font_list:
+			if QFontDatabase.addApplicationFont(f"./font/{font_file}"):
+				IMPORTANT_DATA.count_user_font += 1
+		self.update_font_combo_box()

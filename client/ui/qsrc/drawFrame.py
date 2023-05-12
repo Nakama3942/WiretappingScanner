@@ -64,33 +64,33 @@ class DrawFrame(QFrame):
 			match IMPORTANT_DATA.tab:
 				case 0:
 					# Drawing a radio data frame
-					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					qp.drawText(510, 100, str(IMPORTANT_DATA.radio_impulse))
+					qp.drawPixmap(QPoint(180, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(220, 100, IMPORTANT_DATA.text1)
+					qp.drawText(560, 100, str(IMPORTANT_DATA.radio_impulse))
 
-					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					qp.drawText(510, 140, str(IMPORTANT_DATA.radio_noise))
+					qp.drawPixmap(QPoint(180, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(220, 140, IMPORTANT_DATA.text2)
+					qp.drawText(560, 140, str(IMPORTANT_DATA.radio_noise))
 
-					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					qp.drawText(510, 180, str(IMPORTANT_DATA.radio_signal_spectrum_width))
+					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(220, 180, IMPORTANT_DATA.text3)
+					qp.drawText(560, 180, str(IMPORTANT_DATA.radio_signal_spectrum_width))
 
-					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					qp.drawText(510, 220, str(IMPORTANT_DATA.radio_signal_duration))
+					qp.drawPixmap(QPoint(180, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(220, 220, IMPORTANT_DATA.text4)
+					qp.drawText(560, 220, str(IMPORTANT_DATA.radio_signal_duration))
 
-					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					qp.drawText(510, 260, str(IMPORTANT_DATA.radio_transfer_rate))
+					qp.drawPixmap(QPoint(180, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(220, 260, IMPORTANT_DATA.text5)
+					qp.drawText(560, 260, str(IMPORTANT_DATA.radio_transfer_rate))
 
-					qp.drawPixmap(QPoint(230, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
-					qp.drawText(270, 300, IMPORTANT_DATA.text6)
-					qp.drawText(510, 300, str(IMPORTANT_DATA.radio_antenna_impedance))
+					qp.drawPixmap(QPoint(180, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
+					qp.drawText(220, 300, IMPORTANT_DATA.text6)
+					qp.drawText(560, 300, str(IMPORTANT_DATA.radio_antenna_impedance))
 
-					qp.drawPixmap(QPoint(230, 320), QPixmap(IMPORTANT_DATA.tpixmap7))
-					qp.drawText(270, 340, IMPORTANT_DATA.text7)
-					qp.drawText(510, 340, str(IMPORTANT_DATA.radio_antenna_directivity))
+					qp.drawPixmap(QPoint(180, 320), QPixmap(IMPORTANT_DATA.tpixmap7))
+					qp.drawText(220, 340, IMPORTANT_DATA.text7)
+					qp.drawText(560, 340, str(IMPORTANT_DATA.radio_antenna_directivity))
 
 					if 5 < IMPORTANT_DATA.radio_signal_strength <= 40:
 						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "1")
@@ -101,9 +101,9 @@ class DrawFrame(QFrame):
 					else:
 						pass
 
-					qp.drawPixmap(QPoint(230, 360), QPixmap(IMPORTANT_DATA.tpixmap8))
-					qp.drawText(270, 380, IMPORTANT_DATA.text8)
-					qp.drawText(510, 380, str(IMPORTANT_DATA.radio_signal_strength))
+					qp.drawPixmap(QPoint(180, 360), QPixmap(IMPORTANT_DATA.tpixmap8))
+					qp.drawText(220, 380, IMPORTANT_DATA.text8)
+					qp.drawText(560, 380, str(IMPORTANT_DATA.radio_signal_strength))
 
 					qp.drawPath(sinus(  # Drawing the sinus of a radio wave
 						10,
@@ -113,25 +113,25 @@ class DrawFrame(QFrame):
 					))
 				case 1:
 					# Drawing a compass data frame
-					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					qp.drawText(510, 100, str(IMPORTANT_DATA.compass_magnetic_field))
+					qp.drawPixmap(QPoint(180, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(220, 100, IMPORTANT_DATA.text1)
+					qp.drawText(560, 100, str(IMPORTANT_DATA.compass_magnetic_field))
 
-					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					qp.drawText(510, 140, str(IMPORTANT_DATA.compass_tilt_angle))
+					qp.drawPixmap(QPoint(180, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(220, 140, IMPORTANT_DATA.text2)
+					qp.drawText(560, 140, str(IMPORTANT_DATA.compass_tilt_angle))
 
-					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					qp.drawText(510, 180, str(IMPORTANT_DATA.compass_north_direction))
+					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(220, 180, IMPORTANT_DATA.text3)
+					qp.drawText(560, 180, str(IMPORTANT_DATA.compass_north_direction))
 
-					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					qp.drawText(510, 220, str(IMPORTANT_DATA.compass_field_strength))
+					qp.drawPixmap(QPoint(180, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(220, 220, IMPORTANT_DATA.text4)
+					qp.drawText(560, 220, str(IMPORTANT_DATA.compass_field_strength))
 
-					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					qp.drawText(510, 260, str(IMPORTANT_DATA.compass_temperature))
+					qp.drawPixmap(QPoint(180, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(220, 260, IMPORTANT_DATA.text5)
+					qp.drawText(560, 260, str(IMPORTANT_DATA.compass_temperature))
 
 					# Compass drawing
 					circle = QPainterPath()
@@ -181,13 +181,13 @@ class DrawFrame(QFrame):
 
 				case 2:
 					# Drawing an infrared data frame
-					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					qp.drawText(510, 100, str(IMPORTANT_DATA.infrared_frequency_of_wavefront))
+					qp.drawPixmap(QPoint(180, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(220, 100, IMPORTANT_DATA.text1)
+					qp.drawText(560, 100, str(IMPORTANT_DATA.infrared_frequency_of_wavefront))
 
-					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					qp.drawText(510, 140, str(IMPORTANT_DATA.infrared_wavelength))
+					qp.drawPixmap(QPoint(180, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(220, 140, IMPORTANT_DATA.text2)
+					qp.drawText(560, 140, str(IMPORTANT_DATA.infrared_wavelength))
 
 					if 5 < IMPORTANT_DATA.infrared_signal_strength <= 40:
 						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
@@ -198,21 +198,21 @@ class DrawFrame(QFrame):
 					else:
 						pass
 
-					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					qp.drawText(510, 180, str(IMPORTANT_DATA.infrared_signal_strength))
+					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(220, 180, IMPORTANT_DATA.text3)
+					qp.drawText(560, 180, str(IMPORTANT_DATA.infrared_signal_strength))
 
-					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					qp.drawText(510, 220, str(IMPORTANT_DATA.infrared_signal_power))
+					qp.drawPixmap(QPoint(180, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(220, 220, IMPORTANT_DATA.text4)
+					qp.drawText(560, 220, str(IMPORTANT_DATA.infrared_signal_power))
 
-					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					qp.drawText(510, 260, str(IMPORTANT_DATA.infrared_reception_angle))
+					qp.drawPixmap(QPoint(180, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(220, 260, IMPORTANT_DATA.text5)
+					qp.drawText(560, 260, str(IMPORTANT_DATA.infrared_reception_angle))
 
-					qp.drawPixmap(QPoint(230, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
-					qp.drawText(270, 300, IMPORTANT_DATA.text6)
-					qp.drawText(510, 300, str(IMPORTANT_DATA.infrared_transfer_rate))
+					qp.drawPixmap(QPoint(180, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
+					qp.drawText(220, 300, IMPORTANT_DATA.text6)
+					qp.drawText(560, 300, str(IMPORTANT_DATA.infrared_transfer_rate))
 
 					qp.drawPath(sinus(  # Drawing the sinus of an infrared wave
 						10,
@@ -222,13 +222,13 @@ class DrawFrame(QFrame):
 					))
 				case 3:
 					# Drawing an ultrasound data frame
-					qp.drawPixmap(QPoint(130, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(170, 100, IMPORTANT_DATA.text1)
-					qp.drawText(410, 100, str(IMPORTANT_DATA.ultrasound_frequency_of_wavefront))
+					qp.drawPixmap(QPoint(80, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(120, 100, IMPORTANT_DATA.text1)
+					qp.drawText(460, 100, str(IMPORTANT_DATA.ultrasound_frequency_of_wavefront))
 
-					qp.drawPixmap(QPoint(130, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(170, 140, IMPORTANT_DATA.text2)
-					qp.drawText(410, 140, str(IMPORTANT_DATA.ultrasound_wavelength))
+					qp.drawPixmap(QPoint(80, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(120, 140, IMPORTANT_DATA.text2)
+					qp.drawText(460, 140, str(IMPORTANT_DATA.ultrasound_wavelength))
 
 					if 5 < IMPORTANT_DATA.ultrasound_signal_strength <= 40:
 						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
@@ -239,21 +239,21 @@ class DrawFrame(QFrame):
 					else:
 						pass
 
-					qp.drawPixmap(QPoint(130, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(170, 180, IMPORTANT_DATA.text3)
-					qp.drawText(410, 180, str(IMPORTANT_DATA.ultrasound_signal_strength))
+					qp.drawPixmap(QPoint(80, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(120, 180, IMPORTANT_DATA.text3)
+					qp.drawText(460, 180, str(IMPORTANT_DATA.ultrasound_signal_strength))
 
-					qp.drawPixmap(QPoint(130, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(170, 220, IMPORTANT_DATA.text4)
-					qp.drawText(410, 220, str(IMPORTANT_DATA.ultrasound_signal_power))
+					qp.drawPixmap(QPoint(80, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(120, 220, IMPORTANT_DATA.text4)
+					qp.drawText(460, 220, str(IMPORTANT_DATA.ultrasound_signal_power))
 
-					qp.drawPixmap(QPoint(130, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(170, 260, IMPORTANT_DATA.text5)
-					qp.drawText(410, 260, str(IMPORTANT_DATA.ultrasound_resolution))
+					qp.drawPixmap(QPoint(80, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(120, 260, IMPORTANT_DATA.text5)
+					qp.drawText(460, 260, str(IMPORTANT_DATA.ultrasound_resolution))
 
-					qp.drawPixmap(QPoint(130, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
-					qp.drawText(170, 300, IMPORTANT_DATA.text6)
-					qp.drawText(410, 300, str(IMPORTANT_DATA.ultrasound_transfer_rate))
+					qp.drawPixmap(QPoint(80, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
+					qp.drawText(120, 300, IMPORTANT_DATA.text6)
+					qp.drawText(460, 300, str(IMPORTANT_DATA.ultrasound_transfer_rate))
 
 					qp.drawPath(sinus(  # Drawing the sinus of an ultrasound wave
 						10,
@@ -272,13 +272,13 @@ class DrawFrame(QFrame):
 					qp.drawText(590, 252, "Play sound")
 				case 4:
 					# Drawing a link quality data frame
-					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					qp.drawText(510, 100, str(IMPORTANT_DATA.link_transfer_rate))
+					qp.drawPixmap(QPoint(180, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(220, 100, IMPORTANT_DATA.text1)
+					qp.drawText(560, 100, str(IMPORTANT_DATA.link_transfer_rate))
 
-					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					qp.drawText(510, 140, str(IMPORTANT_DATA.link_frequency_range))
+					qp.drawPixmap(QPoint(180, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(220, 140, IMPORTANT_DATA.text2)
+					qp.drawText(560, 140, str(IMPORTANT_DATA.link_frequency_range))
 
 					if 5 < IMPORTANT_DATA.link_signal_strength <= 40:
 						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
@@ -289,33 +289,33 @@ class DrawFrame(QFrame):
 					else:
 						pass
 
-					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					qp.drawText(510, 180, str(IMPORTANT_DATA.link_signal_strength))
+					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(220, 180, IMPORTANT_DATA.text3)
+					qp.drawText(560, 180, str(IMPORTANT_DATA.link_signal_strength))
 
-					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					qp.drawText(510, 220, str(IMPORTANT_DATA.link_signal_power))
+					qp.drawPixmap(QPoint(180, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(220, 220, IMPORTANT_DATA.text4)
+					qp.drawText(560, 220, str(IMPORTANT_DATA.link_signal_power))
 
-					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					qp.drawText(510, 260, str(IMPORTANT_DATA.link_noise))
+					qp.drawPixmap(QPoint(180, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(220, 260, IMPORTANT_DATA.text5)
+					qp.drawText(560, 260, str(IMPORTANT_DATA.link_noise))
 
-					qp.drawPixmap(QPoint(230, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
-					qp.drawText(270, 300, IMPORTANT_DATA.text6)
-					qp.drawText(510, 300, str(IMPORTANT_DATA.link_signal_spectrum_width))
+					qp.drawPixmap(QPoint(180, 280), QPixmap(IMPORTANT_DATA.tpixmap6))
+					qp.drawText(220, 300, IMPORTANT_DATA.text6)
+					qp.drawText(560, 300, str(IMPORTANT_DATA.link_signal_spectrum_width))
 
-					qp.drawPixmap(QPoint(230, 320), QPixmap(IMPORTANT_DATA.tpixmap7))
-					qp.drawText(270, 340, IMPORTANT_DATA.text7)
-					qp.drawText(510, 340, str(IMPORTANT_DATA.link_interference_level))
+					qp.drawPixmap(QPoint(180, 320), QPixmap(IMPORTANT_DATA.tpixmap7))
+					qp.drawText(220, 340, IMPORTANT_DATA.text7)
+					qp.drawText(560, 340, str(IMPORTANT_DATA.link_interference_level))
 
-					qp.drawPixmap(QPoint(230, 360), QPixmap(IMPORTANT_DATA.tpixmap8))
-					qp.drawText(270, 380, IMPORTANT_DATA.text8)
-					qp.drawText(510, 380, str(IMPORTANT_DATA.link_bit_error_rate))
+					qp.drawPixmap(QPoint(180, 360), QPixmap(IMPORTANT_DATA.tpixmap8))
+					qp.drawText(220, 380, IMPORTANT_DATA.text8)
+					qp.drawText(560, 380, str(IMPORTANT_DATA.link_bit_error_rate))
 
-					qp.drawPixmap(QPoint(230, 400), QPixmap(IMPORTANT_DATA.tpixmap9))
-					qp.drawText(270, 420, IMPORTANT_DATA.text9)
-					qp.drawText(510, 420, str(IMPORTANT_DATA.link_transmission_power))
+					qp.drawPixmap(QPoint(180, 400), QPixmap(IMPORTANT_DATA.tpixmap9))
+					qp.drawText(220, 420, IMPORTANT_DATA.text9)
+					qp.drawText(560, 420, str(IMPORTANT_DATA.link_transmission_power))
 
 					qp.drawPath(sinus(  # Drawing the sinus of a link wave
 						10,
@@ -325,25 +325,25 @@ class DrawFrame(QFrame):
 					))
 				case 5:
 					# Drawing a stethoscope data frame
-					qp.drawPixmap(QPoint(230, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
-					qp.drawText(270, 100, IMPORTANT_DATA.text1)
-					qp.drawText(510, 100, str(IMPORTANT_DATA.stethoscope_sound_amplitude))
+					qp.drawPixmap(QPoint(180, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
+					qp.drawText(220, 100, IMPORTANT_DATA.text1)
+					qp.drawText(560, 100, str(IMPORTANT_DATA.stethoscope_sound_amplitude))
 
-					qp.drawPixmap(QPoint(230, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
-					qp.drawText(270, 140, IMPORTANT_DATA.text2)
-					qp.drawText(510, 140, str(IMPORTANT_DATA.stethoscope_sound_frequency))
+					qp.drawPixmap(QPoint(180, 120), QPixmap(IMPORTANT_DATA.tpixmap2))
+					qp.drawText(220, 140, IMPORTANT_DATA.text2)
+					qp.drawText(560, 140, str(IMPORTANT_DATA.stethoscope_sound_frequency))
 
-					qp.drawPixmap(QPoint(230, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
-					qp.drawText(270, 180, IMPORTANT_DATA.text3)
-					qp.drawText(510, 180, str(IMPORTANT_DATA.stethoscope_sound_pressure))
+					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
+					qp.drawText(220, 180, IMPORTANT_DATA.text3)
+					qp.drawText(560, 180, str(IMPORTANT_DATA.stethoscope_sound_pressure))
 
-					qp.drawPixmap(QPoint(230, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
-					qp.drawText(270, 220, IMPORTANT_DATA.text4)
-					qp.drawText(510, 220, str(IMPORTANT_DATA.stethoscope_sound_direction))
+					qp.drawPixmap(QPoint(180, 200), QPixmap(IMPORTANT_DATA.tpixmap4))
+					qp.drawText(220, 220, IMPORTANT_DATA.text4)
+					qp.drawText(560, 220, str(IMPORTANT_DATA.stethoscope_sound_direction))
 
-					qp.drawPixmap(QPoint(230, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
-					qp.drawText(270, 260, IMPORTANT_DATA.text5)
-					qp.drawText(510, 260, str(IMPORTANT_DATA.stethoscope_transfer_rate))
+					qp.drawPixmap(QPoint(180, 240), QPixmap(IMPORTANT_DATA.tpixmap5))
+					qp.drawText(220, 260, IMPORTANT_DATA.text5)
+					qp.drawText(560, 260, str(IMPORTANT_DATA.stethoscope_transfer_rate))
 
 					qp.drawPath(sinus(  # Drawing the sinus of a sound wave
 						10,

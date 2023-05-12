@@ -33,11 +33,13 @@ if __name__ == '__main__':
 	if not os.path.isfile("data/config.ini"):
 		IMPORTANT_DATA.appearance = "dark"
 		IMPORTANT_DATA.accent_color = "#34C759"
+		IMPORTANT_DATA.service_font = "fixedsys"
 	else:
 		config = ConfigParser()
 		config.read("data/config.ini")
 		IMPORTANT_DATA.appearance = config.get("Color", "appearance")
 		IMPORTANT_DATA.accent_color = config.get("Color", "accent_color")
+		IMPORTANT_DATA.service_font = config.get("Font", "families")
 
 	app = QApplication(sys.argv)
 	setup_theme(theme=IMPORTANT_DATA.appearance, custom_colors={"primary": IMPORTANT_DATA.accent_color})

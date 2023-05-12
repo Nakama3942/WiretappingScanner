@@ -27,6 +27,8 @@ class IMPORTANT_DATA:
 	SerialNum = "AAAAA-AAA-AAA-AAAA"
 	appearance = ""
 	accent_color =  ""
+	service_font = ""
+	count_user_font = 0
 
 	# Local settings
 	tfont = None
