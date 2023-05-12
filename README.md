@@ -11,6 +11,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Nakama3942/WiretappingScanner?color=darkgreen&style=for-the-badge)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Nakama3942/WiretappingScanner?color=darkgreen&style=for-the-badge)
+![Lines of code](https://img.shields.io/tokei/lines/github/Nakama3942/WiretappingScanner?style=for-the-badge)
 
 </div>
 
@@ -25,7 +26,7 @@
 	- [Authors](#authors)
 
 ## Overview
-A project that allows you to track surveillance. It has radio, ultrasonic, ~~infrared~~ wave sensors, a ~~stethoscope~~, compass and can determine the quality of the communication signal.
+A project that allows you to track surveillance. It has radio, ultrasonic, infrared wave sensors, a ~~stethoscope~~, compass and can determine the quality of the communication signal.
 
 - [Content](#content)
 
@@ -48,10 +49,11 @@ The full text of the license can be found at the following [link](https://github
 > limitations under the License.
 
 ## Installation
-Проект находится в архиве в релизе. Он содержит три репозитория: ПО, прошивку, схему пайки устройства.
-ПО не требует инсталляции. Устройство нужно собирать по предоставленной схеме. После сборки устройство нужно прошить предоставленной прошивкой. Перед прошивкой esp32 нужно указать название сети и пароль, к которой будет производиться подключение.
+The project is archived in the release. It contains three repositories: software, firmware, and documentation with a device assembly scheme.
 
-## Анализируемые данные
+The software does not require installation. The device must be assembled according to the provided scheme. After assembly, the device must be flashed with the provided firmware. Before flashing esp32, you need to specify the name of the network and the password to which the connection will be made.
+
+## Analyzed data
 - Radio wiretapping data
 	- radio impulse : seconds (s)
 	- noise : decibel (dB)
@@ -104,27 +106,27 @@ The full text of the license can be found at the following [link](https://github
 	- transfer rate : bits per second (bps)
 
 
-## Схемы работы программы
-### Пайка
-<img src="schemes/Wiretapping Scanner Schematic.svg">
+## Schemes
+### Device assembly
+<img src="docs/Wiretapping Scanner Schematic.svg">
 
-### Репозиторий
-<img src="schemes/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
+### Repo
+<img src="docs/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
 
-### Файловая связь
-<img src="schemes/Wiretapping Scanner-Software file tree.drawio.svg">
+### File relationship
+<img src="docs/Wiretapping Scanner-Software file tree.drawio.svg">
 
-### Подключение
-<img src="schemes/Wiretapping Scanner-Connection establishment algorithm.drawio.svg">
+### Connection
+<img src="docs/Wiretapping Scanner-Connection establishment algorithm.drawio.svg">
 
-### Передача данных
-<img src="schemes/Wiretapping Scanner-Data establishment algorithm.drawio.svg">
+### Data transfer
+<img src="docs/Wiretapping Scanner-Data establishment algorithm.drawio.svg">
 
-### Отключение
-<img src="schemes/Wiretapping Scanner-Disconnection establishment algorithm.drawio.svg">
+### Disconnection
+<img src="docs/Wiretapping Scanner-Disconnection establishment algorithm.drawio.svg">
 
-### Алгоритм прошивки
-<img src="schemes/Wiretapping Scanner-Firmware algorithm.drawio.svg">
+### Firmware algorithm
+<img src="docs/Wiretapping Scanner-Firmware algorithm.drawio.svg">
 
 ## Troubleshooting
 All functionality has been tested by Author, but if you have problems using it, the code does not work, have suggestions for optimization or advice for improving the style of the code and the name - I invite you [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CONTRIBUTING.md) and [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CODE_OF_CONDUCT.md).
@@ -135,8 +137,8 @@ All functionality has been tested by Author, but if you have problems using it, 
 
 <table align="center" style="border-width: 10; border-style: ridge">
 	<tr>
-		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", software, connector</sub></td>
-		<td align="center" width="200"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />Management, soldering, data</sub></td>
+		<td align="center" width="200"><a href="https://github.com/Nakama3942"><img src="https://avatars.githubusercontent.com/u/73797846?s=400&u=a9b7688ac521d739825d7003a5bd599aab74cb76&v=4" width="150px;" alt=""/><br /><sub><b>Kalynovsky Valentin</b></sub></a><sub><br />"Ideological inspirer and Author", developer of software and connector</sub></td>
+		<td align="center" width="200"><a href="https://github.com/Eduard-stack245"><img src="https://avatars.githubusercontent.com/u/75859740?v=4" width="150px;" alt=""/><br /><sub><b>Babii Eduard</b></sub></a><sub><br />"Manager", developer of device assembly and him firmware</sub></td>
 	    <!--<td></td>-->
 	</tr>
 <!--

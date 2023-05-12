@@ -41,8 +41,6 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		super(WiretappingScaner, self).__init__()
 		self.setupUi(self)
 
-		# self.setStyleSheet(load_stylesheet("style/OneDark-Pro.json"))
-
 		# Set window to center
 		qr = self.frameGeometry()
 		qr.moveCenter(self.screen().availableGeometry().center())
