@@ -41,7 +41,10 @@ def sinus(grid: int, window_width: int, spectrum_width: float, amplitude: float,
 	:param y_offset: Wave offset along Y coordinates
 	:return: the drawn sinus
 	"""
-	frequency = 300_000_000 / (spectrum_width * 1_000_000 * grid)
+	try:
+		frequency = 300_000_000 / (spectrum_width * 1_000_000 * grid)
+	except ZeroDivisionError:
+		frequency = 0
 	# |   amplitude : A   |   frequency : λ   |   init_phase : φ   |   offset : k   |
 
 	wave = QPainterPath()

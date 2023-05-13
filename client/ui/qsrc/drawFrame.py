@@ -29,23 +29,6 @@ class DrawFrame(QFrame):
 	"""
 	gen_sound = pyqtSignal()
 	play_sound = pyqtSignal()
-	draw = False
-
-	def customRepaint(self) -> None:
-		"""
-		To prevent premature painting, the painter uses a flag. And this wrapper method interacts with the flag.
-		"""
-		self.draw = True
-		super().repaint()
-		self.draw = False
-
-	def customUpdate(self) -> None:
-		"""
-		To prevent premature painting, the painter uses a flag. And this wrapper method interacts with the flag.
-		"""
-		self.draw = True
-		super().update()
-		self.draw = False
 
 	def paintEvent(self, event: QPaintEvent) -> None:
 		"""
@@ -53,7 +36,7 @@ class DrawFrame(QFrame):
 
 		:param event: See the Qt documentation
 		"""
-		if IMPORTANT_DATA.connect and self.draw:
+		if IMPORTANT_DATA.connect:
 			# Painter setup
 			qp = QPainter(self)
 			qp.drawRect(0, 0, 799, 599)  # Drawing a border widget frame
@@ -92,14 +75,24 @@ class DrawFrame(QFrame):
 					qp.drawText(220, 340, IMPORTANT_DATA.text7)
 					qp.drawText(560, 340, str(IMPORTANT_DATA.radio_antenna_directivity))
 
-					if 5 < IMPORTANT_DATA.radio_signal_strength <= 40:
-						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "1")
-					elif 40 < IMPORTANT_DATA.radio_signal_strength <= 80:
-						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "2")
-					elif 80 < IMPORTANT_DATA.radio_signal_strength:
-						IMPORTANT_DATA.tpixmap8 = IMPORTANT_DATA.tpixmap8.replace("0", "3")
-					else:
-						pass
+					replacement_map = {
+						(5, 40): '1',
+						(40, 80): '2',
+						(80, float('inf')): '3'
+					}
+					digit_to_replace = next(
+						(digit for digit in ['0', '1', '2', '3'] if IMPORTANT_DATA.tpixmap3.count(digit)),
+						None
+					)
+					if digit_to_replace:
+						found_range = False
+						for (lower, upper), replacement in replacement_map.items():
+							if lower < IMPORTANT_DATA.link_signal_strength <= upper:
+								IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, replacement)
+								found_range = True
+								break
+						if not found_range:
+							IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, '0')
 
 					qp.drawPixmap(QPoint(180, 360), QPixmap(IMPORTANT_DATA.tpixmap8))
 					qp.drawText(220, 380, IMPORTANT_DATA.text8)
@@ -189,14 +182,24 @@ class DrawFrame(QFrame):
 					qp.drawText(220, 140, IMPORTANT_DATA.text2)
 					qp.drawText(560, 140, str(IMPORTANT_DATA.infrared_wavelength))
 
-					if 5 < IMPORTANT_DATA.infrared_signal_strength <= 40:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
-					elif 40 < IMPORTANT_DATA.infrared_signal_strength <= 80:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
-					elif 80 < IMPORTANT_DATA.infrared_signal_strength:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
-					else:
-						pass
+					replacement_map = {
+						(5, 40): '1',
+						(40, 80): '2',
+						(80, float('inf')): '3'
+					}
+					digit_to_replace = next(
+						(digit for digit in ['0', '1', '2', '3'] if IMPORTANT_DATA.tpixmap3.count(digit)),
+						None
+					)
+					if digit_to_replace:
+						found_range = False
+						for (lower, upper), replacement in replacement_map.items():
+							if lower < IMPORTANT_DATA.link_signal_strength <= upper:
+								IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, replacement)
+								found_range = True
+								break
+						if not found_range:
+							IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, '0')
 
 					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
 					qp.drawText(220, 180, IMPORTANT_DATA.text3)
@@ -230,14 +233,24 @@ class DrawFrame(QFrame):
 					qp.drawText(120, 140, IMPORTANT_DATA.text2)
 					qp.drawText(460, 140, str(IMPORTANT_DATA.ultrasound_wavelength))
 
-					if 5 < IMPORTANT_DATA.ultrasound_signal_strength <= 40:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
-					elif 40 < IMPORTANT_DATA.ultrasound_signal_strength <= 80:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
-					elif 80 < IMPORTANT_DATA.ultrasound_signal_strength:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
-					else:
-						pass
+					replacement_map = {
+						(5, 40): '1',
+						(40, 80): '2',
+						(80, float('inf')): '3'
+					}
+					digit_to_replace = next(
+						(digit for digit in ['0', '1', '2', '3'] if IMPORTANT_DATA.tpixmap3.count(digit)),
+						None
+					)
+					if digit_to_replace:
+						found_range = False
+						for (lower, upper), replacement in replacement_map.items():
+							if lower < IMPORTANT_DATA.link_signal_strength <= upper:
+								IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, replacement)
+								found_range = True
+								break
+						if not found_range:
+							IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, '0')
 
 					qp.drawPixmap(QPoint(80, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
 					qp.drawText(120, 180, IMPORTANT_DATA.text3)
@@ -263,13 +276,13 @@ class DrawFrame(QFrame):
 					))
 
 					# Button 1
-					qp.drawRect(530, 120, 200, 50)
-					qp.fillRect(530, 120, 200, 50, QColor(50, 50, 50, 40))
-					qp.drawText(575, 152, "Generate sound")
+					qp.drawRect(550, 120, 200, 50)
+					qp.fillRect(550, 120, 200, 50, QColor(50, 50, 50, 40))
+					qp.drawText(580, 152, "Generate sound")
 					# Button 2
-					qp.drawRect(530, 220, 200, 50)
-					qp.fillRect(530, 220, 200, 50, QColor(50, 50, 50, 40))
-					qp.drawText(590, 252, "Play sound")
+					qp.drawRect(550, 220, 200, 50)
+					qp.fillRect(550, 220, 200, 50, QColor(50, 50, 50, 40))
+					qp.drawText(595, 252, "Play sound")
 				case 4:
 					# Drawing a link quality data frame
 					qp.drawPixmap(QPoint(180, 80), QPixmap(IMPORTANT_DATA.tpixmap1))
@@ -280,14 +293,24 @@ class DrawFrame(QFrame):
 					qp.drawText(220, 140, IMPORTANT_DATA.text2)
 					qp.drawText(560, 140, str(IMPORTANT_DATA.link_frequency_range))
 
-					if 5 < IMPORTANT_DATA.link_signal_strength <= 40:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "1")
-					elif 40 < IMPORTANT_DATA.link_signal_strength <= 80:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "2")
-					elif 80 < IMPORTANT_DATA.link_signal_strength:
-						IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace("0", "3")
-					else:
-						pass
+					replacement_map = {
+						(5, 40): '1',
+						(40, 80): '2',
+						(81, float('inf')): '3'
+					}
+					digit_to_replace = next(
+						(digit for digit in ['0', '1', '2', '3'] if IMPORTANT_DATA.tpixmap3.count(digit)),
+						None
+					)
+					if digit_to_replace:
+						found_range = False
+						for (lower, upper), replacement in replacement_map.items():
+							if lower < IMPORTANT_DATA.link_signal_strength <= upper:
+								IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, replacement)
+								found_range = True
+								break
+						if not found_range:
+							IMPORTANT_DATA.tpixmap3 = IMPORTANT_DATA.tpixmap3.replace(digit_to_replace, '0')
 
 					qp.drawPixmap(QPoint(180, 160), QPixmap(IMPORTANT_DATA.tpixmap3))
 					qp.drawText(220, 180, IMPORTANT_DATA.text3)
@@ -359,7 +382,7 @@ class DrawFrame(QFrame):
 		:param event: See the Qt documentation
 		"""
 		if IMPORTANT_DATA.tab == 3:
-			if 530 <= event.pos().x() <= 730 and 120 <= event.pos().y() <= 170:
+			if 550 <= event.pos().x() <= 750 and 120 <= event.pos().y() <= 170:
 				self.gen_sound.emit()
-			elif 530 <= event.pos().x() <= 730 and 220 <= event.pos().y() <= 270:
+			elif 550 <= event.pos().x() <= 750 and 220 <= event.pos().y() <= 270:
 				self.play_sound.emit()

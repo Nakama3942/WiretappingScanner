@@ -316,6 +316,8 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 			ret: int = err.exec()
 			match ret:
 				case QMessageBox.StandardButton.Cancel:
+					if error == "Nmap is not installed":
+						self.reloadTool.setEnabled(False)
 					self.logger.error(message_text=error)
 					self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
 
@@ -383,32 +385,32 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		match IMPORTANT_DATA.tab:
 			case 0:
 				text = f"{IMPORTANT_DATA.radio_signal_spectrum_width} MHz radio signal spectrum width detected"
-				self.RadioDrawFrame.customRepaint()
+				self.RadioDrawFrame.repaint()
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 			case 1:
 				text = f"Compass deviation - {IMPORTANT_DATA.compass_north_direction} degrees"
-				self.CompassDrawFrame.customRepaint()
+				self.CompassDrawFrame.repaint()
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 			case 2:
 				text = f"{IMPORTANT_DATA.infrared_frequency_of_wavefront} Hz infrared frequency of wavefront detected"
-				self.IRDrawFrame.customRepaint()
+				self.IRDrawFrame.repaint()
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 			case 3:
 				text = f"{IMPORTANT_DATA.ultrasound_frequency_of_wavefront} Hz ultrasound frequency of wavefront detected"
-				self.UltrasoundDrawFrame.customRepaint()
+				self.UltrasoundDrawFrame.repaint()
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 			case 4:
 				text = f"{IMPORTANT_DATA.link_signal_strength} Hz link quality detected"
-				self.FreeChannelDrawFrame.customRepaint()
+				self.FreeChannelDrawFrame.repaint()
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 			case 5:
 				text = f"{IMPORTANT_DATA.stethoscope_sound_frequency} Hz stethoscope frequency detected"
-				self.StethoscopeDrawFrame.customRepaint()
+				self.StethoscopeDrawFrame.repaint()
 				self.data_action.setText(text)
 				self.logger.metrics(message_text=text)
 		self.consoleBrowser.append(self.logger.buffer().get_data()[-1])
@@ -475,12 +477,12 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 		"""
 		Frame clearing method.
 		"""
-		self.RadioDrawFrame.customUpdate()
-		self.CompassDrawFrame.customUpdate()
-		self.IRDrawFrame.customUpdate()
-		self.UltrasoundDrawFrame.customUpdate()
-		self.FreeChannelDrawFrame.customUpdate()
-		self.StethoscopeDrawFrame.customUpdate()
+		self.RadioDrawFrame.update()
+		self.CompassDrawFrame.update()
+		self.IRDrawFrame.update()
+		self.UltrasoundDrawFrame.update()
+		self.FreeChannelDrawFrame.update()
+		self.StethoscopeDrawFrame.update()
 
 	def frameshotButt_clicked(self) -> None:
 		"""
@@ -544,7 +546,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text7 = "Antenna directivity (dBi): "
 				IMPORTANT_DATA.tpixmap8 = "./icon/signal_strength_0.png"
 				IMPORTANT_DATA.text8 = "Signal strength (dB): "
-				self.RadioDrawFrame.customRepaint()
+				self.RadioDrawFrame.repaint()
 			case 1:
 				# Setting texts for the second tab
 				IMPORTANT_DATA.tab = index
@@ -558,7 +560,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text4 = "Field strength (A/m): "
 				IMPORTANT_DATA.tpixmap5 = "./icon/temperature.png"
 				IMPORTANT_DATA.text5 = "Temperature (°C): "
-				self.CompassDrawFrame.customRepaint()
+				self.CompassDrawFrame.repaint()
 			case 2:
 				# Setting texts for the third tab
 				IMPORTANT_DATA.tab = index
@@ -574,7 +576,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text5 = "Reception angle (°): "
 				IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
-				self.IRDrawFrame.customRepaint()
+				self.IRDrawFrame.repaint()
 			case 3:
 				# Setting texts for the fourth tab
 				IMPORTANT_DATA.tab = index
@@ -590,7 +592,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text5 = "Resolution (mm): "
 				IMPORTANT_DATA.tpixmap6 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text6 = "Transfer rate (bps): "
-				self.UltrasoundDrawFrame.customRepaint()
+				self.UltrasoundDrawFrame.repaint()
 			case 4:
 				# Setting texts for the fifth tab
 				IMPORTANT_DATA.tab = index
@@ -612,7 +614,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text8 = "Bit error rate (-): "
 				IMPORTANT_DATA.tpixmap9 = "./icon/engine.png"
 				IMPORTANT_DATA.text9 = "Transmission power (dBm): "
-				self.FreeChannelDrawFrame.customRepaint()
+				self.FreeChannelDrawFrame.repaint()
 			case 5:
 				# Setting texts for the sixth tab
 				IMPORTANT_DATA.tab = index
@@ -626,7 +628,7 @@ class WiretappingScaner(QMainWindow, Ui_WindowWiretappingScaner):
 				IMPORTANT_DATA.text4 = "Sound direction (°): "
 				IMPORTANT_DATA.tpixmap5 = "./icon/transfer_rate.png"
 				IMPORTANT_DATA.text5 = "Transfer rate (bps): "
-				self.StethoscopeDrawFrame.customRepaint()
+				self.StethoscopeDrawFrame.repaint()
 
 	def ultrasound_Gen(self) -> None:
 		"""

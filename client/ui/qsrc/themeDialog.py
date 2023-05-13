@@ -19,7 +19,7 @@ limitations under the License.
 from os import listdir
 from configparser import ConfigParser
 
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QSizePolicy, QLabel, QComboBox, QPushButton, QColorDialog
+from PyQt6.QtWidgets import QDialog, QGridLayout, QHBoxLayout, QSizePolicy, QLabel, QComboBox, QPushButton, QColorDialog
 from PyQt6.QtCore import pyqtSignal, Qt, QSize
 from PyQt6.QtGui import QIcon, QColor, QFontDatabase
 import qdarktheme
@@ -92,28 +92,24 @@ class ThemeDialog(QDialog):
 		super(ThemeDialog, self).__init__()
 
 		# Adding layouts
-		self.main_layout = QVBoxLayout()
-		self.appearance_layout = QHBoxLayout()
+		self.main_layout = QGridLayout()
 		self.color_horizontal_layout = QHBoxLayout()
 		self.font_layout = QHBoxLayout()
 
 		# Adding strings
 		self.appearance_label = QLabel("Select appearance", self)
-		self.appearance_layout.addWidget(self.appearance_label)
+		self.main_layout.addWidget(self.appearance_label, 0, 0)
 		self.accent_label = QLabel("Select accent color", self)
-		self.color_horizontal_layout.addWidget(self.accent_label)
+		self.main_layout.addWidget(self.accent_label, 1, 0)
 		self.font_label = QLabel("Select a service font", self)
-		self.font_layout.addWidget(self.font_label)
+		self.main_layout.addWidget(self.font_label, 2, 0)
 
 		# Adding a Theme Picker ComboBox
 		self.appearance_combo_box = QComboBox()
-		self.appearance_combo_box.setMinimumSize(QSize(330, 30))
-		self.appearance_combo_box.setMaximumSize(QSize(330, 30))
-		self.appearance_combo_box.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 		self.appearance_combo_box.addItems(qdarktheme.get_themes())
 		self.appearance_combo_box.setCurrentText(IMPORTANT_DATA.appearance)
 		self.appearance_combo_box.currentTextChanged.connect(_setAppearance)
-		self.appearance_layout.addWidget(self.appearance_combo_box)
+		self.main_layout.addWidget(self.appearance_combo_box, 0, 1)
 
 		# A button to set a custom accent color
 		self.color_dialog_button = QPushButton()
@@ -195,13 +191,12 @@ class ThemeDialog(QDialog):
 		self.graphite_color_button.setStyleSheet(_set_button_color_stylesheet("#808080"))
 		self.graphite_color_button.clicked.connect(lambda: _setAccentColor("#808080"))
 		self.color_horizontal_layout.addWidget(self.graphite_color_button)
+		self.main_layout.addLayout(self.color_horizontal_layout, 1, 1)
 
 		# Adding a Services Font ComboBox
 		self.font_combo_box = QComboBox()
-		self.font_combo_box.setMinimumSize(QSize(200, 30))
-		self.font_combo_box.setMaximumSize(QSize(200, 30))
-		self.font_combo_box.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 		self.update_font_combo_box()
+		self.font_combo_box.setCurrentText(IMPORTANT_DATA.service_font)
 		self.font_combo_box.currentTextChanged.connect(self.font_changed_emit)
 		self.font_layout.addWidget(self.font_combo_box)
 
@@ -214,11 +209,7 @@ class ThemeDialog(QDialog):
 		self.update_font_combo_box_button.setToolTip("Update the custom user font list")
 		self.update_font_combo_box_button.clicked.connect(self.update_font_combo_box_button_clicked)
 		self.font_layout.addWidget(self.update_font_combo_box_button)
-
-		# Setting construction layouts to main layout
-		self.main_layout.addLayout(self.appearance_layout)
-		self.main_layout.addLayout(self.color_horizontal_layout)
-		self.main_layout.addLayout(self.font_layout)
+		self.main_layout.addLayout(self.font_layout, 2, 1)
 
 		# Dialog window customization
 		self.setLayout(self.main_layout)

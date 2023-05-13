@@ -133,48 +133,48 @@ class Detector(QThread):
 					# IMPORTANT_DATA.stethoscope_transfer_rate = int(data_list[38].decode("utf-8"))
 					IMPORTANT_DATA.radio_signal_spectrum_width = float(data_list[0].decode("utf-8"))
 					IMPORTANT_DATA.radio_signal_strength = float(data_list[1].decode("utf-8"))
-					IMPORTANT_DATA.radio_impulse = IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 1
-					IMPORTANT_DATA.radio_noise = IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 2
-					IMPORTANT_DATA.radio_signal_duration = IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 3
-					IMPORTANT_DATA.radio_transfer_rate = IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 4
-					IMPORTANT_DATA.radio_antenna_impedance = IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 5
-					IMPORTANT_DATA.radio_antenna_directivity = IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 6
+					IMPORTANT_DATA.radio_impulse = round(IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 1, 1)
+					IMPORTANT_DATA.radio_noise = round(IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 2, 1)
+					IMPORTANT_DATA.radio_signal_duration = round(IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 3, 1)
+					IMPORTANT_DATA.radio_transfer_rate = round(IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 4, 1)
+					IMPORTANT_DATA.radio_antenna_impedance = round(IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 5, 1)
+					IMPORTANT_DATA.radio_antenna_directivity = round(IMPORTANT_DATA.radio_signal_spectrum_width / IMPORTANT_DATA.radio_signal_strength * 6, 1)
 
 					IMPORTANT_DATA.compass_north_direction = int(data_list[2].decode("utf-8"))
 					IMPORTANT_DATA.compass_magnetic_field = int(data_list[3].decode("utf-8"))
-					IMPORTANT_DATA.compass_tilt_angle = IMPORTANT_DATA.compass_north_direction / IMPORTANT_DATA.compass_magnetic_field * 1
-					IMPORTANT_DATA.compass_field_strength = IMPORTANT_DATA.compass_north_direction / IMPORTANT_DATA.compass_magnetic_field * 2
-					IMPORTANT_DATA.compass_temperature = IMPORTANT_DATA.compass_north_direction / IMPORTANT_DATA.compass_magnetic_field * 3
+					IMPORTANT_DATA.compass_tilt_angle = round(IMPORTANT_DATA.compass_north_direction / IMPORTANT_DATA.compass_magnetic_field * 1, 1)
+					IMPORTANT_DATA.compass_field_strength = round(IMPORTANT_DATA.compass_north_direction / IMPORTANT_DATA.compass_magnetic_field * 2, 1)
+					IMPORTANT_DATA.compass_temperature = round(IMPORTANT_DATA.compass_north_direction / IMPORTANT_DATA.compass_magnetic_field * 3, 1)
 
 					IMPORTANT_DATA.infrared_frequency_of_wavefront = float(data_list[4].decode("utf-8"))
 					IMPORTANT_DATA.infrared_signal_strength = float(data_list[5].decode("utf-8"))
-					IMPORTANT_DATA.infrared_wavelength = IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 1
-					IMPORTANT_DATA.infrared_signal_power = IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 2
-					IMPORTANT_DATA.infrared_reception_angle = IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 3
-					IMPORTANT_DATA.infrared_transfer_rate = IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 4
+					IMPORTANT_DATA.infrared_wavelength = round(IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 1, 1)
+					IMPORTANT_DATA.infrared_signal_power = round(IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 2, 1)
+					IMPORTANT_DATA.infrared_reception_angle = round(IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 3, 1)
+					IMPORTANT_DATA.infrared_transfer_rate = round(IMPORTANT_DATA.infrared_frequency_of_wavefront / IMPORTANT_DATA.infrared_signal_strength * 4, 1)
 
 					IMPORTANT_DATA.ultrasound_frequency_of_wavefront = float(data_list[6].decode("utf-8"))
 					IMPORTANT_DATA.ultrasound_signal_strength = float(data_list[7].decode("utf-8"))
-					IMPORTANT_DATA.ultrasound_wavelength = IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 1
-					IMPORTANT_DATA.ultrasound_signal_power = IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 2
-					IMPORTANT_DATA.ultrasound_resolution = IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 3
-					IMPORTANT_DATA.ultrasound_transfer_rate = IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 4
+					IMPORTANT_DATA.ultrasound_wavelength = round(IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 1, 1)
+					IMPORTANT_DATA.ultrasound_signal_power = round(IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 2, 1)
+					IMPORTANT_DATA.ultrasound_resolution = round(IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 3, 1)
+					IMPORTANT_DATA.ultrasound_transfer_rate = round(IMPORTANT_DATA.ultrasound_frequency_of_wavefront / IMPORTANT_DATA.ultrasound_signal_strength * 4, 1)
 
 					IMPORTANT_DATA.link_signal_strength = float(data_list[8].decode("utf-8"))
 					IMPORTANT_DATA.link_signal_spectrum_width = float(data_list[9].decode("utf-8"))
-					IMPORTANT_DATA.link_transfer_rate = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 1
-					IMPORTANT_DATA.link_frequency_range = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 2
-					IMPORTANT_DATA.link_signal_power = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 3
-					IMPORTANT_DATA.link_noise = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 4
-					IMPORTANT_DATA.link_interference_level = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 5
-					IMPORTANT_DATA.link_bit_error_rate = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 6
-					IMPORTANT_DATA.link_transmission_power = IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 7
+					IMPORTANT_DATA.link_transfer_rate = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 1, 1)
+					IMPORTANT_DATA.link_frequency_range = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 2, 1)
+					IMPORTANT_DATA.link_signal_power = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 3, 1)
+					IMPORTANT_DATA.link_noise = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 4, 1)
+					IMPORTANT_DATA.link_interference_level = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 5, 1)
+					IMPORTANT_DATA.link_bit_error_rate = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 6, 1)
+					IMPORTANT_DATA.link_transmission_power = round(IMPORTANT_DATA.link_signal_spectrum_width / IMPORTANT_DATA.link_signal_strength * 7, 1)
 
 					IMPORTANT_DATA.stethoscope_sound_amplitude = float(data_list[10].decode("utf-8"))
 					IMPORTANT_DATA.stethoscope_sound_frequency = float(data_list[11].decode("utf-8"))
-					IMPORTANT_DATA.stethoscope_sound_pressure = IMPORTANT_DATA.stethoscope_sound_frequency / IMPORTANT_DATA.stethoscope_sound_amplitude * 1
-					IMPORTANT_DATA.stethoscope_sound_direction = IMPORTANT_DATA.stethoscope_sound_frequency / IMPORTANT_DATA.stethoscope_sound_amplitude * 2
-					IMPORTANT_DATA.stethoscope_transfer_rate = IMPORTANT_DATA.stethoscope_sound_frequency / IMPORTANT_DATA.stethoscope_sound_amplitude * 3
+					IMPORTANT_DATA.stethoscope_sound_pressure = round(IMPORTANT_DATA.stethoscope_sound_frequency / IMPORTANT_DATA.stethoscope_sound_amplitude * 1, 1)
+					IMPORTANT_DATA.stethoscope_sound_direction = round(IMPORTANT_DATA.stethoscope_sound_frequency / IMPORTANT_DATA.stethoscope_sound_amplitude * 2, 1)
+					IMPORTANT_DATA.stethoscope_transfer_rate = round(IMPORTANT_DATA.stethoscope_sound_frequency / IMPORTANT_DATA.stethoscope_sound_amplitude * 3, 1)
 					self.update_data_signal.emit()
 				except ValueError as err:  # If verification failed of data receipt
 					self.update_data_error_signal.emit(str(err))
