@@ -52,29 +52,35 @@ After that, you can safely use the program. However, if you don't want to bother
 ### Started program window
 <div align="center"><img src="../images/Screenshot_1.png"></div>
 
-### Search of the static IP addresses
+### Can separated log console
 <div align="center"><img src="../images/Screenshot_2.png"></div>
 
-### Opening the dialog window of listening a COM port (if device connected yet on USB)
+### Search of the static IP addresses
 <div align="center"><img src="../images/Screenshot_3.png"></div>
 
-### Connecting to device and receiving of data
+### Can opening the dialog window of listening a COM port (if device connected yet on USB)
 <div align="center"><img src="../images/Screenshot_4.png"></div>
 
-### Changing appearance and accent color
+### Connecting to device and receiving of data
 <div align="center"><img src="../images/Screenshot_5.png"></div>
 
-### Expanding program window to whole screen
+### Can changing appearance, accent color and services font
 <div align="center"><img src="../images/Screenshot_6.png"></div>
 
-### Jumping on tabs and start disconnection
+### Can expanding program window to whole screen
 <div align="center"><img src="../images/Screenshot_7.png"></div>
 
-### Disconnected from devise
+### Can open program window in full-screen mode
 <div align="center"><img src="../images/Screenshot_8.png"></div>
 
-### Seeing saved log
+### Jumping on tabs and start disconnection
 <div align="center"><img src="../images/Screenshot_9.png"></div>
+
+### Disconnected from devise
+<div align="center"><img src="../images/Screenshot_10.png"></div>
+
+### Seeing saved log
+<div align="center"><img src="../images/Screenshot_11.png"></div>
 
 ## Authors
 

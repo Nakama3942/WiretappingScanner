@@ -98,35 +98,20 @@ The software does not require installation. The device must be assembled accordi
 	- bit error rate : proportion of erroneously transmitted bits (-)
 	- transmission power : decibel milliwatt (dBm)
 
-- Stethoscope wiretapping data
-	- sound amplitude : decibel (dB)
-	- sound frequency : hertz (Hz)
-	- sound pressure : pascal (Pa)
-	- sound direction : degrees (°)
-	- transfer rate : bits per second (bps)
+- ~~Stethoscope wiretapping data~~
+	- ~~sound amplitude : decibel (dB)~~
+	- ~~sound frequency : hertz (Hz)~~
+	- ~~sound pressure : pascal (Pa)~~
+	- ~~sound direction : degrees (°)~~
+	- ~~transfer rate : bits per second (bps)~~
 
 
 ## Schemes
 ### Device assembly
-<img src="docs/Wiretapping Scanner Schematic.svg">
-
-### Repo
-<img src="docs/Wiretapping Scanner-Wiretapping Scanner Repository.drawio.svg">
+<img src="images/Wiretapping Scanner Schematic.svg">
 
 ### File relationship
-<img src="docs/Wiretapping Scanner-Software file tree.drawio.svg">
-
-### Connection
-<img src="docs/Wiretapping Scanner-Connection establishment algorithm.drawio.svg">
-
-### Data transfer
-<img src="docs/Wiretapping Scanner-Data establishment algorithm.drawio.svg">
-
-### Disconnection
-<img src="docs/Wiretapping Scanner-Disconnection establishment algorithm.drawio.svg">
-
-### Firmware algorithm
-<img src="docs/Wiretapping Scanner-Firmware algorithm.drawio.svg">
+<img src="images/Wiretapping Scanner-Software file tree.drawio.svg">
 
 ## Troubleshooting
 All functionality has been tested by Author, but if you have problems using it, the code does not work, have suggestions for optimization or advice for improving the style of the code and the name - I invite you [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CONTRIBUTING.md) and [here](https://github.com/Nakama3942/WiretappingScanner/blob/master/CODE_OF_CONDUCT.md).
